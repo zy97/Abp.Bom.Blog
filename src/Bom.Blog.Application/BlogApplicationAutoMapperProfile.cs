@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Bom.Blog.Categories;
+using Bom.Blog.Posts;
+using Bom.Blog.Tags;
 
 namespace Bom.Blog;
 
@@ -9,5 +12,11 @@ public class BlogApplicationAutoMapperProfile : Profile
         /* You can configure your AutoMapper mapping configuration here.
          * Alternatively, you can split your mapping configurations
          * into multiple profile classes for a better organization. */
+
+        CreateMap<Post, PostDto>();
+        CreateMap<Post, PostBriefDto>();
+        CreateMap<Post, PostPagedDto>();
+        CreateMap<Category, CategoryDto>();
+        CreateMap<Tag, TagDto>();
     }
 }
