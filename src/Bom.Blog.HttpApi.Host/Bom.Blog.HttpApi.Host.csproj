@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bom.Blog.Application\Bom.Blog.Application.csproj" />
+    <ProjectReference Include="..\Bom.Blog.BackgroundJobs\Bom.Blog.BackgroundJobs.csproj" />
     <ProjectReference Include="..\Bom.Blog.EntityFrameworkCore\Bom.Blog.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Bom.Blog.HttpApi\Bom.Blog.HttpApi.csproj" />
   </ItemGroup>

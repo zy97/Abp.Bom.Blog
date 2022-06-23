@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29020.237
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.Domain", "src\Bom.Blog.Domain\Bom.Blog.Domain.csproj", "{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}"
 EndProject
@@ -36,6 +36,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.HttpApi.Host", "src\Bom.Blog.HttpApi.Host\Bom.Blog.HttpApi.Host.csproj", "{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.Blazor", "src\Bom.Blog.Blazor\Bom.Blog.Blazor.csproj", "{27B2DDC7-8B75-4322-A312-25419C15D9D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bom.Blog.BackgroundJobs", "src\Bom.Blog.BackgroundJobs\Bom.Blog.BackgroundJobs.csproj", "{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +105,10 @@ Global
 		{27B2DDC7-8B75-4322-A312-25419C15D9D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27B2DDC7-8B75-4322-A312-25419C15D9D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27B2DDC7-8B75-4322-A312-25419C15D9D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +129,7 @@ Global
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{27B2DDC7-8B75-4322-A312-25419C15D9D8} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}
