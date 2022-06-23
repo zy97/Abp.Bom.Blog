@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bom.Blog.BackgroundJobs\Bom.Blog.BackgroundJobs.csproj" />
     <ProjectReference Include="..\Bom.Blog.Domain\Bom.Blog.Domain.csproj" />
     <ProjectReference Include="..\Bom.Blog.Application.Contracts\Bom.Blog.Application.Contracts.csproj" />
   </ItemGroup>
