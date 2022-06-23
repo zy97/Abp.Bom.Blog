@@ -1,9 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bom.Blog.Categories;
+using Bom.Blog.FriendLinks;
+using Bom.Blog.Posts;
+using Bom.Blog.PostTags;
+using Bom.Blog.Tags;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -24,6 +30,12 @@ public class BlogDbContext :
     ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+
+    public DbSet<Post> Posts { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<PostTag> PostTags { get; set; }
+    public DbSet<FriendLink> FriendLinks { get; set; }
 
     #region Entities from the modules
 
@@ -81,5 +93,50 @@ public class BlogDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
+        builder.Entity<Post>(b =>
+        {
+            b.ToTable(BlogConsts.DbTablePrefix + "Posts", BlogConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.HasKey(i => i.Id);
+            b.Property(i => i.Title).IsRequired().HasMaxLength(256);
+            b.Property(i => i.Author).HasMaxLength(10);
+            b.Property(i => i.Url).IsRequired().HasMaxLength(100);
+            b.Property(i => i.Html).IsRequired();
+            b.Property(i => i.Markdown).IsRequired();
+            b.HasOne<Category>().WithMany().HasForeignKey(i => i.CategoryId).IsRequired();
+        });
+        builder.Entity<Category>(b =>
+        {
+            b.ToTable(BlogConsts.DbTablePrefix + "Categories", BlogConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.HasKey(i => i.Id);
+            b.Property(i => i.CategoryName).IsRequired().HasMaxLength(50);
+            b.Property(i => i.DisplayName).IsRequired().HasMaxLength(50);
+        });
+        builder.Entity<Tag>(b =>
+        {
+            b.ToTable(BlogConsts.DbTablePrefix + "Tags", BlogConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.HasKey(i => i.Id);
+            b.Property(i => i.TagName).IsRequired().HasMaxLength(50);
+            b.Property(i => i.DisplayName).IsRequired().HasMaxLength(50);
+        });
+        builder.Entity<PostTag>(b =>
+        {
+            b.ToTable(BlogConsts.DbTablePrefix + "PostTags", BlogConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.HasKey(i => i.Id);
+            b.Property(i => i.PostId).IsRequired();
+            b.Property(i => i.TagId).IsRequired();
+        });
+        builder.Entity<FriendLink>(b =>
+        {
+            b.ToTable(BlogConsts.DbTablePrefix + "FriendLinks", BlogConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.HasKey(i => i.Id);
+            b.Property(i => i.Title).IsRequired().HasMaxLength(20);
+            b.Property(i => i.LinkUrl).IsRequired().HasMaxLength(100);
+        });
     }
 }
