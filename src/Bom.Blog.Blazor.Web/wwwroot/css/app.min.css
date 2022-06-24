@@ -1,12 +1,39 @@
-﻿/* @tailwind base; */
-@tailwind components;
-@tailwind utilities;
+/* @tailwind base; */
+.container {
+    width: 100%;
+}
+@media (min-width: 640px) {
+    .container {
+        max-width: 640px;
+    }
+}
+@media (min-width: 768px) {
+    .container {
+        max-width: 768px;
+    }
+}
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1024px;
+    }
+}
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1280px;
+    }
+}
+@media (min-width: 1536px) {
+    .container {
+        max-width: 1536px;
+    }
+}
+.static {
+    position: static;
+}
 
 *,
 *:after,
 *:before {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -42,7 +69,8 @@ a {
 abbr[title] {
     border-bottom: none;
     text-decoration: underline;
-    text-decoration: underline dotted;
+    -webkit-text-decoration: underline dotted;
+            text-decoration: underline dotted;
 }
 
 b,
@@ -572,24 +600,15 @@ header label {
     width: 128px;
     height: auto;
     display: inline-block;
-    -webkit-border-radius: 100%;
     border-radius: 100%;
-    -webkit-box-shadow: 0 0 0 0.3618em rgba(0, 0, 0, 0.05);
     box-shadow: 0 0 0 0.3618em rgba(0, 0, 0, 0.05);
     margin: 0 auto;
-    -webkit-transition: all ease 0.4s;
-    -moz-transition: all ease 0.4s;
-    -o-transition: all ease 0.4s;
     transition: all ease 0.4s;
     cursor: pointer;
 }
 
 .intro .avatar img:hover {
     position: relative;
-    -webkit-transform: translateY(-0.75em);
-    -moz-transform: translateY(-0.75em);
-    -ms-transform: translateY(-0.75em);
-    -o-transform: translateY(-0.75em);
     transform: translateY(-0.75em);
     cursor: pointer;
 }
@@ -899,11 +918,7 @@ header label {
         background: #000;
         width: 36px;
         height: 2px;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
         border-radius: 3px;
-        -webkit-transition: 0.25s margin 0.25s, 0.25s transform;
-        -moz-transition: 0.25s margin 0.25s, 0.25s transform;
         transition: 0.25s margin 0.25s, 0.25s transform;
     }
 
@@ -920,8 +935,6 @@ header label {
     }
 
     .navbar-mobile .container .navbar-header .menu-toggle.active span {
-        -webkit-transition: 0.25s margin, 0.25s transform 0.25s;
-        -moz-transition: 0.25s margin, 0.25s transform 0.25s;
         transition: 0.25s margin, 0.25s transform 0.25s;
     }
 
@@ -930,9 +943,6 @@ header label {
         .navbar-header
         .menu-toggle.active
         span:nth-child(1) {
-        -moz-transform: rotate(45deg) translate(4px, 6px);
-        -ms-transform: rotate(45deg) translate(4px, 6px);
-        -webkit-transform: rotate(45deg) translate(4px, 6px);
         transform: rotate(45deg) translate(4px, 6px);
     }
 
@@ -949,9 +959,6 @@ header label {
         .navbar-header
         .menu-toggle.active
         span:nth-child(3) {
-        -moz-transform: rotate(-45deg) translate(8px, -10px);
-        -ms-transform: rotate(-45deg) translate(8px, -10px);
-        -webkit-transform: rotate(-45deg) translate(8px, -10px);
         transform: rotate(-45deg) translate(8px, -10px);
     }
 
@@ -1095,7 +1102,6 @@ header label {
     margin: 0;
     text-align: center;
     z-index: 1000;
-    -webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
 }
 
@@ -1119,22 +1125,32 @@ header label {
     width: 50px;
     height: 50px;
     margin: 0 0 0 -25px;
-    animation: loader 0.6s linear;
-    animation-iteration-count: infinite;
+    -webkit-animation: loader 0.6s linear;
+            animation: loader 0.6s linear;
+    -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
     border-radius: 50px;
     border: 4px solid transparent;
     border-top-color: #767676;
     box-shadow: 0 0 0 1px transparent;
 }
 
-@keyframes loader {
+@-webkit-keyframes loader {
     from {
-        -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
     }
 
     to {
-        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes loader {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
         transform: rotate(360deg);
     }
 }
@@ -1334,7 +1350,6 @@ header label {
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
 }
 
