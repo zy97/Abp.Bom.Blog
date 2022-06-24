@@ -30,9 +30,6 @@ namespace Bom.Blog.Posts
         {
             var queryable = await repository.GetQueryableAsync();
 
-            //var query = from post in queryable
-            //            select post;
-
             var query = queryable.OrderBy<Post>(nameof(Post.CreationTime))
                .Skip(input.SkipCount)
                .Take(input.MaxResultCount);
@@ -42,6 +39,45 @@ namespace Bom.Blog.Posts
 
             var totalCount = await repository.GetCountAsync();
             return new PagedResultDto<PostBriefDto>(totalCount, posts);
+        }
+        public async Task<PagedResultDto<PostBriefDto>> GetListByCategoryNameAsync(GetPostByCategoryNameListDto input)
+        {
+            var queryable = await repository.GetQueryableAsync();
+
+            var countQueryable = from post in queryable
+                                 join category in await categoryRepo.GetQueryableAsync() on post.CategoryId equals category.Id
+                                 where category.CategoryName == input.CategoryName
+                                 select post;
+            var count = await AsyncExecuter.CountAsync(countQueryable);
+
+            var query = countQueryable.OrderBy(nameof(Post.CreationTime))
+               .Skip(input.SkipCount)
+               .Take(input.MaxResultCount);
+
+            var queryResult = await AsyncExecuter.ToListAsync(query);
+            var posts = ObjectMapper.Map<List<Post>, List<PostBriefDto>>(queryResult);
+
+            return new PagedResultDto<PostBriefDto>(count, posts);
+        }
+        public async Task<PagedResultDto<PostBriefDto>> GetListByTagNameNameAsync(GetPostByTagNameListDto input)
+        {
+            var queryable = await repository.GetQueryableAsync();
+
+            var countQueryable = from postTag in await postTagRepo.GetQueryableAsync()
+                                 join tag in await tagRepo.GetQueryableAsync() on postTag.TagId equals tag.Id
+                                 where tag.TagName == input.TagName
+                                 from post in queryable.Where(x => x.Id == postTag.PostId)
+                                 select post;
+            var count = await AsyncExecuter.CountAsync(countQueryable);
+
+            var query = countQueryable.OrderBy(nameof(Post.CreationTime))
+               .Skip(input.SkipCount)
+               .Take(input.MaxResultCount);
+
+            var queryResult = await AsyncExecuter.ToListAsync(query);
+            var posts = ObjectMapper.Map<List<Post>, List<PostBriefDto>>(queryResult);
+
+            return new PagedResultDto<PostBriefDto>(count, posts);
         }
         public async Task<PostDto> GetAsync(Guid id)
         {

@@ -9,5 +9,6 @@ namespace Bom.Blog.Posts
     {
         Task<PostDto> GetAsync(Guid id);
         Task<PagedResultDto<PostBriefDto>> GetListAsync(GetPostListDto input);
+        Task<PagedResultDto<PostBriefDto>> GetListByCategoryNameAsync(GetPostByCategoryNameListDto input);
     }
 }

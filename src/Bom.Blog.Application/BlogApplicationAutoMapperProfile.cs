@@ -16,7 +16,9 @@ public class BlogApplicationAutoMapperProfile : Profile
         CreateMap<Post, PostDto>();
         CreateMap<Post, PostBriefDto>();
         CreateMap<Post, PostPagedDto>();
+
         CreateMap<Category, CategoryDto>();
+        CreateMap<Category, CategoryCountDto>();
         CreateMap<Tag, TagDto>();
     }
 }

@@ -6,4 +6,12 @@ namespace Bom.Blog.Posts
     {
 
     }
+    public class GetPostByCategoryNameListDto : PagedAndSortedResultRequestDto
+    {
+        public string CategoryName { get; set; }
+    }
+    public class GetPostByTagNameListDto : PagedAndSortedResultRequestDto
+    {
+        public string TagName { get; set; }
+    }
 }
