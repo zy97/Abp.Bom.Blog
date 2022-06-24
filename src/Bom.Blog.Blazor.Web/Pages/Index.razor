@@ -29,13 +29,20 @@
                 <NavLink target="_blank" class="link-item" title="Github" href="https://github.com/Meowv/">
                     <i class="iconfont icongithub"></i>
                 </NavLink>
-                <NavLink class="link-item weixin" title="扫码关注微信公众号：『阿星Plus』查看更多。">
+                <NavLink class="link-item weixin" title="扫码关注微信公众号：『阿星Plus』查看更多。" @onmouseover="() => {isHover = true;}" @onmouseout="() => {isHover = false;}">
                     <i class="iconfont iconweixin"></i>
                 </NavLink>
-                <div class="qrcode">
+                <div class="qrcode  @QrCodeCssClass">
                     <img src="https://static.meowv.com/images/wx_qrcode.jpg" />
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@code {
+
+
+    private bool isHover = false;
+    private string QrCodeCssClass => !isHover ? "hidden" : string.Empty;
+}
