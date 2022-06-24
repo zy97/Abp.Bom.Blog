@@ -14,4 +14,8 @@ namespace Bom.Blog.Posts
     {
         public string TagName { get; set; }
     }
+    public class GetPostLisAdmintDto : PagedAndSortedResultRequestDto
+    {
+        public string Filter { get; set; }
+    }
 }

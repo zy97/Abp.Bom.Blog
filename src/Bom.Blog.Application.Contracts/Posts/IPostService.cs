@@ -11,4 +11,8 @@ namespace Bom.Blog.Posts
         Task<PagedResultDto<PostBriefDto>> GetListAsync(GetPostListDto input);
         Task<PagedResultDto<PostBriefDto>> GetListByCategoryNameAsync(GetPostByCategoryNameListDto input);
     }
+    public interface IAdminPostService : ICrudAppService<PostAdminDto, Guid, PagedAndSortedResultRequestDto, CreatePostInputDto, UpdatePostInputDto>
+    {
+
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bom.Blog.Categories;
+using Bom.Blog.FriendLinks;
 using Bom.Blog.Posts;
 using Bom.Blog.Tags;
 
@@ -16,9 +17,13 @@ public class BlogApplicationAutoMapperProfile : Profile
         CreateMap<Post, PostDto>();
         CreateMap<Post, PostBriefDto>();
         CreateMap<Post, PostPagedDto>();
+        CreateMap<Post, PostAdminDto>();
+
 
         CreateMap<Category, CategoryDto>();
         CreateMap<Category, CategoryCountDto>();
         CreateMap<Tag, TagDto>();
+
+        CreateMap<FriendLink, FriendLinkDto>();
     }
 }
