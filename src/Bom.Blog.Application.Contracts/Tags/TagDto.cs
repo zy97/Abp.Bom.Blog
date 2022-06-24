@@ -8,4 +8,9 @@ namespace Bom.Blog.Tags
         public string TagName { get; set; }
         public string DisplayName { get; set; }
     }
+    public class AdminTagDto : EntityDto<Guid>
+    {
+        public string TagName { get; set; }
+        public string DisplayName { get; set; }
+    }
 }

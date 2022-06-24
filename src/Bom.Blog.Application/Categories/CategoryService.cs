@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 namespace Bom.Blog.Categories
 {
@@ -32,6 +34,12 @@ namespace Bom.Blog.Categories
         {
             var res = await categoryRepo.GetAsync(i => i.CategoryName == categoryName);
             return ObjectMapper.Map<Category, CategoryDto>(res);
+        }
+    }
+    public class AdminCategoryService : CrudAppService<Category, CategoryAdminDto, Guid, PagedAndSortedResultRequestDto, CreateOrUpdateCategoryDto>, IAdminCategoryService
+    {
+        public AdminCategoryService(IRepository<Category, Guid> repository) : base(repository)
+        {
         }
     }
 }

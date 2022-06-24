@@ -8,4 +8,9 @@ namespace Bom.Blog.FriendLinks
         public string Title { get; set; }
         public string LinkUrl { get; set; }
     }
+    public class AdminFriendLinkDto : EntityDto<Guid>
+    {
+        public string Title { get; set; }
+        public string LinkUrl { get; set; }
+    }
 }

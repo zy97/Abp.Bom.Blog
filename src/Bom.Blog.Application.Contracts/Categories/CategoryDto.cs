@@ -8,4 +8,9 @@ namespace Bom.Blog.Categories
         public string CategoryName { get; set; }
         public string DisplayName { get; set; }
     }
+    public class CategoryAdminDto : EntityDto<Guid>
+    {
+        public string CategoryName { get; set; }
+        public string DisplayName { get; set; }
+    }
 }

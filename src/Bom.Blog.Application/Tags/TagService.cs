@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 namespace Bom.Blog.Tags
 {
@@ -31,6 +33,12 @@ namespace Bom.Blog.Tags
         {
             var res = await tagRepo.GetAsync(i => i.TagName == tagName);
             return ObjectMapper.Map<Tag, TagDto>(res);
+        }
+    }
+    public class AdminTagService : CrudAppService<Tag, AdminTagDto, Guid, PagedAndSortedResultRequestDto, CreateOrUpdateTagDto>, IAdminTagService
+    {
+        public AdminTagService(IRepository<Tag, Guid> repository) : base(repository)
+        {
         }
     }
 }
