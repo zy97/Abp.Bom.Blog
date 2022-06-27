@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime jsRuntime;
+﻿@using Bom.Blog.Blazor.Web.Common
+@inject JsInvoker jsInvoker;
 
 <header>
     <nav class="navbar">
@@ -23,7 +24,7 @@
             <div class="navbar-header">
                 <div>
                     <NavLink class="menu-item" href="" Match="NavLinkMatch.All">😍阿星Plus</NavLink>
-                    <NavLink>&nbsp;·&nbsp;@currentTheme</NavLink>
+                    <NavLink @onclick="SwitchTheme">&nbsp;·&nbsp;@currentTheme</NavLink>
                 </div>
                 <div class="menu-toggle" @onclick="() =>{ collapseMenu = !collapseMenu;}">&#9776; Menu</div>
             </div>
@@ -44,14 +45,14 @@
     private string currentTheme;
     protected override async Task OnInitializedAsync()
     {
-        var currentTheme = await jsRuntime.InvokeAsync<string>("window.func.getStorage", "theme") ?? "Light";
-        await jsRuntime.InvokeVoidAsync("window.func.switchTheme");
+        var currentTheme = await jsInvoker.GetStorageAsync("theme") ?? "Light";
+        await jsInvoker.InvokeAsync("window.func.switchTheme");
         await base.OnInitializedAsync();
     }
     private async Task SwitchTheme()
     {
         currentTheme = currentTheme == "Light" ? "Dark" : "Light";
-        await jsRuntime.InvokeVoidAsync("window.func.setStorage", "theme", currentTheme);
-        await jsRuntime.InvokeVoidAsync("window.func.switchTheme");
+        await jsInvoker.SetStorageAsync("theme", currentTheme);
+        await jsInvoker.InvokeAsync("window.func.switchTheme");
     }
 }
