@@ -1,6 +1,7 @@
 ﻿@using Bom.Blog.Blazor.Web.Common
+@using Bom.Blog.Posts
 @inject JsInvoker jsInvoker;
-
+@inject IPostService postService
 <header>
     <nav class="navbar">
         <div class="container">
@@ -45,6 +46,7 @@
     private string currentTheme;
     protected override async Task OnInitializedAsync()
     {
+        var res = await postService.GetListAsync(new GetPostListDto() { MaxResultCount = 10, SkipCount = 0 });
         var currentTheme = await jsInvoker.GetStorageAsync("theme") ?? "Light";
         await jsInvoker.InvokeAsync("window.func.switchTheme");
         await base.OnInitializedAsync();

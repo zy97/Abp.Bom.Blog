@@ -1,8 +1,8 @@
+using IdentityServer4.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using IdentityServer4.Models;
-using Microsoft.Extensions.Configuration;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
@@ -180,6 +180,24 @@ public class IdentityServerDataSeedContributor : IDataSeedContributor, ITransien
             );
         }
 
+        // Blazor Client
+        var blazorClientWebId = configurationSection["Blog_Blazor_Web:ClientId"];
+        if (!blazorClientWebId.IsNullOrWhiteSpace())
+        {
+            var blazorRootUrl = configurationSection["Blog_Blazor_Web:RootUrl"].TrimEnd('/');
+
+            await CreateClientAsync(
+                name: blazorClientWebId,
+                scopes: commonScopes,
+                grantTypes: new[] { "authorization_code" },
+                secret: configurationSection["Blog_Blazor_Web:ClientSecret"]?.Sha256(),
+                requireClientSecret: false,
+                redirectUri: $"{blazorRootUrl}/authentication/login-callback",
+                postLogoutRedirectUri: $"{blazorRootUrl}/authentication/logout-callback",
+                corsOrigins: new[] { blazorRootUrl.RemovePostFix("/") }
+            );
+        }
+
 
 
         // Swagger Client
@@ -228,8 +246,8 @@ public class IdentityServerDataSeedContributor : IDataSeedContributor, ITransien
                     AlwaysIncludeUserClaimsInIdToken = true,
                     AllowOfflineAccess = true,
                     AbsoluteRefreshTokenLifetime = 31536000, //365 days
-                        AccessTokenLifetime = 31536000, //365 days
-                        AuthorizationCodeLifetime = 300,
+                    AccessTokenLifetime = 31536000, //365 days
+                    AuthorizationCodeLifetime = 300,
                     IdentityTokenLifetime = 300,
                     RequireConsent = false,
                     FrontChannelLogoutUri = frontChannelLogoutUri,
