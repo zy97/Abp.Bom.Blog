@@ -23,9 +23,9 @@
                     <NavLink class="menu-item" href="" Match="NavLinkMatch.All">😍阿星Plus</NavLink>
                     <NavLink>&nbsp;·&nbsp;Light</NavLink>
                 </div>
-                <div class="menu-toggle">&#9776; Menu</div>
+                <div class="menu-toggle" @onclick="() =>{ collapseMenu = !collapseMenu;}">&#9776; Menu</div>
             </div>
-            <div class="menu">
+            <div class="menu @navMenuCssClss">
                 <NavLink class="menu-item" href="posts">Posts</NavLink>
                 <NavLink class="menu-item" href="categories">Categories</NavLink>
                 <NavLink class="menu-item" href="tags">Tags</NavLink>
@@ -36,5 +36,6 @@
 </header>
 
 @code {
-
+    private bool collapseMenu = false;
+    private string navMenuCssClss => collapseMenu ? "active" : null;
 }
