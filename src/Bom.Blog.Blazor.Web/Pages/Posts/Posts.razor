@@ -1,0 +1,8 @@
+﻿@page "/posts/page/{page:int}"
+@page "/posts/{page:int}"
+@page "/posts"
+<Loading />
+@code {
+    [Parameter]
+    public int? page { get; set; }
+}

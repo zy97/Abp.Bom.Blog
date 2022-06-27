@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.Blazor", "src\Bom.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.BackgroundJobs", "src\Bom.Blog.BackgroundJobs\Bom.Blog.BackgroundJobs.csproj", "{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bom.Blog.Blazor.Web", "src\Bom.Blog.Blazor.Web\Bom.Blog.Blazor.Web.csproj", "{71F09F37-B486-4941-A92C-0094668DB3E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.Blazor.Web", "src\Bom.Blog.Blazor.Web\Bom.Blog.Blazor.Web.csproj", "{71F09F37-B486-4941-A92C-0094668DB3E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
