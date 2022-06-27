@@ -1,4 +1,6 @@
-﻿<header>
+﻿@inject IJSRuntime jsRuntime;
+
+<header>
     <nav class="navbar">
         <div class="container">
             <div class="navbar-header header-logo">
@@ -11,7 +13,7 @@
                 <NavLink class="menu-item" href="categories">Categories</NavLink>
                 <NavLink class="menu-item" href="tags">Tags</NavLink>
                 <NavLink class="menu-item apps" href="apps">Apps</NavLink>
-                <input id="switch_default" type="checkbox" class="switch_default" />
+                <input id="switch_default" type="checkbox" class="switch_default" @onchange="SwitchTheme" checked="@(currentTheme == "Dark")" />
                 <label for="switch_default" class="toggleBtn"></label>
             </div>
         </div>
@@ -21,7 +23,7 @@
             <div class="navbar-header">
                 <div>
                     <NavLink class="menu-item" href="" Match="NavLinkMatch.All">😍阿星Plus</NavLink>
-                    <NavLink>&nbsp;·&nbsp;Light</NavLink>
+                    <NavLink>&nbsp;·&nbsp;@currentTheme</NavLink>
                 </div>
                 <div class="menu-toggle" @onclick="() =>{ collapseMenu = !collapseMenu;}">&#9776; Menu</div>
             </div>
@@ -38,4 +40,18 @@
 @code {
     private bool collapseMenu = false;
     private string navMenuCssClss => collapseMenu ? "active" : null;
+
+    private string currentTheme;
+    protected override async Task OnInitializedAsync()
+    {
+        var currentTheme = await jsRuntime.InvokeAsync<string>("window.func.getStorage", "theme") ?? "Light";
+        await jsRuntime.InvokeVoidAsync("window.func.switchTheme");
+        await base.OnInitializedAsync();
+    }
+    private async Task SwitchTheme()
+    {
+        currentTheme = currentTheme == "Light" ? "Dark" : "Light";
+        await jsRuntime.InvokeVoidAsync("window.func.setStorage", "theme", currentTheme);
+        await jsRuntime.InvokeVoidAsync("window.func.switchTheme");
+    }
 }
