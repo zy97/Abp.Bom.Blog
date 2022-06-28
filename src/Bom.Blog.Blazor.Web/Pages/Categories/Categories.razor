@@ -1,5 +1,46 @@
 ﻿@page "/categories"
-<Loading />
-@code {
+@using Bom.Blog.Categories
+@inject ICategoryService categoryService;
 
+@if (datas == null)
+{
+    <Loading />
+}
+else
+{
+    <div class="container">
+        <div class="post-wrap categories">
+            <h2 class="post-title">-&nbsp;Categories&nbsp;-</h2>
+            <div class="categories-card">
+                @if (datas.Any())
+                {
+                    @foreach (var item in datas)
+                    {
+                        <div class="card-item">
+                            <div class="categories">
+                                <a href="/category/@item.DisplayName/">
+                                    <h3>
+                                        <i class="iconfont iconcode" style="padding-right:3px"></i>
+                                        @item.CategoryName
+                                    </h3>
+                                    <small>(@item.Count)</small>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <ErrorTip />
+                }
+            </div>
+        </div>
+    </div>
+}
+@code {
+    private IEnumerable<CategoryCountDto> datas;
+    protected override async Task OnInitializedAsync()
+    {
+        datas = await categoryService.GetCountAsync();
+    }
 }

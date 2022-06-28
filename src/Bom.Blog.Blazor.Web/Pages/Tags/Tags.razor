@@ -1,5 +1,39 @@
 ﻿@page "/tags"
-<Loading />
-@code {
+@using Bom.Blog.Tags
+@inject ITagService tagService;
 
+
+@if (datas == null)
+{
+    <Loading />
+}
+else
+{
+    <div class="container">
+        <div class="post-wrap tags">
+            <h2 class="post-title">-&nbsp;Tags&nbsp;-</h2>
+            <div class="tag-cloud-tags">
+                @if (datas.Any())
+                {
+                    @foreach (var item in datas)
+                    {
+                        <a href="/tag/@item.DisplayName/">@item.TagName<small>(@item.Count)</small></a>
+                    }
+                }
+                else
+                {
+                    <ErrorTip />
+                }
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    private IEnumerable<TagCountDto> datas;
+    protected override async Task OnInitializedAsync()
+    {
+        datas = await tagService.GetCountAsync();
+    }
 }

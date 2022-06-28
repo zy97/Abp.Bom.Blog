@@ -18,7 +18,7 @@ namespace Bom.Blog.Tags
             this.tagRepo = tagRepo;
             this.postTagRepo = postTagRepo;
         }
-        public async Task<List<TagCountDto>> GetCountAsync()
+        async Task<List<TagCountDto>> ITagService.GetCountAsync()
         {
             var query = from tag in await tagRepo.GetQueryableAsync()
                         join postTag in await postTagRepo.GetQueryableAsync() on tag.Id equals postTag.TagId into tpt
@@ -29,7 +29,7 @@ namespace Bom.Blog.Tags
             var result = await AsyncExecuter.ToListAsync(query);
             return result;
         }
-        public async Task<TagDto> GetByNameAsync(string tagName)
+        async Task<TagDto> ITagService.GetByNameAsync(string tagName)
         {
             var res = await tagRepo.GetAsync(i => i.TagName == tagName);
             return ObjectMapper.Map<Tag, TagDto>(res);
