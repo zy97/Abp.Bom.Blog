@@ -1,4 +1,5 @@
 ﻿@page "/post/{year:int}/{month:int}/{day:int}/{name}"
+
 <Loading />
 @code {
     [Parameter]
@@ -12,4 +13,6 @@
 
     [Parameter]
     public string name { get; set; }
+
+
 }

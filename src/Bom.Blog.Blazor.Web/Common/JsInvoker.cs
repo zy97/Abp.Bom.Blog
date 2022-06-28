@@ -1,14 +1,17 @@
-﻿using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace Bom.Blog.Blazor.Web.Common
 {
     public class JsInvoker
     {
         private readonly IJSRuntime jSRuntime;
+        private readonly NavigationManager navigationManager;
 
-        public JsInvoker(IJSRuntime jSRuntime)
+        public JsInvoker(IJSRuntime jSRuntime, NavigationManager navigationManager)
         {
             this.jSRuntime = jSRuntime;
+            this.navigationManager = navigationManager;
         }
         public async Task InvokeAsync(string identifier, params object[] args)
         {
@@ -25,6 +28,11 @@ namespace Bom.Blog.Blazor.Web.Common
         public async Task<string> GetStorageAsync(string key)
         {
             return await InvokeAsync<string>("window.func.getStorage", key);
+        }
+        public async Task RenderPageAsync(string url, bool forceLoad = true)
+        {
+            navigationManager.NavigateTo(url, forceLoad);
+            await Task.CompletedTask;
         }
     }
 }
