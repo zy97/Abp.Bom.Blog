@@ -18,6 +18,7 @@ function App() {
         <p>
           Edit <code>App.tsx</code> and save to test HMR updates.
         </p>
+        <div className='bg-blue-300'>test windicss</div>
         <p>
           <a
             className="App-link"
