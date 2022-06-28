@@ -7,23 +7,25 @@ export default defineConfig({
     plugins: [
         react(),
         WindiCSS(),
-        vitePluginImp({
-            libList: [
-                {
-                    libName: 'antd',
-                    style: (name) => `antd/es/${name}/style`,
-                },
-            ],
-        }),
+        //用于antd按需加载，但很慢
+        // vitePluginImp({
+        //     libList: [
+        //         {
+        //             libName: 'antd',
+        //             style: (name) => `antd/es/${name}/style`,
+        //         },
+        //     ],
+        // }),
     ],
-    css: {
-        preprocessorOptions: {
-            less: {
-                javascriptEnabled: true,
-                modifyVars: {
-                    // '@primary-color': '#4377FE', //设置antd主题色
-                },
-            },
-        },
-    },
+    //用于antd按需加载，但很慢
+    // css: {
+    //     preprocessorOptions: {
+    //         less: {
+    //             javascriptEnabled: true,
+    //             modifyVars: {
+    //                 // '@primary-color': '#4377FE', //设置antd主题色
+    //             },
+    //         },
+    //     },
+    // },
 });
