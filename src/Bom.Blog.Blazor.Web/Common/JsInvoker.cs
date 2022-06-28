@@ -29,10 +29,14 @@ namespace Bom.Blog.Blazor.Web.Common
         {
             return await InvokeAsync<string>("window.func.getStorage", key);
         }
-        public async Task RenderPageAsync(string url, bool forceLoad = true)
+        public async Task NavigateTo(string url, bool forceLoad = false)
         {
             navigationManager.NavigateTo(url, forceLoad);
             await Task.CompletedTask;
+        }
+        public async Task BaskAsync()
+        {
+            await InvokeAsync("window.history.back");
         }
     }
 }
