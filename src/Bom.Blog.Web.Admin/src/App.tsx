@@ -8,46 +8,54 @@ import {
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
+import { Outlet, useNavigate, useOutlet, useRoutes } from 'react-router-dom';
 import Login from './pages/Components/Login';
+import { routerConfig } from './router';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
 
-const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
-  ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem('Files', '9', <FileOutlined />),
-];
+
 
 const App: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+  const getItem = (
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode,
+    children?: MenuItem[],
+  ) => {
+    return {
+      key,
+      icon,
+      children,
+      label,
+      onClick: () => { navigate(key + ""); }
+    } as MenuItem;
+  }
+  const items: MenuItem[] = [
+    getItem('Option 1', '1', <PieChartOutlined />),
+    getItem('Option 2', '2', <DesktopOutlined />),
+    getItem('User', 'sub1', <UserOutlined />, [
+      getItem('Tom', '3'),
+      getItem('Bill', '4'),
+      getItem('Alex', '5'),
+    ]),
+    getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
+    getItem('Files', '9', <FileOutlined />),
+    ...routerConfig[0].children.map(i => getItem(i.path, i.path)),
+  ];
 
+  const [collapsed, setCollapsed] = useState(false);
+  const routes = useOutlet();
+  console.log(routes);
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
         <div className="logo text-white h-16 text-lg text-center  leading-[64px]"><div>logo</div></div>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+        <Menu theme="dark" defaultSelectedKeys={['2']} mode="inline" items={items} />
       </Sider>
       <Layout className="site-layout">
         <Header className="site-layout-background " style={{ padding: 0 }} >
@@ -61,6 +69,7 @@ const App: React.FC = () => {
             <Breadcrumb.Item>Bill</Breadcrumb.Item>
           </Breadcrumb>
           <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+            <Outlet />
             Bill is a cat.
           </div>
         </Content>
