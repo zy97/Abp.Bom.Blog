@@ -161,6 +161,24 @@ public class IdentityServerDataSeedContributor : IDataSeedContributor, ITransien
             );
         }
 
+        // React Client
+        var reactClientId = configurationSection["Blog_React:ClientId"];
+        if (!reactClientId.IsNullOrWhiteSpace())
+        {
+            var webClientRootUrl = configurationSection["Blog_React:RootUrl"]?.TrimEnd('/');
+
+            await CreateClientAsync(
+                name: reactClientId,
+                scopes: commonScopes,
+                grantTypes: new[] { "password", "client_credentials", "authorization_code" },
+                secret: (configurationSection["Blog_React:ClientSecret"] ?? "1q2w3e*").Sha256(),
+                requireClientSecret: false,
+                redirectUri: webClientRootUrl,
+                postLogoutRedirectUri: webClientRootUrl,
+                corsOrigins: new[] { webClientRootUrl.RemovePostFix("/") }
+            );
+        }
+
 
         // Blazor Client
         var blazorClientId = configurationSection["Blog_Blazor:ClientId"];

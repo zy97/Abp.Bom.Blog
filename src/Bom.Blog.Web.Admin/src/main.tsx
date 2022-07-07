@@ -9,6 +9,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PageA from './pages/PageA'
 import PageB from './pages/PageB'
 import PageC from './pages/PageC'
+import { AuthProvider } from 'react-oidc-context'
+import { oidcConfig } from './environments/environment';
 function RouteWithSubRoutes(key: any, route: any) {
   return (
 
@@ -19,22 +21,25 @@ function RouteWithSubRoutes(key: any, route: any) {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    {/* <App /> */}
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="pagea" element={<PageA />} />
-        <Route path="pageb" element={<PageB />} />
-        <Route path="pagec" element={<PageC />} />
-        <Route
-          path="*"
-          element={
-            <main style={{ padding: "1rem" }}>
-              <p>There's nothing here!</p>
-            </main>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider {...oidcConfig}>
+      {/* <App /> */}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="pagea" element={<PageA />} />
+          <Route path="pageb" element={<PageB />} />
+          <Route path="pagec" element={<PageC />} />
+          <Route
+            path="*"
+            element={
+              <main style={{ padding: "1rem" }}>
+                <p>There's nothing here!</p>
+              </main>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+
   </React.StrictMode>
 )

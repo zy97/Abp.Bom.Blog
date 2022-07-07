@@ -1,40 +1,48 @@
 import { Button, Dropdown, Menu, Space } from "antd";
 import { useState } from "react";
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
+import { useAuth } from "react-oidc-context";
 
-const menu = (
-    <Menu
-        items={[
-            {
-                key: '1',
-                label: (
-                    <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-                        我的信息
-                    </a>
-                ),
-            },
-            {
-                key: '1',
-                label: (
-                    <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-                        退出登录
-                    </a>
-                ),
-            },
-        ]}
-    />
-);
+
 function Login() {
-    const [isLogin, setIsLogin] = useState(true)
+    const auth = useAuth();
+    console.log(auth.user?.profile);
     const login = () => {
         console.log('login')
+        auth.signinRedirect();
+
     }
+    const logout = () => {
+        console.log('logout')
+        auth.removeUser();
+        auth.revokeTokens();
+        auth.clearStaleState();
+    }
+    const menu = (
+        <Menu
+            items={[
+                {
+                    key: '1',
+                    label: (
+                        <a >我的信息</a>
+                    ),
+                },
+                {
+                    key: '2',
+                    label: (
+                        <a onClick={logout} >退出登录</a>
+                    ),
+                },
+            ]}
+        />
+    );
     return (
         <div>
-            {isLogin ? <Dropdown overlay={menu}>
+            {auth.isAuthenticated ? <Dropdown overlay={menu}>
                 <a onClick={e => e.preventDefault()}>
                     <Space>
-                        Hover me
+                        {
+                            auth.user?.profile.preferred_username}
                         <DownOutlined />
                     </Space>
                 </a>
