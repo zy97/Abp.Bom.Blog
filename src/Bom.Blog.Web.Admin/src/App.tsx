@@ -55,7 +55,6 @@ const App: React.FC = () => {
     }
     return arr
   }
-  console.log(createMenu("", routerConfig[0].children, []))
   const items: MenuItem[] = [
     // getItem('Option 1', '1', <PieChartOutlined />),
     // getItem('Option 2', '2', <DesktopOutlined />),
@@ -88,12 +87,14 @@ const App: React.FC = () => {
             <Breadcrumb.Item>User</Breadcrumb.Item>
             <Breadcrumb.Item>Bill</Breadcrumb.Item>
           </Breadcrumb>
-          <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-            <Outlet />
-            Bill is a cat.
+          <div className='h-full'>
+            <div className='p-6 bg-white h-full'>
+              <Outlet />
+
+            </div>
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+        <Footer style={{ textAlign: 'center' }}>Footer</Footer>
       </Layout>
     </Layout>
   );

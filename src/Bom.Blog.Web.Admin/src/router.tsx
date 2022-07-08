@@ -1,5 +1,7 @@
 import { useRoutes } from 'react-router-dom';
 import App from './App';
+import Blog from './pages/BlogManage/Pages/Blog';
+import Tag from './pages/BlogManage/Pages/Tag/Index';
 import PageA from './pages/PageA';
 import PageB from './pages/PageB';
 import PageC from './pages/PageC';
@@ -36,18 +38,23 @@ export const routerConfig: Route[] = [
                     }]
             },
             {
-                title: "Page B",
-                path: 'pageb',
-                element: <PageB />,
-            },
-            {
-                title: "Page C",
-                path: 'pagec',
-                element: <PageC />,
-            },
+                title: "博客管理",
+                path: 'blogmanage',
+                children: [
+                    {
+                        title: "博客",
+                        path: 'blog',
+                        element: <Blog />
+                    },
+                    {
+                        title: "标签",
+                        path: 'tag',
+                        element: <Tag />
+                    }
+                ]
+            }
         ]
     },
-
     {
         path: '*',
         element: (
