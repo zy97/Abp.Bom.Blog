@@ -7,10 +7,10 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu } from 'antd';
-import React, { useState } from 'react';
+import React, { Children, useState } from 'react';
 import { Outlet, useNavigate, useOutlet, useRoutes } from 'react-router-dom';
 import Login from './pages/Components/Login';
-import { routerConfig } from './router';
+import { Route, routerConfig } from './router';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -32,25 +32,45 @@ const App: React.FC = () => {
       icon,
       children,
       label,
-      onClick: () => { navigate(key + ""); }
+      onClick: (item: any, key: string, keyPath: any, domEvent: any) => {
+        console.log(item, key, keyPath, domEvent);
+        navigate(item.key + "");
+
+      }
     } as MenuItem;
   }
+  const createMenu = (rootPath: React.Key, nodes: Route[], arr: MenuItem[]) => {
+    for (let item of nodes) {
+      if (item.path) {
+        const menu = getItem(item.title, rootPath + "" + item.path, null);
+        arr.push(menu);
+
+        if (item.children && item.children.length) {
+          menu.children = [];
+          menu.key = null;
+          createMenu(item.path + "/", item.children, menu.children);
+        }
+      }
+
+    }
+    return arr
+  }
+  console.log(createMenu("", routerConfig[0].children, []))
   const items: MenuItem[] = [
-    getItem('Option 1', '1', <PieChartOutlined />),
-    getItem('Option 2', '2', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-      getItem('Tom', '3'),
-      getItem('Bill', '4'),
-      getItem('Alex', '5'),
-    ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-    getItem('Files', '9', <FileOutlined />),
-    ...routerConfig[0].children.map(i => getItem(i.path, i.path)),
+    // getItem('Option 1', '1', <PieChartOutlined />),
+    // getItem('Option 2', '2', <DesktopOutlined />),
+    // getItem('User', 'sub1', <UserOutlined />, [
+    //   getItem('Tom', '3'),
+    //   getItem('Bill', '4'),
+    //   getItem('Alex', '5'),
+    // ]),
+    // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
+    // getItem('Files', '9', <FileOutlined />),
+    // ...routerConfig[0].children.map(i => getItem(i.title, i.path)),
+    ...createMenu("", routerConfig[0].children, [])
   ];
 
   const [collapsed, setCollapsed] = useState(false);
-  const routes = useOutlet();
-  console.log(routes);
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>

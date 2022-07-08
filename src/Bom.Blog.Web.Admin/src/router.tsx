@@ -4,21 +4,45 @@ import PageA from './pages/PageA';
 import PageB from './pages/PageB';
 import PageC from './pages/PageC';
 
-export const routerConfig = [
+export interface Route {
+    path?: React.Key;
+    title?: string;
+    element?: React.ReactNode;
+    children?: Route[];
+}
+export const routerConfig: Route[] = [
     {
         path: '/',
         element: <App />,
         children: [
             {
-                path: '/pagea',
-                element: <PageA />,
+                title: "Page A",
+                path: 'pagea',
+                children: [
+                    {
+                        title: "Page A",
+                        path: 'pagea',
+                        element: <PageA />,
+                    },
+                    {
+                        title: "Page B",
+                        path: 'pageb',
+                        element: <PageB />,
+                    },
+                    {
+                        title: "Page C",
+                        path: 'pagec',
+                        element: <PageC />,
+                    }]
             },
             {
-                path: '/pageb',
+                title: "Page B",
+                path: 'pageb',
                 element: <PageB />,
             },
             {
-                path: '/pagec',
+                title: "Page C",
+                path: 'pagec',
                 element: <PageC />,
             },
         ]

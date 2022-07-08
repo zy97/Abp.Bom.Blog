@@ -6,7 +6,6 @@ import { useAuth } from "react-oidc-context";
 
 function Login() {
     const auth = useAuth();
-    console.log(auth.user?.profile);
     const login = () => {
         console.log('login')
         auth.signinRedirect();
