@@ -7,19 +7,6 @@ class TagStore {
     constructor() {
         makeAutoObservable(this);
     }
-    // getTags = () => {
-    //     return tagApi
-    //         .getTags()
-    //         .then((posts) => {
-    //             return {
-    //                 total: posts.data.totalCount,
-    //                 list: posts.data.items,
-    //             };
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    // };
     getTags = async (data: any, form: any) => {
         try {
             const result = await tagApi.getTags({
@@ -42,11 +29,23 @@ class TagStore {
     }
     async addTag(tag: AddTag) {
         try {
-            await tagApi.addTag(tag);
-            return true;
+            const data = await tagApi.addTag(tag);
+            return data.data;
         } catch (error) {
             return false;
         }
+    }
+    async getTagById(id: string) {
+        try {
+            const tag = await tagApi.getTagById(id);
+            return tag.data;
+        } catch (error) {}
+    }
+    async updateTag(id: string, tag: AddTag) {
+        try {
+            const result = await tagApi.updateTag(id, tag);
+            return result.data;
+        } catch (error) {}
     }
 }
 

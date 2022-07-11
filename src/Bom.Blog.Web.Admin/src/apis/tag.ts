@@ -6,7 +6,7 @@ import Tag from '../data/models/Tag';
 
 // 添加博客
 export const addTag = (tag: AddTag) =>
-    axios.post(`/api/app/admin-tag`, { ...tag });
+    axios.post<Tag>(`/api/app/admin-tag`, { ...tag });
 
 // 获取博客
 export const getTags = (params: PageRequest) =>
@@ -17,9 +17,9 @@ export const deleteTag = (id: string) =>
     axios.delete(`/api/app/admin-tag/${id}`);
 
 // 获取指定博客
-export const getTagById = (id: any, params: any) =>
-    axios.get(`/api/app/admin-tag/${id}`, { params });
+export const getTagById = (id: string) =>
+    axios.get<Tag>(`/api/app/admin-tag/${id}`, {});
 
 // 更新博客
-export const updateTag = (id: any, params: any) =>
-    axios.put(`/api/app/admin-tag/${id}`, { params });
+export const updateTag = (id: string, tag: AddTag) =>
+    axios.put<Tag>(`/api/app/admin-tag/${id}`, { ...tag });

@@ -1,14 +1,5 @@
-import { useAntdTable } from 'ahooks';
-import {
-    Button,
-    Form,
-    Input,
-    message,
-    Modal,
-    Radio,
-    Select,
-    Table,
-} from 'antd';
+import { useAntdTable, useRequest } from 'ahooks';
+import { Button, Form, Input, message, Modal, Table } from 'antd';
 import { useState } from 'react';
 import AdvancedSearchForm from '../../../../components/AdvanceSearchForm';
 import Tag from '../../../../data/models/Tag';
@@ -23,8 +14,10 @@ function Tags() {
         form,
         debounceWait: 500,
     });
+    const { runAsync } = useRequest(tagStore.getTagById, {
+        manual: true,
+    });
     const deleteTag = (record: Tag) => {
-        console.log('deleteTag', record);
         Modal.confirm({
             title: '删除标签',
             content: '确定删除吗？',
@@ -41,8 +34,47 @@ function Tags() {
             cancelText: '取消',
         });
     };
-    const addTag = () => {
+    const showModal = () => {
         setVisible(true);
+    };
+    const getTag = async (record: Tag) => {
+        try {
+            console.log('editTag', record);
+            const tag = await runAsync(record.id);
+            if (tag) {
+                modalForm.setFieldsValue(tag);
+                console.log(tag);
+                setVisible(true);
+            }
+        } catch (error) {}
+    };
+    const addOrUpdateTag = async (data: Tag) => {
+        try {
+            if (data.id) {
+                const tag = await tagStore.updateTag(data.id, data);
+                if (tag) {
+                    modalForm.resetFields();
+                    message.success('更新成功');
+                    setVisible(false);
+                    search.submit();
+                }
+            } else {
+                const tag = await tagStore.addTag(data);
+                if (tag) {
+                    modalForm.resetFields();
+                    message.success('添加成功');
+                    setVisible(false);
+                    search.submit();
+                }
+            }
+            // tagStore.addTag(values as Tag).then(() => {
+            //     modalForm.resetFields();
+            //     console.log('Received values of form: ', values);
+            //     setVisible(false);
+            //     message.success('添加成功');
+            //     search.submit();
+            // });
+        } catch (error) {}
     };
     return (
         <div>
@@ -52,7 +84,7 @@ function Tags() {
                 extraActions={[
                     {
                         content: '添加',
-                        action: addTag,
+                        action: showModal,
                     },
                 ]}
             >
@@ -81,7 +113,12 @@ function Tags() {
                         render={(recode) => {
                             return (
                                 <div className="space-x-4">
-                                    <Button type="primary">编辑</Button>
+                                    <Button
+                                        type="primary"
+                                        onClick={() => getTag(recode)}
+                                    >
+                                        编辑
+                                    </Button>
                                     <Button
                                         type="primary"
                                         danger
@@ -108,16 +145,7 @@ function Tags() {
                     modalForm
                         .validateFields()
                         .then((values) => {
-                            tagStore.addTag(values as Tag).then(() => {
-                                modalForm.resetFields();
-                                console.log(
-                                    'Received values of form: ',
-                                    values
-                                );
-                                setVisible(false);
-                                message.success('添加成功');
-                                search.submit();
-                            });
+                            addOrUpdateTag(values);
                         })
                         .catch((info) => {
                             console.log('Validate Failed:', info);
@@ -131,6 +159,9 @@ function Tags() {
                     labelCol={{ span: 6 }}
                     wrapperCol={{ span: 18 }}
                 >
+                    <Form.Item name="id" label="id" hidden>
+                        <Input />
+                    </Form.Item>
                     <Form.Item
                         name="tagName"
                         label="标签名"

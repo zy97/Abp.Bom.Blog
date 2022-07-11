@@ -69,6 +69,7 @@ public class BlogHttpApiHostModule : AbpModule
         //或者禁用
         Configure<AbpAntiForgeryOptions>(options =>
         {
+            options.AutoValidateIgnoredHttpMethods.Add("PUT");
             options.AutoValidateIgnoredHttpMethods.Add("POST");
             options.AutoValidateIgnoredHttpMethods.Add("DELETE");
         });
