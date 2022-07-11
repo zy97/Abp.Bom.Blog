@@ -30,8 +30,12 @@ function Tags() {
             content: '确定删除吗？',
             onOk: async () => {
                 const success = await tagStore.deleteTag(record.id);
-                if (success) message.success('删除成功');
-                else message.error('删除失败');
+                if (success) {
+                    message.success('删除成功');
+                    search.submit();
+                } else {
+                    message.error('删除失败');
+                }
             },
             okText: '确定',
             cancelText: '取消',
@@ -111,10 +115,13 @@ function Tags() {
                                     values
                                 );
                                 setVisible(false);
+                                message.success('添加成功');
+                                search.submit();
                             });
                         })
                         .catch((info) => {
                             console.log('Validate Failed:', info);
+                            message.error('添加失败');
                         });
                 }}
             >
