@@ -33,7 +33,7 @@ const App: React.FC = () => {
       children,
       label,
       onClick: (item: any, key: string, keyPath: any, domEvent: any) => {
-        console.log(item, key, keyPath, domEvent);
+        // console.log(item, key, keyPath, domEvent);
         navigate(item.key + "");
 
       }
