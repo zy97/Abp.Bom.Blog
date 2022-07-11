@@ -6,12 +6,9 @@ import React, { useState } from 'react';
 const { Option } = Select;
 
 const AdvancedSearchForm = (props: any) => {
-    const { defaultMaxShowCount, children } = props;
-    console.log(props)
+    const { defaultMaxShowCount, children, form, submit, reset } = props;
     const formCount = props.children.length;
-    console.log(formCount)
     const [expand, setExpand] = useState(false);
-    const [form] = Form.useForm();
 
     const getFields = () => {
         const count = formCount <= 6 ? formCount : expand ? formCount : 6;
@@ -55,21 +52,15 @@ const AdvancedSearchForm = (props: any) => {
         <Form
             form={form}
             name="advanced_search"
-            className="ant-advanced-search-form"
             onFinish={onFinish}
         >
             <Row gutter={24}>{getFields()}</Row>
             <Row>
                 <Col span={24} style={{ textAlign: 'right' }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" onClick={submit}>
                         搜索
                     </Button>
-                    <Button
-                        style={{ margin: '0 8px' }}
-                        onClick={() => {
-                            form.resetFields();
-                        }}
-                    >
+                    <Button style={{ margin: '0 8px' }} onClick={reset}>
                         重置
                     </Button>
                     {formCount >= 6 && <a style={{ fontSize: 12 }} onClick={() => { setExpand(!expand); }}>

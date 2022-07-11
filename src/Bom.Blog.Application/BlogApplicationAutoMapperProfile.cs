@@ -22,7 +22,9 @@ public class BlogApplicationAutoMapperProfile : Profile
 
         CreateMap<Category, CategoryDto>();
         CreateMap<Category, CategoryCountDto>();
+
         CreateMap<Tag, TagDto>();
+        CreateMap<Tag, AdminTagDto>();
 
         CreateMap<FriendLink, FriendLinkDto>();
     }
