@@ -9,6 +9,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PageA from './pages/PageA'
 import PageB from './pages/PageB'
 import PageC from './pages/PageC'
+import zhCN from 'antd/lib/locale/zh_CN';
+import { ConfigProvider } from 'antd';
 import { AuthProvider } from 'react-oidc-context'
 import { oidcConfig } from './environments/environment';
 function RouteWithSubRoutes(key: any, route: any) {
@@ -22,10 +24,11 @@ function RouteWithSubRoutes(key: any, route: any) {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider {...oidcConfig}>
-      {/* <App> */}
-      <BrowserRouter>
-        {/* <Routes> */}
-        {/* <Route path="/" element={<App />} />
+      <ConfigProvider locale={zhCN}>
+        {/* <App> */}
+        <BrowserRouter>
+          {/* <Routes> */}
+          {/* <Route path="/" element={<App />} />
             <Route path="pagea" element={<PageA />} />
             <Route path="pageb" element={<PageB />} />
             <Route path="pagec" element={<PageC />} />
@@ -37,11 +40,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 </main>
               }
             /> */}
-        <RenderRoutes />
+          <RenderRoutes />
 
-        {/* </Routes> */}
-      </BrowserRouter>
-      {/* </App> */}
+          {/* </Routes> */}
+        </BrowserRouter>
+        {/* </App> */}
+      </ConfigProvider>
+
 
     </AuthProvider>
 

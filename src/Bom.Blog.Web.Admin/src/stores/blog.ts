@@ -5,10 +5,11 @@ class BlogStore {
         makeAutoObservable(this);
     }
     getPosts = () => {
-        blogApi
+        return blogApi
             .getPosts()
             .then((posts) => {
                 console.log(posts);
+                return posts;
             })
             .catch((err) => {
                 console.log(err);
