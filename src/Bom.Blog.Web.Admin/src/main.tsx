@@ -13,13 +13,12 @@ import zhCN from 'antd/lib/locale/zh_CN';
 import { ConfigProvider } from 'antd';
 import { AuthProvider } from 'react-oidc-context'
 import { oidcConfig } from './environments/environment';
-function RouteWithSubRoutes(key: any, route: any) {
-  return (
-
-    < Route{...route} key={key}
-    />
-  );
-}
+import * as dayjs from 'dayjs'
+import * as isLeapYear from 'dayjs/plugin/isLeapYear' // import plugin
+import 'dayjs/locale/zh-cn' // import locale
+dayjs().format()
+dayjs.extend(isLeapYear) // use plugin
+dayjs.locale('zh-cn') // use locale
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

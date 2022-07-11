@@ -17,17 +17,17 @@ export default defineConfig({
         //     ],
         // }),
     ],
-    //用于antd按需加载，但很慢
-    // css: {
-    //     preprocessorOptions: {
-    //         less: {
-    //             javascriptEnabled: true,
-    //             modifyVars: {
-    //                 // '@primary-color': '#4377FE', //设置antd主题色
-    //             },
-    //         },
-    //     },
-    // },
+    // 用于antd按需加载，但很慢
+    css: {
+        preprocessorOptions: {
+            less: {
+                javascriptEnabled: true,
+                modifyVars: {
+                    // '@primary-color': '#4377FE', //设置antd主题色
+                },
+            },
+        },
+    },
     server: {
         proxy: {
             '/api': {
