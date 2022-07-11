@@ -20,17 +20,6 @@ class TagStore {
     //         });
     // };
     getTags = async (data: any, form: any) => {
-        // return tagApi
-        //     .getTags()
-        //     .then((posts) => {
-        //         return {
-        //             total: posts.data.totalCount,
-        //             list: posts.data.items,
-        //         };
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
         try {
             const result = await tagApi.getTags({
                 skipCount: data.pageSize * (data.current - 1),
@@ -42,6 +31,14 @@ class TagStore {
             };
         } catch (error) {}
     };
+    async deleteTag(id: string) {
+        try {
+            await tagApi.deleteTag(id);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
 }
 
 export default new TagStore();

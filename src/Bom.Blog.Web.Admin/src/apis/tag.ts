@@ -12,7 +12,8 @@ export const getTags = (params: PageRequest) =>
     axios.get<PagedList<Tag>>(`/api/app/admin-tag`, { params });
 
 // 删除博客
-export const deleteTag = (id: any) => axios.delete(`/api/app/admin-tag/${id}`);
+export const deleteTag = (id: string) =>
+    axios.delete(`/api/app/admin-tag/${id}`);
 
 // 获取指定博客
 export const getTagById = (id: any, params: any) =>

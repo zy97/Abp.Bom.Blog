@@ -1,7 +1,7 @@
 import { useRoutes } from 'react-router-dom';
 import App from './App';
 import Blog from './pages/BlogManage/Pages/Blog';
-import Tag from './pages/BlogManage/Pages/Tag/Index';
+import Tags from './pages/BlogManage/Pages/Tag/Index';
 import PageA from './pages/PageA';
 import PageB from './pages/PageB';
 import PageC from './pages/PageC';
@@ -49,7 +49,7 @@ export const routerConfig: Route[] = [
                     {
                         title: "标签",
                         path: 'tag',
-                        element: <Tag />
+                        element: <Tags />
                     }
                 ]
             }
