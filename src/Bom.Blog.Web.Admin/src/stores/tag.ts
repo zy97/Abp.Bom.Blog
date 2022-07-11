@@ -1,6 +1,7 @@
 import { AntdTableResult } from 'ahooks/lib/useAntdTable/types';
 import { makeAutoObservable } from 'mobx';
 import { tagApi } from '../apis';
+import AddTag from '../data/models/Tag';
 import Tag from '../data/models/Tag';
 class TagStore {
     constructor() {
@@ -34,6 +35,14 @@ class TagStore {
     async deleteTag(id: string) {
         try {
             await tagApi.deleteTag(id);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+    async addTag(tag: AddTag) {
+        try {
+            await tagApi.addTag(tag);
             return true;
         } catch (error) {
             return false;

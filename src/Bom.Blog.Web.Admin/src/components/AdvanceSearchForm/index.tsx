@@ -6,7 +6,8 @@ import React, { useState } from 'react';
 const { Option } = Select;
 
 const AdvancedSearchForm = (props: any) => {
-    const { defaultMaxShowCount, children, form, submit, reset } = props;
+    const { defaultMaxShowCount, children, form, submit, reset, extraActions } =
+        props;
     const formCount = props.children.length;
     const [expand, setExpand] = useState(false);
 
@@ -38,7 +39,7 @@ const AdvancedSearchForm = (props: any) => {
                         )}
                     </Form.Item> */}
                     {props.children[i]}
-                </Col>,
+                </Col>
             );
         }
         return children;
@@ -49,24 +50,31 @@ const AdvancedSearchForm = (props: any) => {
     };
 
     return (
-        <Form
-            form={form}
-            name="advanced_search"
-            onFinish={onFinish}
-        >
+        <Form form={form} name="advanced_search" onFinish={onFinish}>
             <Row gutter={24}>{getFields()}</Row>
             <Row>
-                <Col span={24} style={{ textAlign: 'right' }}>
+                <Col span={24} className="space-x-4 text-right">
+                    {extraActions.map((i: any) => {
+                        return (
+                            <Button type="primary" onClick={i.action}>
+                                {i.content}
+                            </Button>
+                        );
+                    })}
                     <Button type="primary" htmlType="submit" onClick={submit}>
                         搜索
                     </Button>
-                    <Button style={{ margin: '0 8px' }} onClick={reset}>
-                        重置
-                    </Button>
-                    {formCount >= 6 && <a style={{ fontSize: 12 }} onClick={() => { setExpand(!expand); }}>
-                        {expand ? <UpOutlined /> : <DownOutlined />} 折叠
-                    </a>}
-
+                    <Button onClick={reset}>重置</Button>
+                    {formCount >= 6 && (
+                        <a
+                            style={{ fontSize: 12 }}
+                            onClick={() => {
+                                setExpand(!expand);
+                            }}
+                        >
+                            {expand ? <UpOutlined /> : <DownOutlined />} 折叠
+                        </a>
+                    )}
                 </Col>
             </Row>
         </Form>

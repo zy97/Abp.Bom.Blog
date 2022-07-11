@@ -1,11 +1,12 @@
 import axios from 'axios';
 import PagedList from '../data/models/PagedList';
 import PageRequest from '../data/models/PageRequest';
+import AddTag from '../data/models/Tag';
 import Tag from '../data/models/Tag';
 
 // 添加博客
-export const addTag = (params: any) =>
-    axios.post(`/api/app/admin-tag`, { params });
+export const addTag = (tag: AddTag) =>
+    axios.post(`/api/app/admin-tag`, { ...tag });
 
 // 获取博客
 export const getTags = (params: PageRequest) =>

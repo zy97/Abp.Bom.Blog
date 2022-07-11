@@ -25,6 +25,8 @@ public class BlogApplicationAutoMapperProfile : Profile
 
         CreateMap<Tag, TagDto>();
         CreateMap<Tag, AdminTagDto>();
+        CreateMap<CreateOrUpdateTagDto, Tag>();
+
 
         CreateMap<FriendLink, FriendLinkDto>();
     }

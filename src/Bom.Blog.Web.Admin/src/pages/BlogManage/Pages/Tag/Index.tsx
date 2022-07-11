@@ -1,11 +1,23 @@
 import { useAntdTable } from 'ahooks';
-import { Button, Form, Input, message, Modal, Select, Table } from 'antd';
+import {
+    Button,
+    Form,
+    Input,
+    message,
+    Modal,
+    Radio,
+    Select,
+    Table,
+} from 'antd';
+import { useState } from 'react';
 import AdvancedSearchForm from '../../../../components/AdvanceSearchForm';
 import Tag from '../../../../data/models/Tag';
 import useStores from '../../../../hooks/useStore';
 function Tags() {
     const { tagStore } = useStores();
+    const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
+    const [modalForm] = Form.useForm();
     const { tableProps, search } = useAntdTable(tagStore.getTags, {
         defaultPageSize: 5,
         form,
@@ -25,9 +37,21 @@ function Tags() {
             cancelText: '取消',
         });
     };
+    const addTag = () => {
+        setVisible(true);
+    };
     return (
         <div>
-            <AdvancedSearchForm form={form} {...search}>
+            <AdvancedSearchForm
+                form={form}
+                {...search}
+                extraActions={[
+                    {
+                        content: '添加',
+                        action: addTag,
+                    },
+                ]}
+            >
                 <Form.Item name="tagName" label="标签名">
                     <Input placeholder="请输入标签名" />
                 </Form.Item>
@@ -67,6 +91,65 @@ function Tags() {
                     />
                 </Table>
             </div>
+            <Modal
+                visible={visible}
+                title="添加一个新标签"
+                okText="确定"
+                cancelText="取消"
+                onCancel={() => {
+                    setVisible(false);
+                    modalForm.resetFields();
+                }}
+                onOk={() => {
+                    modalForm
+                        .validateFields()
+                        .then((values) => {
+                            tagStore.addTag(values as Tag).then(() => {
+                                modalForm.resetFields();
+                                console.log(
+                                    'Received values of form: ',
+                                    values
+                                );
+                                setVisible(false);
+                            });
+                        })
+                        .catch((info) => {
+                            console.log('Validate Failed:', info);
+                        });
+                }}
+            >
+                <Form
+                    form={modalForm}
+                    name="form_in_modal"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 18 }}
+                >
+                    <Form.Item
+                        name="tagName"
+                        label="标签名"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入标签名',
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="displayName"
+                        label="展示名"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入展示名',
+                            },
+                        ]}
+                    >
+                        <Input type="textarea" />
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
     );
 }
