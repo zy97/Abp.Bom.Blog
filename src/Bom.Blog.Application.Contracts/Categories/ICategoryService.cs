@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
 namespace Bom.Blog.Categories
@@ -11,7 +10,7 @@ namespace Bom.Blog.Categories
         Task<CategoryDto> GetByNameAsync(string categoryName);
         Task<IEnumerable<CategoryCountDto>> GetCountAsync();
     }
-    public interface IAdminCategoryService : ICrudAppService<CategoryAdminDto, Guid, PagedAndSortedResultRequestDto, CreateOrUpdateCategoryDto>
+    public interface IAdminCategoryService : ICrudAppService<CategoryAdminDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdateCategoryDto>
     {
     }
 }

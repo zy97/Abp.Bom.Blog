@@ -2,29 +2,29 @@ import { useAntdTable, useRequest } from 'ahooks';
 import { Button, Form, Input, message, Modal, Table } from 'antd';
 import { useState } from 'react';
 import AdvancedSearchForm from '../../../../components/AdvanceSearchForm';
-import Tag from '../../../../data/models/Tag';
+import CategoryDto from '../../../../data/models/CategoryDto';
 import useStores from '../../../../hooks/useStore';
-import Category from '../Category';
-function Tags() {
-    const { tagStore } = useStores();
+
+function Category() {
+    const { categoryStore } = useStores();
     const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
     const [modalForm] = Form.useForm();
-    const { tableProps, search } = useAntdTable(tagStore.getTags, {
+    const { tableProps, search } = useAntdTable(categoryStore.getCategories, {
         defaultPageSize: 10,
         form,
         debounceWait: 500,
     });
     console.log(tableProps);
-    const { runAsync } = useRequest(tagStore.getTagById, {
+    const { runAsync } = useRequest(categoryStore.getTagById, {
         manual: true,
     });
-    const deleteTag = (record: categorydto) => {
+    const deleteTag = (record: CategoryDto) => {
         Modal.confirm({
             title: '删除标签',
             content: '确定删除吗？',
             onOk: async () => {
-                const success = await tagStore.deleteTag(record.id);
+                const success = await categoryStore.deleteTag(record.id);
                 if (success) {
                     message.success('删除成功');
                     search.submit();
@@ -39,7 +39,7 @@ function Tags() {
     const showModal = () => {
         setVisible(true);
     };
-    const getTag = async (record: Tag) => {
+    const getTag = async (record: CategoryDto) => {
         try {
             const tag = await runAsync(record.id);
             if (tag) {
@@ -49,10 +49,10 @@ function Tags() {
             }
         } catch (error) {}
     };
-    const addOrUpdateTag = async (data: Tag) => {
+    const addOrUpdateTag = async (data: CategoryDto) => {
         try {
             if (data.id) {
-                const tag = await tagStore.updateTag(data.id, data);
+                const tag = await categoryStore.updateTag(data.id, data);
                 if (tag) {
                     modalForm.resetFields();
                     message.success('更新成功');
@@ -60,7 +60,7 @@ function Tags() {
                     search.submit();
                 }
             } else {
-                const tag = await tagStore.addTag(data);
+                const tag = await categoryStore.addTag(data);
                 if (tag) {
                     modalForm.resetFields();
                     message.success('添加成功');
@@ -82,15 +82,15 @@ function Tags() {
                     },
                 ]}
             >
-                <Form.Item name="tagName" label="标签名">
-                    <Input placeholder="请输入标签名" />
+                <Form.Item name="categoryName" label="目录名">
+                    <Input placeholder="请输入目录名" />
                 </Form.Item>
                 <Form.Item name="displayName" label="展示名">
                     <Input placeholder="请输入展示名" />
                 </Form.Item>
             </AdvancedSearchForm>
             <div className="mt-4">
-                <Table<Tag>
+                <Table<CategoryDto>
                     rowKey="id"
                     {...{
                         ...tableProps,
@@ -103,10 +103,16 @@ function Tags() {
                         },
                     }}
                 >
-                    <Table.Column<Tag> title="Id" dataIndex="id" />
-                    <Table.Column<Tag> title="标签名" dataIndex="tagName" />
-                    <Table.Column<Tag> title="展示名" dataIndex="displayName" />
-                    <Table.Column<Tag>
+                    <Table.Column<CategoryDto> title="Id" dataIndex="id" />
+                    <Table.Column<CategoryDto>
+                        title="目录名"
+                        dataIndex="categoryName"
+                    />
+                    <Table.Column<CategoryDto>
+                        title="展示名"
+                        dataIndex="displayName"
+                    />
+                    <Table.Column<CategoryDto>
                         title="操作"
                         render={(recode) => {
                             return (
@@ -160,12 +166,12 @@ function Tags() {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name="tagName"
-                        label="标签名"
+                        name="categoryName"
+                        label="目录名"
                         rules={[
                             {
                                 required: true,
-                                message: '请输入标签名',
+                                message: '请输入目录名',
                             },
                         ]}
                     >
@@ -181,11 +187,12 @@ function Tags() {
                             },
                         ]}
                     >
-                        <Input type="textarea" />
+                        <Input />
                     </Form.Item>
                 </Form>
             </Modal>
         </div>
     );
 }
-export default Tags;
+
+export default Category;

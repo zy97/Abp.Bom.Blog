@@ -1,6 +1,7 @@
 import { useRoutes } from 'react-router-dom';
 import App from './App';
 import Blog from './pages/BlogManage/Pages/Blog';
+import Category from './pages/BlogManage/Pages/Category';
 import Tags from './pages/BlogManage/Pages/Tag/Index';
 import PageA from './pages/PageA';
 import PageB from './pages/PageB';
@@ -18,42 +19,48 @@ export const routerConfig: Route[] = [
         element: <App />,
         children: [
             {
-                title: "Page A",
+                title: 'Page A',
                 path: 'pagea',
                 children: [
                     {
-                        title: "Page A",
+                        title: 'Page A',
                         path: 'pagea',
                         element: <PageA />,
                     },
                     {
-                        title: "Page B",
+                        title: 'Page B',
                         path: 'pageb',
                         element: <PageB />,
                     },
                     {
-                        title: "Page C",
+                        title: 'Page C',
                         path: 'pagec',
                         element: <PageC />,
-                    }]
+                    },
+                ],
             },
             {
-                title: "博客管理",
+                title: '博客管理',
                 path: 'blogmanage',
                 children: [
                     {
-                        title: "博客",
+                        title: '博客',
                         path: 'blog',
-                        element: <Blog />
+                        element: <Blog />,
                     },
                     {
-                        title: "标签",
+                        title: '标签',
                         path: 'tag',
-                        element: <Tags />
-                    }
-                ]
-            }
-        ]
+                        element: <Tags />,
+                    },
+                    {
+                        title: '目录',
+                        path: 'category',
+                        element: <Category />,
+                    },
+                ],
+            },
+        ],
     },
     {
         path: '*',

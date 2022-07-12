@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 namespace Bom.Blog.Categories
@@ -36,10 +35,17 @@ namespace Bom.Blog.Categories
             return ObjectMapper.Map<Category, CategoryDto>(res);
         }
     }
-    public class AdminCategoryService : CrudAppService<Category, CategoryAdminDto, Guid, PagedAndSortedResultRequestDto, CreateOrUpdateCategoryDto>, IAdminCategoryService
+    public class AdminCategoryService : CrudAppService<Category, CategoryAdminDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdateCategoryDto>, IAdminCategoryService
     {
         public AdminCategoryService(IRepository<Category, Guid> repository) : base(repository)
         {
+        }
+        protected override async Task<IQueryable<Category>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)
+        {
+            var queryable = await this.ReadOnlyRepository.GetQueryableAsync().ConfigureAwait(false);
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.CategoryName), i => i.CategoryName.Contains(input.CategoryName));
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.DisplayName), i => i.DisplayName.Contains(input.DisplayName));
+            return queryable;
         }
     }
 }
