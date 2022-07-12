@@ -18,7 +18,6 @@ using Volo.Abp.Account.Web;
 using Volo.Abp.AspNetCore.Authentication.JwtBearer;
 using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc;
-using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic.Bundling;
@@ -67,12 +66,12 @@ public class BlogHttpApiHostModule : AbpModule
     {
         //RequestVerificationToken 是预防CSRF攻击的一个手段，abp默认是开启的。开启后，前端所有的post请求的header必须带有这个token
         //或者禁用
-        Configure<AbpAntiForgeryOptions>(options =>
-        {
-            options.AutoValidateIgnoredHttpMethods.Add("PUT");
-            options.AutoValidateIgnoredHttpMethods.Add("POST");
-            options.AutoValidateIgnoredHttpMethods.Add("DELETE");
-        });
+        //Configure<AbpAntiForgeryOptions>(options =>
+        //{
+        //    options.AutoValidateIgnoredHttpMethods.Add("PUT");
+        //    options.AutoValidateIgnoredHttpMethods.Add("POST");
+        //    options.AutoValidateIgnoredHttpMethods.Add("DELETE");
+        //});
     }
 
     private void ConfigureBundles()
