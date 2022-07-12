@@ -1,14 +1,13 @@
-import { AntdTableResult } from 'ahooks/lib/useAntdTable/types';
 import { makeAutoObservable } from 'mobx';
-import { tagApi } from '../apis';
-import { AddTagDto } from '../data/models/Tag';
-class TagStore {
+import { postApi } from '../apis';
+import { AddPostDto } from '../data/models/post';
+class PostStore {
     constructor() {
         makeAutoObservable(this);
     }
-    getTags = async (data: any, form: any) => {
+    getPosts = async (data: any, form: any) => {
         try {
-            const result = await tagApi.getTags({
+            const result = await postApi.getPosts({
                 skipCount: data.pageSize * (data.current - 1),
                 maxResultCount: data.pageSize,
                 ...form,
@@ -21,34 +20,34 @@ class TagStore {
             return { total: 0, list: [] };
         }
     };
-    async deleteTag(id: string) {
+    async deletePost(id: string) {
         try {
-            await tagApi.deleteTag(id);
+            await postApi.deletePost(id);
             return true;
         } catch (error) {
             return false;
         }
     }
-    async addTag(tag: AddTagDto) {
+    async addPost(tag: AddPostDto) {
         try {
-            const data = await tagApi.addTag(tag);
+            const data = await postApi.addPost(tag);
             return data.data;
         } catch (error) {
             return false;
         }
     }
-    async getTagById(id: string) {
+    async getPostById(id: string) {
         try {
-            const tag = await tagApi.getTagById(id);
+            const tag = await postApi.getPostById(id);
             return tag.data;
         } catch (error) {}
     }
-    async updateTag(id: string, tag: AddTagDto) {
+    async updatePost(id: string, tag: AddPostDto) {
         try {
-            const result = await tagApi.updateTag(id, tag);
+            const result = await postApi.updatePost(id, tag);
             return result.data;
         } catch (error) {}
     }
 }
 
-export default new TagStore();
+export default new PostStore();

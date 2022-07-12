@@ -1,12 +1,13 @@
 import { useRoutes } from 'react-router-dom';
 import App from './App';
-import Blog from './pages/BlogManage/Pages/Blog';
+import Post from './pages/BlogManage/Pages/Post';
 import Category from './pages/BlogManage/Pages/Category';
 import FriendLink from './pages/BlogManage/Pages/FriendLink';
 import Tags from './pages/BlogManage/Pages/Tag/Index';
 import PageA from './pages/PageA';
 import PageB from './pages/PageB';
 import PageC from './pages/PageC';
+import AddOrEditPost from './pages/BlogManage/Pages/Post/AddOrNewPost';
 
 export interface Route {
     path?: React.Key;
@@ -47,7 +48,7 @@ export const routerConfig: Route[] = [
                     {
                         title: '博客',
                         path: 'blog',
-                        element: <Blog />,
+                        element: <Post />,
                     },
                     {
                         title: '标签',

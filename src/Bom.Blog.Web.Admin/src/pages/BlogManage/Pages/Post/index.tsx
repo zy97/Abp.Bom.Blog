@@ -1,30 +1,32 @@
+import { Button, Form, Input, message, Modal, Select, Table } from 'antd';
+import { useEffect, useState } from 'react';
 import { useAntdTable, useRequest } from 'ahooks';
-import { Button, Form, Input, message, Modal, Table } from 'antd';
-import { useState } from 'react';
 import AdvancedSearchForm from '../../../../components/AdvanceSearchForm';
-import { TagDto } from '../../../../data/models/Tag';
+import { DatePicker } from '../../../../components/DateTime';
 import useStores from '../../../../hooks/useStore';
-import Category from '../Category';
-function Tags() {
-    const { tagStore } = useStores();
+import { AddPostDto, PostDto } from '../../../../data/models/post';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+const { Option } = Select;
+function Post() {
+    const { postStore } = useStores();
     const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
     const [modalForm] = Form.useForm();
-    const { tableProps, search } = useAntdTable(tagStore.getTags, {
+    const { tableProps, search } = useAntdTable(postStore.getPosts, {
         defaultPageSize: 10,
         form,
         debounceWait: 500,
     });
-    console.log(tableProps);
-    const { runAsync } = useRequest(tagStore.getTagById, {
+    const { runAsync } = useRequest(postStore.getPostById, {
         manual: true,
     });
-    const deleteTag = (record: TagDto) => {
+    const deletePost = (record: PostDto) => {
         Modal.confirm({
             title: '删除标签',
             content: '确定删除吗？',
             onOk: async () => {
-                const success = await tagStore.deleteTag(record.id);
+                const success = await postStore.deletePost(record.id);
                 if (success) {
                     message.success('删除成功');
                     search.submit();
@@ -39,7 +41,7 @@ function Tags() {
     const showModal = () => {
         setVisible(true);
     };
-    const getTag = async (record: TagDto) => {
+    const getPost = async (record: PostDto) => {
         try {
             const tag = await runAsync(record.id);
             if (tag) {
@@ -49,10 +51,14 @@ function Tags() {
             }
         } catch (error) {}
     };
-    const addOrUpdateTag = async (data: TagDto) => {
+    const addOrUpdatePost = async (data: PostDto) => {
         try {
             if (data.id) {
-                const tag = await tagStore.updateTag(data.id, data);
+                const tag = await postStore.updatePost(data.id, {
+                    ...data,
+                    categoryId: '',
+                    tagIds: [],
+                });
                 if (tag) {
                     modalForm.resetFields();
                     message.success('更新成功');
@@ -60,7 +66,11 @@ function Tags() {
                     search.submit();
                 }
             } else {
-                const tag = await tagStore.addTag(data);
+                const tag = await postStore.addPost({
+                    ...data,
+                    categoryId: '',
+                    tagIds: [],
+                });
                 if (tag) {
                     modalForm.resetFields();
                     message.success('添加成功');
@@ -90,7 +100,7 @@ function Tags() {
                 </Form.Item>
             </AdvancedSearchForm>
             <div className="mt-4">
-                <Table<TagDto>
+                <Table<PostDto>
                     rowKey="id"
                     {...{
                         ...tableProps,
@@ -103,24 +113,27 @@ function Tags() {
                         },
                     }}
                 >
-                    <Table.Column<TagDto> title="Id" dataIndex="id" />
-                    <Table.Column<TagDto> title="标签名" dataIndex="tagName" />
-                    <Table.Column<TagDto> title="展示名" dataIndex="displayName" />
-                    <Table.Column<TagDto>
+                    <Table.Column<PostDto> title="Id" dataIndex="id" />
+                    <Table.Column<PostDto> title="作者" dataIndex="author" />
+                    <Table.Column<PostDto> title="目录" dataIndex="category" />
+                    <Table.Column<PostDto> title="标题" dataIndex="title" />
+                    <Table.Column<PostDto> title="链接" dataIndex="url" />
+                    <Table.Column<PostDto> title="标签" dataIndex="tags" />
+                    <Table.Column<PostDto>
                         title="操作"
                         render={(recode) => {
                             return (
                                 <div className="space-x-4">
                                     <Button
                                         type="primary"
-                                        onClick={() => getTag(recode)}
+                                        onClick={() => getPost(recode)}
                                     >
                                         编辑
                                     </Button>
                                     <Button
                                         type="primary"
                                         danger
-                                        onClick={() => deleteTag(recode)}
+                                        onClick={() => deletePost(recode)}
                                     >
                                         删除
                                     </Button>
@@ -143,7 +156,7 @@ function Tags() {
                     modalForm
                         .validateFields()
                         .then((values) => {
-                            addOrUpdateTag(values);
+                            addOrUpdatePost(values);
                         })
                         .catch((info) => {
                             message.error('添加失败');
@@ -160,32 +173,84 @@ function Tags() {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name="tagName"
-                        label="标签名"
+                        name="author"
+                        label="作者"
                         rules={[
                             {
                                 required: true,
-                                message: '请输入标签名',
+                                message: '请输入作者',
                             },
                         ]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name="displayName"
-                        label="展示名"
+                        name="title"
+                        label="标题"
                         rules={[
                             {
                                 required: true,
-                                message: '请输入展示名',
+                                message: '请输入标题',
                             },
                         ]}
                     >
-                        <Input type="textarea" />
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="url"
+                        label="地址"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入地址',
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="category"
+                        label="目录"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入地址',
+                            },
+                        ]}
+                    >
+                        <Select></Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="tags"
+                        label="标签"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入地址',
+                            },
+                        ]}
+                    >
+                        <Select></Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="tags"
+                        label="标签"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入地址',
+                            },
+                        ]}
+                    >
+                        <ReactQuill
+                            theme="snow"
+                            value="<p>test p</p>"
+                        ></ReactQuill>
                     </Form.Item>
                 </Form>
             </Modal>
         </div>
     );
 }
-export default Tags;
+
+export default Post;
