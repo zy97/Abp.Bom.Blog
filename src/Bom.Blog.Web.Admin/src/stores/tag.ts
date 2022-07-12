@@ -18,7 +18,9 @@ class TagStore {
                 total: result.data.totalCount,
                 list: result.data.items,
             };
-        } catch (error) {}
+        } catch (error) {
+            return { total: 0, list: [] };
+        }
     };
     async deleteTag(id: string) {
         try {

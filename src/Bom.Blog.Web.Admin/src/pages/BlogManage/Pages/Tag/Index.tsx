@@ -9,7 +9,7 @@ function Tags() {
     const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
     const [modalForm] = Form.useForm();
-    const { tableProps, search, params } = useAntdTable(tagStore.getTags, {
+    const { tableProps, search } = useAntdTable(tagStore.getTags, {
         defaultPageSize: 10,
         form,
         debounceWait: 500,
@@ -40,7 +40,6 @@ function Tags() {
     };
     const getTag = async (record: Tag) => {
         try {
-            console.log('editTag', record);
             const tag = await runAsync(record.id);
             if (tag) {
                 modalForm.setFieldsValue(tag);
@@ -95,7 +94,8 @@ function Tags() {
                     {...{
                         ...tableProps,
                         pagination: {
-                            showTotal: (total, range) => {
+                            ...tableProps.pagination,
+                            showTotal: (total) => {
                                 return <div>总共：{total} 项</div>;
                             },
                             showSizeChanger: true,
@@ -145,7 +145,6 @@ function Tags() {
                             addOrUpdateTag(values);
                         })
                         .catch((info) => {
-                            console.log('Validate Failed:', info);
                             message.error('添加失败');
                         });
                 }}
