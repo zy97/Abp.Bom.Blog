@@ -12,6 +12,7 @@ class TagStore {
             const result = await tagApi.getTags({
                 skipCount: data.pageSize * (data.current - 1),
                 maxResultCount: data.pageSize,
+                ...form,
             });
             return {
                 total: result.data.totalCount,

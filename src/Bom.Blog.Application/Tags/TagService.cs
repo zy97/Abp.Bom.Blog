@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 namespace Bom.Blog.Tags
@@ -35,10 +35,17 @@ namespace Bom.Blog.Tags
             return ObjectMapper.Map<Tag, TagDto>(res);
         }
     }
-    public class AdminTagService : CrudAppService<Tag, AdminTagDto, Guid, PagedAndSortedResultRequestDto, CreateOrUpdateTagDto>, IAdminTagService
+    public class AdminTagService : CrudAppService<Tag, AdminTagDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdateTagDto>, IAdminTagService
     {
         public AdminTagService(IRepository<Tag, Guid> repository) : base(repository)
         {
+        }
+        protected override async Task<IQueryable<Tag>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)
+        {
+            var queryable = await this.ReadOnlyRepository.GetQueryableAsync().ConfigureAwait(false);
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.TagName), i => i.TagName.Contains(input.TagName));
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.DisplayName), i => i.DisplayName.Contains(input.DisplayName));
+            return queryable;
         }
     }
 }
