@@ -31,5 +31,7 @@ public class BlogApplicationAutoMapperProfile : Profile
 
 
         CreateMap<FriendLink, FriendLinkDto>();
+        CreateMap<FriendLink, AdminFriendLinkDto>();
+        CreateMap<CreateOrUpdateFriendLinkDto, FriendLink>();
     }
 }

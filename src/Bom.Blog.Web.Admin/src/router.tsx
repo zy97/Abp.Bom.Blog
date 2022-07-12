@@ -2,6 +2,7 @@ import { useRoutes } from 'react-router-dom';
 import App from './App';
 import Blog from './pages/BlogManage/Pages/Blog';
 import Category from './pages/BlogManage/Pages/Category';
+import FriendLink from './pages/BlogManage/Pages/FriendLink';
 import Tags from './pages/BlogManage/Pages/Tag/Index';
 import PageA from './pages/PageA';
 import PageB from './pages/PageB';
@@ -57,6 +58,11 @@ export const routerConfig: Route[] = [
                         title: '目录',
                         path: 'category',
                         element: <Category />,
+                    },
+                    {
+                        title: '友情链接',
+                        path: 'friendlink',
+                        element: <FriendLink />,
                     },
                 ],
             },

@@ -2,28 +2,33 @@ import { useAntdTable, useRequest } from 'ahooks';
 import { Button, Form, Input, message, Modal, Table } from 'antd';
 import { useState } from 'react';
 import AdvancedSearchForm from '../../../../components/AdvanceSearchForm';
-import CategoryDto from '../../../../data/models/CategoryDto';
+import { FriendLinkDto } from '../../../../data/models/FriendLink';
 import useStores from '../../../../hooks/useStore';
 
-function Category() {
-    const { categoryStore } = useStores();
+function FriendLink() {
+    const { friendLinkStore } = useStores();
     const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
     const [modalForm] = Form.useForm();
-    const { tableProps, search } = useAntdTable(categoryStore.getCategories, {
-        defaultPageSize: 10,
-        form,
-        debounceWait: 500,
-    });
-    const { runAsync } = useRequest(categoryStore.getTagById, {
+    const { tableProps, search } = useAntdTable(
+        friendLinkStore.getFriendLinks,
+        {
+            defaultPageSize: 10,
+            form,
+            debounceWait: 500,
+        }
+    );
+    const { runAsync } = useRequest(friendLinkStore.getFriendLinkById, {
         manual: true,
     });
-    const deleteTag = (record: CategoryDto) => {
+    const deleteTag = (record: FriendLinkDto) => {
         Modal.confirm({
             title: '删除标签',
             content: '确定删除吗？',
             onOk: async () => {
-                const success = await categoryStore.deleteTag(record.id);
+                const success = await friendLinkStore.deleteFriendLink(
+                    record.id
+                );
                 if (success) {
                     message.success('删除成功');
                     search.submit();
@@ -38,7 +43,7 @@ function Category() {
     const showModal = () => {
         setVisible(true);
     };
-    const getTag = async (record: CategoryDto) => {
+    const getTag = async (record: FriendLinkDto) => {
         try {
             const tag = await runAsync(record.id);
             if (tag) {
@@ -48,10 +53,13 @@ function Category() {
             }
         } catch (error) {}
     };
-    const addOrUpdateTag = async (data: CategoryDto) => {
+    const addOrUpdateTag = async (data: FriendLinkDto) => {
         try {
             if (data.id) {
-                const tag = await categoryStore.updateTag(data.id, data);
+                const tag = await friendLinkStore.updateFriendLink(
+                    data.id,
+                    data
+                );
                 if (tag) {
                     modalForm.resetFields();
                     message.success('更新成功');
@@ -59,7 +67,7 @@ function Category() {
                     search.submit();
                 }
             } else {
-                const tag = await categoryStore.addTag(data);
+                const tag = await friendLinkStore.addFriendLink(data);
                 if (tag) {
                     modalForm.resetFields();
                     message.success('添加成功');
@@ -81,15 +89,15 @@ function Category() {
                     },
                 ]}
             >
-                <Form.Item name="categoryName" label="目录名">
-                    <Input placeholder="请输入目录名" />
+                <Form.Item name="title" label="标题">
+                    <Input placeholder="请输入标题" />
                 </Form.Item>
-                <Form.Item name="displayName" label="展示名">
-                    <Input placeholder="请输入展示名" />
+                <Form.Item name="linkUrl" label="链接地址">
+                    <Input placeholder="请输入链接地址" />
                 </Form.Item>
             </AdvancedSearchForm>
             <div className="mt-4">
-                <Table<CategoryDto>
+                <Table<FriendLinkDto>
                     rowKey="id"
                     {...{
                         ...tableProps,
@@ -102,16 +110,16 @@ function Category() {
                         },
                     }}
                 >
-                    <Table.Column<CategoryDto> title="Id" dataIndex="id" />
-                    <Table.Column<CategoryDto>
-                        title="目录名"
-                        dataIndex="categoryName"
+                    <Table.Column<FriendLinkDto> title="Id" dataIndex="id" />
+                    <Table.Column<FriendLinkDto>
+                        title="标题"
+                        dataIndex="title"
                     />
-                    <Table.Column<CategoryDto>
-                        title="展示名"
-                        dataIndex="displayName"
+                    <Table.Column<FriendLinkDto>
+                        title="链接地址"
+                        dataIndex="linkUrl"
                     />
-                    <Table.Column<CategoryDto>
+                    <Table.Column<FriendLinkDto>
                         title="操作"
                         render={(recode) => {
                             return (
@@ -165,24 +173,24 @@ function Category() {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name="categoryName"
-                        label="目录名"
+                        name="title"
+                        label="标题"
                         rules={[
                             {
                                 required: true,
-                                message: '请输入目录名',
+                                message: '请输入标题',
                             },
                         ]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name="displayName"
-                        label="展示名"
+                        name="linkUrl"
+                        label="链接地址"
                         rules={[
                             {
                                 required: true,
-                                message: '请输入展示名',
+                                message: '请输入链接地址',
                             },
                         ]}
                     >
@@ -194,4 +202,4 @@ function Category() {
     );
 }
 
-export default Category;
+export default FriendLink;
