@@ -6,8 +6,7 @@ import React, { useState } from 'react';
 const { Option } = Select;
 
 const AdvancedSearchForm = (props: any) => {
-    const { defaultMaxShowCount, children, form, submit, reset, extraActions } =
-        props;
+    const { form, submit, reset, extraActions } = props;
     const formCount = props.children.length;
     const [expand, setExpand] = useState(false);
 
@@ -54,9 +53,9 @@ const AdvancedSearchForm = (props: any) => {
             <Row gutter={24}>{getFields()}</Row>
             <Row>
                 <Col span={24} className="space-x-4 text-right">
-                    {extraActions.map((i: any) => {
+                    {extraActions.map((i: any, key: any) => {
                         return (
-                            <Button type="primary" onClick={i.action}>
+                            <Button type="primary" key={key} onClick={i.action}>
                                 {i.content}
                             </Button>
                         );

@@ -9,11 +9,12 @@ function Tags() {
     const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
     const [modalForm] = Form.useForm();
-    const { tableProps, search } = useAntdTable(tagStore.getTags, {
-        defaultPageSize: 5,
+    const { tableProps, search, params } = useAntdTable(tagStore.getTags, {
+        defaultPageSize: 10,
         form,
         debounceWait: 500,
     });
+    console.log(tableProps);
     const { runAsync } = useRequest(tagStore.getTagById, {
         manual: true,
     });
@@ -67,13 +68,6 @@ function Tags() {
                     search.submit();
                 }
             }
-            // tagStore.addTag(values as Tag).then(() => {
-            //     modalForm.resetFields();
-            //     console.log('Received values of form: ', values);
-            //     setVisible(false);
-            //     message.success('添加成功');
-            //     search.submit();
-            // });
         } catch (error) {}
     };
     return (
@@ -96,18 +90,21 @@ function Tags() {
                 </Form.Item>
             </AdvancedSearchForm>
             <div>
-                <Table<Tag> rowKey="Id" {...tableProps}>
-                    <Table.Column<Tag> title="Id" dataIndex="id" key="id" />
-                    <Table.Column<Tag>
-                        title="标签名"
-                        dataIndex="tagName"
-                        key="tagName"
-                    />
-                    <Table.Column<Tag>
-                        title="展示名"
-                        dataIndex="displayName"
-                        key="displayName"
-                    />
+                <Table<Tag>
+                    rowKey="id"
+                    {...{
+                        ...tableProps,
+                        pagination: {
+                            showTotal: (total, range) => {
+                                return <div>总共：{total} 项</div>;
+                            },
+                            showSizeChanger: true,
+                        },
+                    }}
+                >
+                    <Table.Column<Tag> title="Id" dataIndex="id" />
+                    <Table.Column<Tag> title="标签名" dataIndex="tagName" />
+                    <Table.Column<Tag> title="展示名" dataIndex="displayName" />
                     <Table.Column<Tag>
                         title="操作"
                         render={(recode) => {
