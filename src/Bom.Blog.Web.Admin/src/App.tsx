@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu } from 'antd';
+import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import React, { Children, useState } from 'react';
 import { Outlet, useNavigate, useOutlet, useRoutes } from 'react-router-dom';
 import Login from './pages/Components/Login';
@@ -41,7 +42,10 @@ const App: React.FC = () => {
         arr: MenuItem[]
     ) => {
         for (let item of nodes) {
-            if (item.path) {
+            if (
+                item.path &&
+                (item.showInMenu === undefined || item.showInMenu === true)
+            ) {
                 const menu = getItem(
                     item.title,
                     rootPath + '' + item.path,
@@ -51,13 +55,44 @@ const App: React.FC = () => {
 
                 if (item.children && item.children.length) {
                     menu.children = [];
-                    menu.key = null;
+                    // menu.key = null;
                     createMenu(item.path + '/', item.children, menu.children);
                 }
             }
         }
         return arr;
     };
+    const menu = createMenu('', routerConfig[0].children, []);
+    const clearMenu = (nodes: ItemType[]) => {
+        for (let item of nodes) {
+            if (item.children && item.children.length === 0) {
+                item.children = null;
+            }
+            if (item.children && item.children.length) {
+                clearMenu(item.children);
+            }
+            // if (
+            //     item.path &&
+            //     (item.showInMenu === undefined || item.showInMenu === true)
+            // ) {
+            //     const menu = getItem(
+            //         item.title,
+            //         rootPath + '' + item.path,
+            //         null
+            //     );
+            //     arr.push(menu);
+            //     if (item.children && item.children.length) {
+            //         menu.children = [];
+            //         menu.key = null;
+            //         createMenu(item.path + '/', item.children, menu.children);
+            //     }
+            // }
+        }
+    };
+    console.log(menu);
+    const finalMenu = clearMenu(menu);
+    console.log(menu);
+
     const items: MenuItem[] = [
         // getItem('Option 1', '1', <PieChartOutlined />),
         // getItem('Option 2', '2', <DesktopOutlined />),
@@ -69,7 +104,7 @@ const App: React.FC = () => {
         // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
         // getItem('Files', '9', <FileOutlined />),
         // ...routerConfig[0].children.map(i => getItem(i.title, i.path)),
-        ...createMenu('', routerConfig[0].children, []),
+        ...menu,
     ];
 
     const [collapsed, setCollapsed] = useState(false);

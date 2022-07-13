@@ -14,6 +14,7 @@ export interface Route {
     title?: string;
     element?: React.ReactNode;
     children?: Route[];
+    showInMenu?: boolean;
 }
 export const routerConfig: Route[] = [
     {
@@ -49,6 +50,14 @@ export const routerConfig: Route[] = [
                         title: '博客',
                         path: 'blog',
                         element: <Post />,
+                        children: [
+                            {
+                                path: 'aa',
+                                title: 'asd',
+                                showInMenu: false,
+                                element: <AddOrEditPost />,
+                            },
+                        ],
                     },
                     {
                         title: '标签',
