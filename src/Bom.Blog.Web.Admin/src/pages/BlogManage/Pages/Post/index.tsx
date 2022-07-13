@@ -41,7 +41,7 @@ function Post() {
         });
     };
     const navigateToNewPage = () => {
-        navigate('/blogmanage/blog/add');
+        navigate('/blogmanage/post/add');
         // setVisible(true);
     };
     const getPost = async (record: PostDto) => {
