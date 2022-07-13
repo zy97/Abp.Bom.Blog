@@ -90,7 +90,7 @@ const App: React.FC = () => {
         }
     };
     // console.log(menu);
-    // const finalMenu = clearMenu(menu);
+    clearMenu(menu);
     // console.log(menu);
 
     const items: MenuItem[] = [

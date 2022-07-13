@@ -6,9 +6,11 @@ import { DatePicker } from '../../../../components/DateTime';
 import useStores from '../../../../hooks/useStore';
 import { AddPostDto, PostDto } from '../../../../data/models/post';
 import Editor from '../../../../components/Editor';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 function Post() {
+    const navigate = useNavigate();
     const { postStore } = useStores();
     const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
@@ -38,8 +40,9 @@ function Post() {
             cancelText: '取消',
         });
     };
-    const showModal = () => {
-        setVisible(true);
+    const navigateToNewPage = () => {
+        navigate('/blogmanage/blog/add');
+        // setVisible(true);
     };
     const getPost = async (record: PostDto) => {
         try {
@@ -82,19 +85,13 @@ function Post() {
     };
     return (
         <div>
-            <Editor
-                value="<p>hello</p>"
-                placeholder="请输入一些文本"
-                onChange={(e) => console.log(e)}
-            />
-
             <AdvancedSearchForm
                 form={form}
                 {...search}
                 extraActions={[
                     {
                         content: '添加',
-                        action: showModal,
+                        action: navigateToNewPage,
                     },
                 ]}
             >

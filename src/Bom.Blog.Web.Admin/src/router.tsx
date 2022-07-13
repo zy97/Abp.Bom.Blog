@@ -4,9 +4,6 @@ import Post from './pages/BlogManage/Pages/Post';
 import Category from './pages/BlogManage/Pages/Category';
 import FriendLink from './pages/BlogManage/Pages/FriendLink';
 import Tags from './pages/BlogManage/Pages/Tag/Index';
-import PageA from './pages/PageA';
-import PageB from './pages/PageB';
-import PageC from './pages/PageC';
 import AddOrEditPost from './pages/BlogManage/Pages/Post/AddOrNewPost';
 
 export interface Route {
@@ -15,6 +12,7 @@ export interface Route {
     element?: React.ReactNode;
     children?: Route[];
     showInMenu?: boolean;
+    index?: boolean;
 }
 export const routerConfig: Route[] = [
     {
@@ -27,13 +25,26 @@ export const routerConfig: Route[] = [
                 children: [
                     {
                         title: '博客',
-                        path: 'blog',
+                        path: 'post',
                         element: <Post />,
                         children: [
                             {
-                                path: 'blog/aa',
-                                title: 'asd',
                                 showInMenu: false,
+                                index: true,
+                                element: <AddOrEditPost />,
+                            },
+                            {
+                                path: 'edit',
+                                title: 'edit',
+                                showInMenu: false,
+                                index: true,
+                                element: <AddOrEditPost />,
+                            },
+                            {
+                                path: 'add',
+                                title: 'add',
+                                showInMenu: false,
+                                index: true,
                                 element: <AddOrEditPost />,
                             },
                         ],
