@@ -5,8 +5,8 @@ import AdvancedSearchForm from '../../../../components/AdvanceSearchForm';
 import { DatePicker } from '../../../../components/DateTime';
 import useStores from '../../../../hooks/useStore';
 import { AddPostDto, PostDto } from '../../../../data/models/post';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import Editor from '../../../../components/Editor';
+
 const { Option } = Select;
 function Post() {
     const { postStore } = useStores();
@@ -82,6 +82,12 @@ function Post() {
     };
     return (
         <div>
+            <Editor
+                value="<p>hello</p>"
+                placeholder="请输入一些文本"
+                onChange={(e) => console.log(e)}
+            />
+
             <AdvancedSearchForm
                 form={form}
                 {...search}
@@ -241,12 +247,7 @@ function Post() {
                                 message: '请输入地址',
                             },
                         ]}
-                    >
-                        <ReactQuill
-                            theme="snow"
-                            value="<p>test p</p>"
-                        ></ReactQuill>
-                    </Form.Item>
+                    ></Form.Item>
                 </Form>
             </Modal>
         </div>
