@@ -55,8 +55,12 @@ const App: React.FC = () => {
 
                 if (item.children && item.children.length) {
                     menu.children = [];
-                    // menu.key = null;
-                    createMenu(item.path + '/', item.children, menu.children);
+                    menu.key = rootPath + '' + item.path;
+                    createMenu(
+                        rootPath + '' + item.path + '/',
+                        item.children,
+                        menu.children
+                    );
                 }
             }
         }
@@ -71,41 +75,13 @@ const App: React.FC = () => {
             if (item.children && item.children.length) {
                 clearMenu(item.children);
             }
-            // if (
-            //     item.path &&
-            //     (item.showInMenu === undefined || item.showInMenu === true)
-            // ) {
-            //     const menu = getItem(
-            //         item.title,
-            //         rootPath + '' + item.path,
-            //         null
-            //     );
-            //     arr.push(menu);
-            //     if (item.children && item.children.length) {
-            //         menu.children = [];
-            //         menu.key = null;
-            //         createMenu(item.path + '/', item.children, menu.children);
-            //     }
-            // }
         }
     };
-    // console.log(menu);
+    console.log(menu);
     clearMenu(menu);
     // console.log(menu);
 
-    const items: MenuItem[] = [
-        // getItem('Option 1', '1', <PieChartOutlined />),
-        // getItem('Option 2', '2', <DesktopOutlined />),
-        // getItem('User', 'sub1', <UserOutlined />, [
-        //   getItem('Tom', '3'),
-        //   getItem('Bill', '4'),
-        //   getItem('Alex', '5'),
-        // ]),
-        // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-        // getItem('Files', '9', <FileOutlined />),
-        // ...routerConfig[0].children.map(i => getItem(i.title, i.path)),
-        ...menu,
-    ];
+    const items: MenuItem[] = [...menu];
 
     const [collapsed, setCollapsed] = useState(false);
     return (

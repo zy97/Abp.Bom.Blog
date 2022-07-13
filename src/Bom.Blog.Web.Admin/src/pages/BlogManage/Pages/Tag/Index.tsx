@@ -15,7 +15,6 @@ function Tags() {
         form,
         debounceWait: 500,
     });
-    console.log(tableProps);
     const { runAsync } = useRequest(tagStore.getTagById, {
         manual: true,
     });
@@ -105,7 +104,10 @@ function Tags() {
                 >
                     <Table.Column<TagDto> title="Id" dataIndex="id" />
                     <Table.Column<TagDto> title="标签名" dataIndex="tagName" />
-                    <Table.Column<TagDto> title="展示名" dataIndex="displayName" />
+                    <Table.Column<TagDto>
+                        title="展示名"
+                        dataIndex="displayName"
+                    />
                     <Table.Column<TagDto>
                         title="操作"
                         render={(recode) => {
