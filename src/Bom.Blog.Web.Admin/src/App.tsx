@@ -7,23 +7,28 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu } from 'antd';
-import { ItemType } from 'antd/lib/menu/hooks/useItems';
-import React, { Children, useState } from 'react';
-import { Outlet, useNavigate, useOutlet, useRoutes } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Login from './pages/Components/Login';
 import { Route, routerConfig } from './router';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
-
-const App: React.FC = () => {
+type MenuItemProps = {
+    label: React.ReactNode;
+    key: React.Key;
+    icon?: React.ReactNode;
+    children?: MenuItemProps[] | undefined | null;
+    onclick?: (item: any, key: string, keyPath: any, domEvent: any) => void;
+};
+function App() {
     const navigate = useNavigate();
     const getItem = (
         label: React.ReactNode,
         key: React.Key,
         icon?: React.ReactNode,
-        children?: MenuItem[]
+        children?: MenuItem[] | undefined | null
     ) => {
         return {
             key,
@@ -34,12 +39,12 @@ const App: React.FC = () => {
                 // console.log(item, key, keyPath, domEvent);
                 navigate(item.key + '');
             },
-        } as MenuItem;
+        } as MenuItemProps;
     };
     const createMenu = (
         rootPath: React.Key,
         nodes: Route[],
-        arr: MenuItem[]
+        arr: MenuItemProps[]
     ) => {
         for (let item of nodes) {
             if (
@@ -51,6 +56,9 @@ const App: React.FC = () => {
                     rootPath + '' + item.path,
                     null
                 );
+                // const sdf = {} as ItemType;
+                // sdf.children
+                // console.log(sdf);
                 arr.push(menu);
 
                 if (item.children && item.children.length) {
@@ -66,8 +74,8 @@ const App: React.FC = () => {
         }
         return arr;
     };
-    const menu = createMenu('', routerConfig[0].children, []);
-    const clearMenu = (nodes: ItemType[]) => {
+    const menu = createMenu('', routerConfig[0].children!, []);
+    const clearMenu = (nodes: MenuItemProps[]) => {
         for (let item of nodes) {
             if (item.children && item.children.length === 0) {
                 item.children = null;
@@ -125,6 +133,6 @@ const App: React.FC = () => {
             </Layout>
         </Layout>
     );
-};
+}
 
 export default App;

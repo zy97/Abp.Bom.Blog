@@ -10,6 +10,7 @@ import App from './App';
 export interface Route extends RouteObject {
     title?: string;
     showInMenu?: boolean;
+    children?: Route[];
 }
 
 export const routerConfig: Route[] = [
