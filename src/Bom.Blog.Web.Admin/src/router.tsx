@@ -22,27 +22,6 @@ export const routerConfig: Route[] = [
         element: <App />,
         children: [
             {
-                title: 'Page A',
-                path: 'pagea',
-                children: [
-                    {
-                        title: 'Page A',
-                        path: 'pagea',
-                        element: <PageA />,
-                    },
-                    {
-                        title: 'Page B',
-                        path: 'pageb',
-                        element: <PageB />,
-                    },
-                    {
-                        title: 'Page C',
-                        path: 'pagec',
-                        element: <PageC />,
-                    },
-                ],
-            },
-            {
                 title: '博客管理',
                 path: 'blogmanage',
                 children: [
@@ -52,7 +31,7 @@ export const routerConfig: Route[] = [
                         element: <Post />,
                         children: [
                             {
-                                path: 'aa',
+                                path: 'blog/aa',
                                 title: 'asd',
                                 showInMenu: false,
                                 element: <AddOrEditPost />,
@@ -76,17 +55,17 @@ export const routerConfig: Route[] = [
                     },
                 ],
             },
+            {
+                path: '*',
+                element: (
+                    <>
+                        <main style={{ padding: '1rem' }}>
+                            <p>There's nothing here!</p>
+                        </main>
+                    </>
+                ),
+            },
         ],
-    },
-    {
-        path: '*',
-        element: (
-            <>
-                <main style={{ padding: '1rem' }}>
-                    <p>There's nothing here!</p>
-                </main>
-            </>
-        ),
     },
 ];
 export function RenderRoutes() {

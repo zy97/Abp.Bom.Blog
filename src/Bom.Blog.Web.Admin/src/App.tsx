@@ -89,9 +89,9 @@ const App: React.FC = () => {
             // }
         }
     };
-    console.log(menu);
-    const finalMenu = clearMenu(menu);
-    console.log(menu);
+    // console.log(menu);
+    // const finalMenu = clearMenu(menu);
+    // console.log(menu);
 
     const items: MenuItem[] = [
         // getItem('Option 1', '1', <PieChartOutlined />),
