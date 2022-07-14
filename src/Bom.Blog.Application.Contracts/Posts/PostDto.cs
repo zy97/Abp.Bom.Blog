@@ -86,7 +86,6 @@ namespace Bom.Blog.Posts
         /// </summary>
         public string Markdown { get; set; }
 
-
         /// <summary>
         /// 分类
         /// </summary>

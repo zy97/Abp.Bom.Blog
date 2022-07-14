@@ -40,6 +40,13 @@ namespace Bom.Blog.Tags
         public AdminTagService(IRepository<Tag, Guid> repository) : base(repository)
         {
         }
+
+        public async Task<List<TagSelectOptionDto>> GetAllTags()
+        {
+            var tags = await this.ReadOnlyRepository.GetListAsync();
+            return ObjectMapper.Map<List<Tag>, List<TagSelectOptionDto>>(tags);
+        }
+
         protected override async Task<IQueryable<Tag>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)
         {
             var queryable = await this.ReadOnlyRepository.GetQueryableAsync().ConfigureAwait(false);

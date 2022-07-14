@@ -13,4 +13,8 @@ namespace Bom.Blog.Tags
         public string TagName { get; set; }
         public string DisplayName { get; set; }
     }
+    public class TagSelectOptionDto : EntityDto<Guid>
+    {
+        public string DisplayName { get; set; }
+    }
 }

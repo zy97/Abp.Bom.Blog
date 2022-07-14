@@ -26,7 +26,8 @@ public class BlogApplicationAutoMapperProfile : Profile
         CreateMap<CreateOrUpdateCategoryDto, Category>();
 
         CreateMap<Tag, TagDto>();
-        CreateMap<Tag, AdminTagDto>();
+        CreateMap<Tag, TagDto>();
+        CreateMap<Tag, TagSelectOptionDto>();
         CreateMap<CreateOrUpdateTagDto, Tag>();
 
 

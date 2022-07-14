@@ -12,5 +12,6 @@ namespace Bom.Blog.Tags
     }
     public interface IAdminTagService : ICrudAppService<AdminTagDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdateTagDto>
     {
+        Task<List<TagSelectOptionDto>> GetAllTags();
     }
 }
