@@ -6,7 +6,9 @@ import Tags from './pages/BlogManage/Pages/Tag/Index';
 import AddOrEditPost from './pages/BlogManage/Pages/Post/AddOrNewPost';
 import NotFound from './pages/NotFound';
 import App from './App';
-
+import ListView from './pages/BlogManage/Pages/Post/ListView';
+//https://reactrouter.com/docs/en/v6/getting-started/overview#nested-routes
+//嵌套的的父级需要有一个letout容器才行
 export interface Route extends RouteObject {
     title?: string;
     showInMenu?: boolean;
@@ -33,8 +35,17 @@ export const routerConfig: Route[] = [
                         element: <Post />,
                         children: [
                             {
-                                title: '博客',
+                                index: true,
+                                showInMenu: false,
+                                element: <ListView />,
+                            },
+                            {
                                 path: 'add',
+                                showInMenu: false,
+                                element: <AddOrEditPost />,
+                            },
+                            {
+                                path: 'edit/:id',
                                 showInMenu: false,
                                 element: <AddOrEditPost />,
                             },
