@@ -86,10 +86,6 @@ namespace Bom.Blog.Posts
         /// </summary>
         public string Markdown { get; set; }
 
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public string CreationTime { get; set; }
 
         /// <summary>
         /// 分类

@@ -41,14 +41,15 @@ function ListView() {
         navigate('/blogmanage/post/add');
         // setVisible(true);
     };
-    const getPost = async (record: PostDto) => {
+    const navigateToEditPost = async (record: PostDto) => {
         try {
-            const tag = await runAsync(record.id);
-            if (tag) {
-                modalForm.setFieldsValue(tag);
-                console.log(tag);
-                setVisible(true);
-            }
+            navigate(`/blogmanage/post/edit/${record.id}`);
+            // const tag = await runAsync(record.id);
+            // if (tag) {
+            //     modalForm.setFieldsValue(tag);
+            //     console.log(tag);
+            //     setVisible(true);
+            // }
         } catch (error) {}
     };
     const addOrUpdatePost = async (data: PostDto) => {
@@ -126,7 +127,9 @@ function ListView() {
                                 <div className="space-x-4">
                                     <Button
                                         type="primary"
-                                        onClick={() => getPost(recode)}
+                                        onClick={() =>
+                                            navigateToEditPost(recode)
+                                        }
                                     >
                                         编辑
                                     </Button>

@@ -8,7 +8,6 @@ export interface PostDto {
     url: string;
     html: string;
     markdown: string;
-    creationTime: string;
     category: CategoryDto;
     tags: TagDto[];
 }
@@ -18,7 +17,6 @@ export interface AddPostDto {
     url: string;
     html: string;
     markdown: string;
-    creationTime: string;
     categoryId: string;
     tagIds: string[];
 }

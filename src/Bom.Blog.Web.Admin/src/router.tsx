@@ -45,7 +45,7 @@ export const routerConfig: Route[] = [
                                 element: <AddOrEditPost />,
                             },
                             {
-                                path: 'edit/:id',
+                                path: 'edit/:postid',
                                 showInMenu: false,
                                 element: <AddOrEditPost />,
                             },
