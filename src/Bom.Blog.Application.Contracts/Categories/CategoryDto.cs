@@ -13,4 +13,8 @@ namespace Bom.Blog.Categories
         public string CategoryName { get; set; }
         public string DisplayName { get; set; }
     }
+    public class CategorySelectOptionDto : EntityDto<Guid>
+    {
+        public string DisplayName { get; set; }
+    }
 }

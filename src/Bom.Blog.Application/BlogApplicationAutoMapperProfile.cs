@@ -18,11 +18,14 @@ public class BlogApplicationAutoMapperProfile : Profile
         CreateMap<Post, PostBriefDto>();
         CreateMap<Post, PostPagedDto>();
         CreateMap<Post, PostAdminDto>();
+        CreateMap<CreatePostInputDto, Post>();
+
 
 
         CreateMap<Category, CategoryDto>();
         CreateMap<Category, CategoryAdminDto>();
         CreateMap<Category, CategoryCountDto>();
+        CreateMap<Category, CategorySelectOptionDto>();
         CreateMap<CreateOrUpdateCategoryDto, Category>();
 
         CreateMap<Tag, TagDto>();

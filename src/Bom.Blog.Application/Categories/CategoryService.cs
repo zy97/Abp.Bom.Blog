@@ -40,6 +40,12 @@ namespace Bom.Blog.Categories
         public AdminCategoryService(IRepository<Category, Guid> repository) : base(repository)
         {
         }
+        public async Task<List<CategorySelectOptionDto>> GetAllCategories()
+        {
+            var categories = await this.ReadOnlyRepository.GetListAsync();
+            return ObjectMapper.Map<List<Category>, List<CategorySelectOptionDto>>(categories);
+        }
+
         protected override async Task<IQueryable<Category>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)
         {
             var queryable = await this.ReadOnlyRepository.GetQueryableAsync().ConfigureAwait(false);

@@ -66,9 +66,7 @@ namespace Bom.Blog
                 {
                     Title = "TestTitle",
                     Author = "TestAuthor",
-                    Url = "http://www.baidu.com",
-                    Html = "<p>test p</p>",
-                    Markdown = "TestMarkdown",
+                    Markdown = "<p>test p</p>",
                     CategoryId = category[0].Id,
                 });
                 await postTagRepo.InsertManyAsync(tags.Select(i => new PostTag() { TagId = i.Id, PostId = post.Id }));

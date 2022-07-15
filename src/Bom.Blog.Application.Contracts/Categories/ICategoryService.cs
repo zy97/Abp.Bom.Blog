@@ -12,5 +12,6 @@ namespace Bom.Blog.Categories
     }
     public interface IAdminCategoryService : ICrudAppService<CategoryAdminDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdateCategoryDto>
     {
+        Task<List<CategorySelectOptionDto>> GetAllCategories();
     }
 }

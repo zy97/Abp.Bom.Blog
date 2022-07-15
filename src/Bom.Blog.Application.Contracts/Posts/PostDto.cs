@@ -18,15 +18,6 @@ namespace Bom.Blog.Posts
         /// </summary>
         public string Author { get; set; }
 
-        /// <summary>
-        /// 链接
-        /// </summary>
-        public string Url { get; set; }
-
-        /// <summary>
-        /// HTML
-        /// </summary>
-        public string Html { get; set; }
 
         /// <summary>
         /// Markdown
@@ -71,15 +62,6 @@ namespace Bom.Blog.Posts
         /// </summary>
         public string Author { get; set; }
 
-        /// <summary>
-        /// 链接
-        /// </summary>
-        public string Url { get; set; }
-
-        /// <summary>
-        /// HTML
-        /// </summary>
-        public string Html { get; set; }
 
         /// <summary>
         /// Markdown
