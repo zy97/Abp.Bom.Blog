@@ -40,13 +40,17 @@ class PostStore {
     try {
       const tag = await postApi.getPostById(id);
       return tag.data;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
   async updatePost(id: string, tag: AddPostDto) {
     try {
       const result = await postApi.updatePost(id, tag);
       return result.data;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

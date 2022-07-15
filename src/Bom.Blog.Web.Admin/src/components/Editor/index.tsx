@@ -33,7 +33,7 @@ interface OnChangeHandler {
   (e: any): void;
 }
 type Props = {
-  value: string;
+  value?: string;
   placeholder: string;
   onChange?: OnChangeHandler;
 };
@@ -42,6 +42,7 @@ function Editor(props: Props) {
   return (
     <>
       <ReactQuill
+        className="h-[360px]"
         theme="snow"
         value={value || ""}
         modules={modules}

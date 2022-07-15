@@ -34,12 +34,13 @@ namespace Bom.Blog.Posts
                 post.Category = ObjectMapper.Map<Category, CategoryDto>(await FindPostCategoryAsync(post.Category.Id));
                 post.Tags = ObjectMapper.Map<List<Tag>, List<TagDto>>(await FindPostTagsAsync(post.Id));
             }
-            //posts.Items.Select(async post =>
-            //{
-
-            //    return post;
-            //});
             return posts;
+        }
+        public override async Task<PostAdminDto> GetAsync(Guid id)
+        {
+            var post = await base.GetAsync(id);
+            post.Tags = ObjectMapper.Map<List<Tag>, List<TagDto>>(await FindPostTagsAsync(post.Id));
+            return post;
         }
         public override async Task<PostAdminDto> CreateAsync(CreatePostInputDto input)
         {

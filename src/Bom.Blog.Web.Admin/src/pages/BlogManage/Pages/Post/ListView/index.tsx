@@ -44,7 +44,7 @@ function ListView() {
   };
   const navigateToEditPost = async (record: PostDto) => {
     try {
-      navigate(`/blogmanage/post/edit/${record.id}`);
+      navigate(`/blogmanage/post/${record.id}`);
       // const tag = await runAsync(record.id);
       // if (tag) {
       //     modalForm.setFieldsValue(tag);
