@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Bom.Blog.AuditLogs;
 using Bom.Blog.Categories;
 using Bom.Blog.FriendLinks;
 using Bom.Blog.Posts;
 using Bom.Blog.Tags;
+using Volo.Abp.AuditLogging;
 
 namespace Bom.Blog;
 
@@ -37,5 +39,7 @@ public class BlogApplicationAutoMapperProfile : Profile
         CreateMap<FriendLink, FriendLinkDto>();
         CreateMap<FriendLink, AdminFriendLinkDto>();
         CreateMap<CreateOrUpdateFriendLinkDto, FriendLink>();
+
+        CreateMap<AuditLog, AuditLogDto>();
     }
 }
