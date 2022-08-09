@@ -29,7 +29,7 @@ public class BlogApplicationAutoMapperProfile : Profile
         CreateMap<CreateOrUpdateCategoryDto, Category>();
 
         CreateMap<Tag, TagDto>();
-        CreateMap<Tag, TagDto>();
+        CreateMap<Tag, AdminTagDto>();
         CreateMap<Tag, TagSelectOptionDto>();
         CreateMap<CreateOrUpdateTagDto, Tag>();
 
