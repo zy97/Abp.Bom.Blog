@@ -1,15 +1,29 @@
 import { Button, Dropdown, Menu, Space } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { useAuth } from "react-oidc-context";
+import axios from "axios";
 
 
 function Login() {
     const auth = useAuth();
+    useEffect(() => {
+
+        return auth.events.addUserSignedIn(() => {
+            console.log('login success')
+        });
+
+    }, [auth.events, auth.signinSilent])
+    useEffect(() => {
+        if (auth.isAuthenticated) {
+            axios.get('/api/abp/application-configuration').then(res => { console.log(res); });
+        }
+    }, [auth.isAuthenticated])
+
     const login = () => {
         console.log('login')
-        auth.signinRedirect();
 
+        auth.signinRedirect();
     }
     const logout = () => {
         console.log('logout')

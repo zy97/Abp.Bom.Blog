@@ -6,4 +6,11 @@ public static class BlogPermissions
 
     //Add your own permission names. Example:
     //public const string MyPermission1 = GroupName + ".MyPermission1";
+    public static class Admin
+    {
+        public const string Default = GroupName + ".Admin";
+        public const string Create = Default + ".Create";
+        public const string Delete = Default + ".Delete";
+        public const string Update = Default + ".Update";
+    }
 }

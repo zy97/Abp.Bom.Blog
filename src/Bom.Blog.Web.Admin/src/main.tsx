@@ -23,7 +23,7 @@ interceptors();
 // 这一阶段还是先进行正常的显示，调用的时候服务器判断是否有权限，后期在进行权限菜单优化显示
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <AuthProvider {...oidcConfig} on>
+        <AuthProvider {...oidcConfig} >
             <ConfigProvider locale={zhCN}>
                 <BrowserRouter>
                     <RenderRoutes />

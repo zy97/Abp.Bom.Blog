@@ -8,6 +8,7 @@ export const oidcConfig = {
   redirect_uri: baseUrl,
   response_type: "code",
   scope: "offline_access Blog profile openid email role phone address",
+  monitorSession: true,
 
   onSigninCallback: (_user: User | void): void => {
     window.history.replaceState({}, document.title, window.location.pathname);
