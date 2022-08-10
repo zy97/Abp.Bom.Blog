@@ -23,7 +23,7 @@ function Login() {
                 {
                     key: '1',
                     label: (
-                        <a >我的信息</a>
+                        <a onClick={() => { console.log(auth.user) }}>我的信息</a>
                     ),
                 },
                 {

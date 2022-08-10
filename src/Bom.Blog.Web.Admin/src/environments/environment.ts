@@ -1,9 +1,15 @@
-const baseUrl = 'http://localhost:3000';
+import { User } from "oidc-client-ts";
+
+const baseUrl = "http://localhost:3000";
 
 export const oidcConfig = {
-    authority: 'https://localhost:44399',
-    client_id: 'Blog_React',
-    redirect_uri: baseUrl,
-    response_type: 'code',
-    scope: 'offline_access Blog profile openid email role phone address',
+  authority: "https://localhost:44399",
+  client_id: "Blog_React",
+  redirect_uri: baseUrl,
+  response_type: "code",
+  scope: "offline_access Blog profile openid email role phone address",
+
+  onSigninCallback: (_user: User | void): void => {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  },
 };

@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import 'virtual:windi.css';
 import 'antd/dist/antd.css';
-import { RenderRoutes, routerConfig } from './router';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { RenderRoutes } from './router';
+import { BrowserRouter } from 'react-router-dom';
 import zhCN from 'antd/lib/locale/zh_CN';
 import { ConfigProvider } from 'antd';
 import { AuthProvider } from 'react-oidc-context';
@@ -21,7 +21,7 @@ dayjs.locale('zh-cn'); // use locale
 interceptors();
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <AuthProvider {...oidcConfig}>
+        <AuthProvider {...oidcConfig} on>
             <ConfigProvider locale={zhCN}>
                 <BrowserRouter>
                     <RenderRoutes />
