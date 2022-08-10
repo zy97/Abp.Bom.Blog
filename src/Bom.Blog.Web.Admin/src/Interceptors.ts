@@ -27,6 +27,9 @@ const interceptors = () => {
       if (error.response.status === 500) {
         message.error(error.response.data.error.message);
       }
+      if (error.response.status === 403) {
+        message.error(error.response.data.error.message);
+      }
       // const code = get(error, 'response.data.code');
       // const err = get(error, 'response.data.message');
       // if (code === '401101') {

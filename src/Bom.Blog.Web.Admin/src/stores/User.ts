@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { makeAutoObservable } from "mobx";
 import { userApi } from "../apis";
 import { AddUserDto } from "../data/models/system/User";
@@ -24,7 +25,7 @@ class UserStore {
     try {
       await userApi.deleteUser(id);
       return true;
-    } catch (error) {
+    } catch (error: any) {
       return false;
     }
   }

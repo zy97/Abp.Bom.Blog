@@ -27,8 +27,6 @@ function User() {
         if (success) {
           message.success("删除成功");
           search.submit();
-        } else {
-          message.error("删除失败");
         }
       },
       okText: "确定",
@@ -107,7 +105,7 @@ function User() {
           <Table.Column<UserDto> title="绰号" dataIndex="surname" />
           <Table.Column<UserDto> title="邮箱" dataIndex="email" />
           <Table.Column<UserDto> title="电话" dataIndex="phoneNumber" />
-          <Table.Column<UserDto> title="锁定" dataIndex="lockoutEnabled" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
+          <Table.Column<UserDto> title="启动锁定" dataIndex="lockoutEnabled" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
           <Table.Column<UserDto> title="已删除" dataIndex="isDeleted" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
           <Table.Column<UserDto> title="邮箱确认" dataIndex="emailConfirmed" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
           <Table.Column<UserDto> title="电话确认" dataIndex="phoneNumberConfirmed" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
@@ -163,28 +161,31 @@ function User() {
           <Form.Item name="id" label="id" hidden>
             <Input />
           </Form.Item>
-          <Form.Item
-            name="title"
-            label="标题"
-            rules={[
-              {
-                required: true,
-                message: "请输入标题",
-              },
-            ]}
-          >
+          <Form.Item name="userName" label="userName" rules={[{ required: true, message: "请输入userName" }]} >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="linkUrl"
-            label="链接地址"
-            rules={[
-              {
-                required: true,
-                message: "请输入链接地址",
-              },
-            ]}
-          >
+          <Form.Item name="name" label="name" rules={[{ required: true, message: "请输入name" }]} >
+            <Input />
+          </Form.Item>
+          <Form.Item name="surname" label="surname" rules={[{ required: true, message: "请输入surname" }]} >
+            <Input />
+          </Form.Item>
+          <Form.Item name="email" label="email" rules={[{ required: true, message: "请输入email" }]} >
+            <Input />
+          </Form.Item>
+          <Form.Item name="phoneNumber" label="phoneNumber" rules={[{ required: true, message: "请输入phoneNumber" }]} >
+            <Input />
+          </Form.Item>
+          <Form.Item name="isActive" label="isActive" rules={[{ required: true, message: "请输入isActive" }]} >
+            <Input />
+          </Form.Item>
+          <Form.Item name="lockoutEnabled" label="lockoutEnabled" rules={[{ required: true, message: "请输入lockoutEnabled" }]} >
+            <Input />
+          </Form.Item>
+          <Form.Item name="password" label="password" rules={[{ required: true, message: "请输入password" }]} >
+            <Input />
+          </Form.Item>
+          <Form.Item name="concurrencyStamp" label="concurrencyStamp" rules={[{ required: true, message: "请输入concurrencyStamp" }]} hidden>
             <Input />
           </Form.Item>
         </Form>
