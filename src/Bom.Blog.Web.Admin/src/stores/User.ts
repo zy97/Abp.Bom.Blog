@@ -1,7 +1,7 @@
 import { message } from "antd";
 import { makeAutoObservable } from "mobx";
 import { userApi } from "../apis";
-import { AddUserDto } from "../data/models/system/User";
+import { AddUserDto, UpdateUserDto } from "../data/models/system/User";
 class UserStore {
   constructor() {
     makeAutoObservable(this);
@@ -45,12 +45,30 @@ class UserStore {
       console.log(error);
     }
   }
-  async updateUser(id: string, user: AddUserDto) {
+  async updateUser(id: string, user: UpdateUserDto) {
     try {
       const result = await userApi.updateUser(id, user);
       return result.data;
     } catch (error) {
       console.log(error);
+    }
+  }
+  async getUserRoleById(id: string) {
+    try {
+      const result = await userApi.getUserRoleById(id);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return { items: [] };
+    }
+  }
+  async getAssignableRoles() {
+    try {
+      const result = await userApi.getAssignableRoles();
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return { items: [] };
     }
   }
 }

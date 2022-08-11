@@ -1,7 +1,7 @@
 import BaseEntity from "../BaseEntity";
 export type UserBaseDto = BaseEntity<string>;
 
-export interface AddUserDto {
+export interface AddUpdateUserBaseDto {
   userName: string;
   name: string;
   surname: string;
@@ -11,10 +11,11 @@ export interface AddUserDto {
   lockoutEnabled: boolean;
   roleNames: string[];
   password: string;
-}
-export interface UpdateUserDto extends AddUserDto {
   concurrencyStamp: string;
 }
+export type AddUserDto = Omit<AddUpdateUserBaseDto, "concurrencyStamp">;
+
+export type UpdateUserDto = Omit<AddUpdateUserBaseDto, "password">;
 export interface UserDto extends UpdateUserDto, UserBaseDto {
   creationTime: string;
   creatorId: string;

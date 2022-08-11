@@ -1,15 +1,18 @@
 import { useAntdTable, useRequest } from "ahooks";
-import { Button, Form, Input, message, Modal, Table } from "antd";
+import { Button, Checkbox, Form, Input, message, Modal, Row, Switch, Table, Tabs } from "antd";
 import { useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
-import { UserDto } from "../../../../data/models/system/User";
+import { RoleDto } from "../../../../data/models/system/Role";
+import { AddUpdateUserBaseDto, UserDto } from "../../../../data/models/system/User";
 import useStores from "../../../../hooks/useStore";
 
 function User() {
   const { userStore } = useStores();
   const [visible, setVisible] = useState(false);
+  const [isAddUser, setIsAddUser] = useState(true);
   const [form] = Form.useForm();
   const [modalForm] = Form.useForm();
+  const [roles, setRoles] = useState<RoleDto[]>([])
   const { tableProps, search } = useAntdTable(userStore.getUsers, {
     defaultPageSize: 10,
     form,
@@ -34,22 +37,33 @@ function User() {
     });
   };
   const showModal = () => {
+    userStore.getAssignableRoles().then((res) => { setRoles(res.items) });
     setVisible(true);
+  };
+  const addUser = () => {
+    setIsAddUser(true);
+    showModal();
+  };
+  const updateUser = (id: string, user: UserDto) => {
+    setIsAddUser(false);
+    showModal();
+    userStore.getUserRoleById(id).then((res) => {
+      modalForm.setFieldsValue({ ...user, roleNames: res.items.map(i => i.name) });
+    });
   };
   const getUser = async (record: UserDto) => {
     try {
       const user = await runAsync(record.id);
       if (user) {
-        modalForm.setFieldsValue(user);
-        console.log(user);
-        setVisible(true);
+        updateUser(record.id, user)
       }
     } catch (error) { }
+
   };
-  const addOrUpdateUser = async (data: UserDto) => {
+  const addOrUpdateUser = async (id: string, data: AddUpdateUserBaseDto) => {
     try {
-      if (data.id) {
-        const user = await userStore.updateUser(data.id, data);
+      if (id) {
+        const user = await userStore.updateUser(id, data);
         if (user) {
           modalForm.resetFields();
           message.success("更新成功");
@@ -75,7 +89,7 @@ function User() {
         extraActions={[
           {
             content: "添加",
-            action: showModal,
+            action: addUser,
           },
         ]}
       >
@@ -101,8 +115,8 @@ function User() {
           }}
         >
           <Table.Column<UserDto> title="用户名" dataIndex="userName" />
-          <Table.Column<UserDto> title="姓名" dataIndex="name" />
-          <Table.Column<UserDto> title="绰号" dataIndex="surname" />
+          <Table.Column<UserDto> title="名" dataIndex="name" />
+          <Table.Column<UserDto> title="姓" dataIndex="surname" />
           <Table.Column<UserDto> title="邮箱" dataIndex="email" />
           <Table.Column<UserDto> title="电话" dataIndex="phoneNumber" />
           <Table.Column<UserDto> title="启动锁定" dataIndex="lockoutEnabled" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
@@ -115,16 +129,9 @@ function User() {
             render={(recode) => {
               return (
                 <div className="space-x-4">
-                  <Button type="primary" onClick={() => getUser(recode)}>
-                    编辑
-                  </Button>
-                  <Button
-                    type="primary"
-                    danger
-                    onClick={() => deleteUser(recode)}
-                  >
-                    删除
-                  </Button>
+                  <Button type="primary" onClick={() => getUser(recode)}>编辑</Button>
+                  <Button type="primary">权限</Button>
+                  <Button type="primary" danger onClick={() => deleteUser(recode)} >删除</Button>
                 </div>
               );
             }}
@@ -144,53 +151,64 @@ function User() {
           modalForm
             .validateFields()
             .then((values) => {
-              addOrUpdateUser(values);
+              addOrUpdateUser(values.id, values);
             })
             .catch((info) => {
               message.error("添加失败");
             });
         }}
       >
+        <Form form={modalForm} name="form_in_modal" labelCol={{ span: 7 }} wrapperCol={{ span: 17 }} >
+          <Tabs defaultActiveKey="1">
 
-        <Form
-          form={modalForm}
-          name="form_in_modal"
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
-        >
-          <Form.Item name="id" label="id" hidden>
-            <Input />
-          </Form.Item>
-          <Form.Item name="userName" label="userName" rules={[{ required: true, message: "请输入userName" }]} >
-            <Input />
-          </Form.Item>
-          <Form.Item name="name" label="name" rules={[{ required: true, message: "请输入name" }]} >
-            <Input />
-          </Form.Item>
-          <Form.Item name="surname" label="surname" rules={[{ required: true, message: "请输入surname" }]} >
-            <Input />
-          </Form.Item>
-          <Form.Item name="email" label="email" rules={[{ required: true, message: "请输入email" }]} >
-            <Input />
-          </Form.Item>
-          <Form.Item name="phoneNumber" label="phoneNumber" rules={[{ required: true, message: "请输入phoneNumber" }]} >
-            <Input />
-          </Form.Item>
-          <Form.Item name="isActive" label="isActive" rules={[{ required: true, message: "请输入isActive" }]} >
-            <Input />
-          </Form.Item>
-          <Form.Item name="lockoutEnabled" label="lockoutEnabled" rules={[{ required: true, message: "请输入lockoutEnabled" }]} >
-            <Input />
-          </Form.Item>
-          <Form.Item name="password" label="password" rules={[{ required: true, message: "请输入password" }]} >
-            <Input />
-          </Form.Item>
-          <Form.Item name="concurrencyStamp" label="concurrencyStamp" rules={[{ required: true, message: "请输入concurrencyStamp" }]} hidden>
-            <Input />
-          </Form.Item>
+            <Tabs.TabPane tab="用户信息" key="1">
+
+              <Form.Item name="id" label="id" hidden>
+                <Input />
+              </Form.Item>
+              <Form.Item name="userName" label="用户名" rules={[{ required: true, message: "请输入用户名" }]} >
+                <Input />
+              </Form.Item>
+              <Form.Item name="name" label="名" rules={[{ required: true, message: "请输入名" }]} >
+                <Input />
+              </Form.Item>
+              <Form.Item name="surname" label="姓" rules={[{ required: true, message: "请输入姓" }]} >
+                <Input />
+              </Form.Item>
+              {isAddUser && <Form.Item name="password" label="密码" rules={[{ required: true, message: "请输入密码" }]} >
+                <Input />
+              </Form.Item>}
+              <Form.Item name="email" label="邮箱" rules={[{ required: true, message: "请输入邮箱" }]} >
+                <Input />
+              </Form.Item>
+              <Form.Item name="phoneNumber" label="电话" rules={[{ required: true, message: "请输入电话" }]} >
+                <Input />
+              </Form.Item>
+              <Form.Item name="isActive" label="启用" valuePropName="checked">
+                <Switch />
+              </Form.Item>
+              <Form.Item name="lockoutEnabled" label="登陆失败，账号锁定" valuePropName="checked" >
+                <Switch />
+              </Form.Item>
+              <Form.Item name="concurrencyStamp" label="concurrencyStamp" hidden>
+                <Input />
+              </Form.Item>
+
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="角色" key="2">
+              <Form.Item name="roleNames" label="">
+                <Checkbox.Group style={{ width: '100%' }}>
+                  {roles.map((item) => { return <Row key={item.name}><Checkbox value={item.name}>{item.name}</Checkbox></Row> })}
+                </Checkbox.Group>
+              </Form.Item>
+
+            </Tabs.TabPane>
+
+          </Tabs>
         </Form>
+
       </Modal>
-    </div>
+    </div >
   );
 }
 
