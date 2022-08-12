@@ -7,6 +7,7 @@ import postStore from "./post";
 import audit_logStore from "./AuditLog";
 import userStore from "./User";
 import permissionStore from "./Permission";
+import roleStore from './Role';
 
 export const storesContext = React.createContext({
   blogStore,
@@ -16,5 +17,5 @@ export const storesContext = React.createContext({
   postStore,
   audit_logStore,
   userStore,
-  permissionStore,
+  permissionStore,	roleStore
 });

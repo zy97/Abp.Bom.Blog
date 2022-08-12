@@ -9,3 +9,8 @@ export interface RoleDto extends RoleBaseDto {
   isPublic: boolean;
   concurrencyStamp: string;
 }
+export type AddRoleDto = Omit<UpdateRoleDto, "concurrencyStamp">;
+export type UpdateRoleDto = Omit<
+  RoleDto,
+  "extraProperties" | "isStatic" | "id"
+>;

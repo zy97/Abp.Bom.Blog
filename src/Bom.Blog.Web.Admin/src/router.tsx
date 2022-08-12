@@ -9,6 +9,7 @@ import App from "./App";
 import ListView from "./pages/BlogManage/Pages/Post/ListView";
 import AuditLog from "./pages/BlogManage/Pages/AuditLog";
 import User from "./pages/BlogManage/Pages/User";
+import Role from "./pages/BlogManage/Pages/Role";
 //https://reactrouter.com/docs/en/v6/getting-started/overview#nested-routes
 //嵌套的的父级需要有一个letout容器才行
 export interface Route extends RouteObject {
@@ -23,7 +24,15 @@ export const routerConfig: Route[] = [
     element: <App />,
     children: [
       { index: true, element: <Post /> },
-      { title: "系统管理", path: "/sysmanage", children: [{ title: "用户管理", path: "user", element: <User /> }, { title: "审计日志", path: "auditlog", element: <AuditLog /> }] },
+      {
+        title: "系统管理",
+        path: "/sysmanage",
+        children: [
+          { title: "用户管理", path: "user", element: <User /> },
+          { title: "角色管理", path: "role", element: <Role /> },
+          { title: "审计日志", path: "auditlog", element: <AuditLog /> },
+        ],
+      },
       {
         title: "博客管理",
         path: "/blogmanage",

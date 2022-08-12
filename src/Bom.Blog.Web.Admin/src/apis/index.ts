@@ -6,3 +6,4 @@ export * as postApi from "./post";
 export * as audit_logApi from "./AuditLog";
 export * as userApi from "./User";
 export * as permissionApi from "./Permission";
+export * as roleApi from './Role';
