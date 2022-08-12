@@ -6,6 +6,7 @@ import friendLinkStore from "./friendLink";
 import postStore from "./post";
 import audit_logStore from "./AuditLog";
 import userStore from "./User";
+import permissionStore from "./Permission";
 
 export const storesContext = React.createContext({
   blogStore,
@@ -15,4 +16,5 @@ export const storesContext = React.createContext({
   postStore,
   audit_logStore,
   userStore,
+  permissionStore,
 });

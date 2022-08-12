@@ -1,18 +1,27 @@
 import { useAntdTable, useRequest } from "ahooks";
-import { Button, Checkbox, Form, Input, message, Modal, Row, Switch, Table, Tabs } from "antd";
+import { Button, Checkbox, Divider, Form, Input, message, Modal, Row, Switch, Table, Tabs } from "antd";
+import { CheckboxChangeEvent } from "antd/lib/checkbox";
+import { stringify } from "rc-field-form/es/useWatch";
 import { useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { RoleDto } from "../../../../data/models/system/Role";
 import { AddUpdateUserBaseDto, UserDto } from "../../../../data/models/system/User";
 import useStores from "../../../../hooks/useStore";
 
+type CheckState = Record<string, boolean>;
 function User() {
-  const { userStore } = useStores();
+  const { userStore, permissionStore } = useStores();
   const [visible, setVisible] = useState(false);
+  const [permissionModalVisible, setPermissionModalVisible] = useState(false);
+  const [permissionModalForm] = Form.useForm();
   const [isAddUser, setIsAddUser] = useState(true);
   const [form] = Form.useForm();
   const [modalForm] = Form.useForm();
-  const [roles, setRoles] = useState<RoleDto[]>([])
+  const [roles, setRoles] = useState<RoleDto[]>([]);
+  const [permissionGroup, setPermissionGroup] = useState<PermissionGroup>({} as PermissionGroup);
+  // const [allCheckStatus, setAllCheckStatus] = useState<CheckState>({});
+  const [allCheckStatus, setAllCheckStatus] = useState<{ [key: string]: boolean }>({});
+
   const { tableProps, search } = useAntdTable(userStore.getUsers, {
     defaultPageSize: 10,
     form,
@@ -36,9 +45,127 @@ function User() {
       cancelText: "取消",
     });
   };
+  const onPermissionChange = (e: CheckboxChangeEvent) => {
+    console.log('checked = ', e.target.checked, e.target.name);
+    const name = e.target.name!;
+    const value = e.target.checked;
+    if (name === "allCheck") {
+      //勾选全部点击
+      if (value === true) {
+        for (const key in allCheckStatus) {
+          allCheckStatus[key] = true;
+        }
+        allCheckStatus[name] = value;
+      }
+      else {
+        for (const key in allCheckStatus) {
+          allCheckStatus[key] = false;
+        }
+        allCheckStatus[name] = value;
+      }
+    }
+    else {
+      if (permissionGroup.groups.findIndex(g => g.name === name) !== -1) {
+        //是组点击
+        if (value === true) {
+          for (const key in allCheckStatus) {
+            if (key.startsWith(name)) {
+              allCheckStatus[key] = true;
+            }
+          }
+          allCheckStatus[name] = value;
+        }
+        else {
+          for (const key in allCheckStatus) {
+            if (key.startsWith(name)) {
+              allCheckStatus[key] = false;
+            }
+          }
+          allCheckStatus[name] = value;
+        }
+      }
+      else {
+        //不是组点击
+        if (value === true) {
+          allCheckStatus[name] = value;
+          if (name.split('.').length === 3) {
+            allCheckStatus[name.substring(0, name.lastIndexOf('.'))] = value;
+          }
+        }
+        else {
+          allCheckStatus[name] = value;
+          if (name.split('.').length === 2) {
+            for (const key in allCheckStatus) {
+              if (key.startsWith(name)) {
+                allCheckStatus[key] = value;
+              }
+            }
+          }
+        }
+      }
+    }
+    let array = Array<{ key: string, value: boolean }>();
+    for (const key in allCheckStatus) {
+      array.push({ key: key, value: allCheckStatus[key] });
+    }
+    if (name.split('.').length > 1) {
+      const groupName = name.substring(0, name.indexOf('.'));
+      console.log(groupName);
+      const group1 = array.filter(i => i.key.startsWith(groupName));
+      const group2 = group1.filter(i => i.key !== groupName);
+      console.log(array);
+      console.log(group1);
+      console.log(group2);
+      if (group2.every(i => i.value === true)) {
+        allCheckStatus[groupName] = true;
+      }
+      else {
+        allCheckStatus[groupName] = false;
+      }
+    }
+    array = Array<{ key: string, value: boolean }>();
+    for (const key in allCheckStatus) {
+      array.push({ key: key, value: allCheckStatus[key] });
+    }
+    const group = array.filter(i => permissionGroup.groups.map(i => i.name).includes(i.key));
+    console.log(group);
+    if (group.every(i => i.value === true)) {
+      allCheckStatus["allCheck"] = true;
+    }
+    else {
+      allCheckStatus["allCheck"] = false;
+    }
+    console.log(allCheckStatus);
+    setAllCheckStatus({ ...allCheckStatus });
+
+  };
   const showModal = () => {
     userStore.getAssignableRoles().then((res) => { setRoles(res.items) });
     setVisible(true);
+  };
+  const showPermissionModal = (id: string) => {
+    setPermissionModalVisible(true);
+    permissionStore.getPermissionByUser(id).then((res) => {
+      const staus: { [key: string]: boolean } = {};
+      res.groups.forEach(g => {
+        g.permissions.forEach(p => { staus[p.name] = p.isGranted; });
+        if (g.permissions.every(p => p.isGranted === true)) {
+          staus[g.name] = true;
+        }
+        else {
+          staus[g.name] = false;
+        }
+      });
+      staus.allCheck = true;
+      for (const k in staus) {
+        if (staus[k] === false) {
+          staus.allCheck = false;
+        }
+      }
+      console.log(staus);
+      setAllCheckStatus(staus);
+      setPermissionGroup(res);
+    });
   };
   const addUser = () => {
     setIsAddUser(true);
@@ -81,6 +208,41 @@ function User() {
       }
     } catch (error) { }
   };
+  const checkedCount = (groupName: string) => {
+    let count = 0;
+    for (const key in allCheckStatus) {
+      if (key.startsWith(groupName) && key !== groupName) {
+        if (allCheckStatus[key] === true) {
+          count += 1;
+        }
+      }
+    }
+    return count;
+  }
+  const createPermissionView = () => {
+
+    return (<>
+      <Checkbox onChange={onPermissionChange} name="allCheck" checked={allCheckStatus.allCheck}>授予所有权限</Checkbox>
+      <Divider />
+      <Form form={permissionModalForm} name="form_in_modal" labelCol={{ span: 7 }} wrapperCol={{ span: 17 }} >
+        <Tabs defaultActiveKey="1" tabPosition="left">
+          {permissionGroup.groups && permissionGroup.groups.map(g => {
+            return <Tabs.TabPane tab={`${g.displayName}(${checkedCount(g.name)}/${g.permissions.length})`} key={g.name}>
+              {g.displayName}
+              <Divider />
+              <Checkbox name={g.name} checked={allCheckStatus[g.name]} onChange={onPermissionChange}>全选</Checkbox>
+              <Divider />
+              {g.permissions.map(p => {
+                return <Row key={p.name}>{p.parentName !== null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> : ""}<Checkbox name={p.name} onChange={onPermissionChange} checked={allCheckStatus[p.name]}>{p.displayName}</Checkbox></Row>
+              })}
+
+            </Tabs.TabPane>
+          })}
+
+        </Tabs>
+      </Form>
+    </>)
+  }
   return (
     <div>
       <AdvancedSearchForm
@@ -130,7 +292,7 @@ function User() {
               return (
                 <div className="space-x-4">
                   <Button type="primary" onClick={() => getUser(recode)}>编辑</Button>
-                  <Button type="primary">权限</Button>
+                  <Button type="primary" onClick={() => showPermissionModal(recode.id)}>权限</Button>
                   <Button type="primary" danger onClick={() => deleteUser(recode)} >删除</Button>
                 </div>
               );
@@ -207,6 +369,47 @@ function User() {
           </Tabs>
         </Form>
 
+      </Modal>
+      <Modal
+        visible={permissionModalVisible}
+        title="权限"
+        okText="确定"
+        cancelText="取消"
+        onCancel={() => {
+          setPermissionModalVisible(false);
+          // modalForm.resetFields();
+        }}
+        onOk={() => {
+          // modalForm
+          //   .validateFields()
+          //   .then((values) => {
+          //     addOrUpdateUser(values.id, values);
+          //   })
+          //   .catch((info) => {
+          //     message.error("添加失败");
+          //   });
+        }}
+      >
+        {/* <Checkbox onChange={onPermissionChange} name="allCheck" checked={allCheckStatus.allCheck}>授予所有权限</Checkbox>
+        <Divider />
+        <Form form={permissionModalForm} name="form_in_modal" labelCol={{ span: 7 }} wrapperCol={{ span: 17 }} >
+          <Tabs defaultActiveKey="1" tabPosition="left">
+            {permissionGroup.groups && permissionGroup.groups.map(g => {
+              return <Tabs.TabPane tab={`${g.displayName}(${g.permissions.length})`} key={g.name}>
+                {g.displayName}
+                <Divider />
+                <Checkbox name={g.name} onChange={onPermissionChange}>全选</Checkbox>
+                <Divider />
+                {g.permissions.map(p => {
+                  return <Row key={p.name}>{p.parentName !== null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> : ""}<Checkbox name={p.name} onChange={onPermissionChange} defaultChecked={p.isGranted}>{p.displayName}</Checkbox></Row>
+                })}
+
+              </Tabs.TabPane>
+            })}
+
+          </Tabs>
+        </Form> */}
+        {createPermissionView()}
       </Modal>
     </div >
   );
