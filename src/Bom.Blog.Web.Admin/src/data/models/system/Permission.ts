@@ -1,4 +1,4 @@
-interface PermissionGroup {
+export interface PermissionGroup {
   entityDisplayName: string;
   groups: Group[];
 }
@@ -16,4 +16,11 @@ interface Permission {
   isGranted: boolean;
   allowedProviders: any[];
   grantedProviders: any[];
+}
+export interface UpdatePermissionListItemDto {
+  name: string;
+  isGranted: boolean;
+}
+export interface UpdatePermissionListDto {
+  permissions: UpdatePermissionListItemDto[];
 }
