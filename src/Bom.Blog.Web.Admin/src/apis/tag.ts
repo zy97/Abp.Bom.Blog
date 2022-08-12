@@ -1,5 +1,5 @@
 import axios from "axios";
-import PagedList from "../data/models/PagedList";
+import { PagedList } from "../data/models/PagedList";
 import PageRequest from "../data/models/PageRequest";
 import { AddTagDto, TagDto, TagSelectOptionDto } from "../data/models/Tag";
 

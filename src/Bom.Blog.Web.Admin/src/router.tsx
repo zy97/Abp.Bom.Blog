@@ -84,6 +84,6 @@ export const routerConfig: Route[] = [
   },
 ];
 export function RenderRoutes() {
-  let routes = useRoutes(routerConfig);
+  const routes = useRoutes(routerConfig);
   return routes;
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
-import PagedList from "../data/models/PagedList";
+import { List, PagedList } from "../data/models/PagedList";
 import PageRequest from "../data/models/PageRequest";
-import { RoleDtoItems } from "../data/models/system/Role";
+import { RoleDto } from "../data/models/system/Role";
 import { AddUserDto, UpdateUserDto, UserDto } from "../data/models/system/User";
 
 // 添加
@@ -26,8 +26,8 @@ export const updateUser = (id: string, user: UpdateUserDto) =>
 
 // 获取用户角色
 export const getUserRoleById = (id: string) =>
-  axios.get<RoleDtoItems>(`/api/identity/users/${id}/roles`, {});
+  axios.get<List<RoleDto>>(`/api/identity/users/${id}/roles`, {});
 
 // 获取可分配角色
 export const getAssignableRoles = () =>
-  axios.get<RoleDtoItems>(`/api/identity/users/assignable-roles`, {});
+  axios.get<List<RoleDto>>(`/api/identity/users/assignable-roles`, {});
