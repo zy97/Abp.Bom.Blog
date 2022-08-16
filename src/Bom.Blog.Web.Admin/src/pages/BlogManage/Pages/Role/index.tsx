@@ -119,16 +119,9 @@ function Role() {
             render={(recode) => {
               return (
                 <div className="space-x-4">
-                  <Button type="primary" onClick={() => getRole(recode)}>
-                    编辑
-                  </Button>
-                  <Button
-                    type="primary"
-                    danger
-                    onClick={() => deleteRole(recode)}
-                  >
-                    删除
-                  </Button>
+                  <Button type="primary" onClick={() => getRole(recode)}>编辑</Button>
+                  <Button type="primary" onClick={() => getRole(recode)}>权限</Button>
+                  <Button type="primary" danger onClick={() => deleteRole(recode)}>删除</Button>
                 </div>
               );
             }}
