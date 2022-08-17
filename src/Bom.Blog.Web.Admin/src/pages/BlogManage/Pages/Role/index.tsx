@@ -2,15 +2,22 @@ import { useAntdTable, useRequest } from "ahooks";
 import { Button, Checkbox, Form, Input, message, Modal, Table } from "antd";
 import { useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
+import { PermissionGroup } from "../../../../data/models/system/Permission";
 import { RoleDto } from "../../../../data/models/system/Role";
 import useStores from "../../../../hooks/useStore";
+import Permission from "../../../Components/Permission";
 
 function Role() {
-  const { roleStore } = useStores();
+  const { roleStore, permissionStore } = useStores();
   const [modalTitle, setModalTitle] = useState("");
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
   const [modalForm] = Form.useForm();
+  const [roleId, setRoleId] = useState("");
+  const [permissionModalVisible, setPermissionModalVisible] = useState(false);
+  const [allCheckStatus, setAllCheckStatus] = useState<{ [key: string]: boolean }>({});
+  const [initPermission, setInitPermission] = useState<{ [key: string]: boolean }>({});
+  const [permissionGroup, setPermissionGroup] = useState<PermissionGroup>({} as PermissionGroup);
   const { tableProps, search } = useAntdTable(roleStore.getRoles, {
     defaultPageSize: 10,
     form,
@@ -77,6 +84,42 @@ function Role() {
       //
     }
   };
+
+  const showPermissionModal = (name: string) => {
+    setRoleId(name);
+
+    permissionStore.getPermissionByRole(name).then((res) => {
+
+      const staus: { [key: string]: boolean } = {};
+      res.groups.forEach(g => {
+        g.permissions.forEach(p => { staus[p.name] = p.isGranted; });
+        if (g.permissions.every(p => p.isGranted === true)) {
+          staus[g.name] = true;
+        }
+        else {
+          staus[g.name] = false;
+        }
+      });
+      staus.allCheck = true;
+      for (const k in staus) {
+        if (staus[k] === false) {
+          staus.allCheck = false;
+        }
+      }
+
+      setAllCheckStatus(staus);
+      const temp = { ...staus };
+      delete temp.allCheck;
+
+      res.groups.forEach(g => {
+        delete temp[g.name];
+      });
+      setInitPermission(temp);
+      setPermissionGroup(res);
+      setPermissionModalVisible(true);
+
+    });
+  }
   return (
     <div>
       <AdvancedSearchForm
@@ -120,7 +163,7 @@ function Role() {
               return (
                 <div className="space-x-4">
                   <Button type="primary" onClick={() => getRole(recode)}>编辑</Button>
-                  <Button type="primary" onClick={() => getRole(recode)}>权限</Button>
+                  <Button type="primary" onClick={() => showPermissionModal(recode.name)}>权限</Button>
                   <Button type="primary" danger onClick={() => deleteRole(recode)}>删除</Button>
                 </div>
               );
@@ -173,6 +216,29 @@ function Role() {
           </Form.Item>
 
         </Form>
+      </Modal>
+      <Modal visible={permissionModalVisible} title="权限" okText="确定" cancelText="取消" onCancel={() => { setPermissionModalVisible(false); }}
+        onOk={() => {
+          // const temp = { ...allCheckStatus };
+          // delete temp.allCheck;
+          // permissionGroup.groups.forEach(g => {
+          //   delete temp[g.name];
+          // });
+          // const change: UpdatePermissionListItemDto[] = [];
+          // for (const key in initPermission) {
+          //   if (initPermission[key] !== temp[key]) {
+          //     change.push({ name: key, isGranted: temp[key] });
+          //   }
+          // }
+          // console.log(change, userId);
+          // permissionStore.updatePermissionsByUser(userId, { permissions: change }).then(() => {
+          //   //
+          //   console.log("成功");
+          //   setPermissionModalVisible(false);
+          // });
+        }}
+      >
+        <Permission permissionGroup={permissionGroup} />
       </Modal>
     </div>
   );

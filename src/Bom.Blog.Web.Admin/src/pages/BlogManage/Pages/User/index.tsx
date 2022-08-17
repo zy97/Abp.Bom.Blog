@@ -409,7 +409,6 @@ function User() {
 
           </Tabs>
         </Form>
-        {/* {createPermissionView()} */}
       </Modal>
     </div >
   );
