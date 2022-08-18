@@ -1,6 +1,7 @@
 using Bom.Blog.BackgroundJobs;
 using Bom.Blog.EntityFrameworkCore;
 using Bom.Blog.MultiTenancy;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +25,7 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
+using Volo.Abp.Hangfire;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
@@ -242,7 +244,10 @@ public class BlogHttpApiHostModule : AbpModule
         app.UseUnitOfWork();
         app.UseIdentityServer();
         app.UseAuthorization();
-
+        app.UseHangfireDashboard(options: new DashboardOptions
+        {
+            AsyncAuthorization = new[] { new AbpHangfireAuthorizationFilter() }
+        });
         app.UseSwagger();
         app.UseAbpSwaggerUI(c =>
         {

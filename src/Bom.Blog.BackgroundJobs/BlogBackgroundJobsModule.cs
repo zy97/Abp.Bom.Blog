@@ -18,7 +18,6 @@ namespace Bom.Blog.BackgroundJobs
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
         {
             var app = context.GetApplicationBuilder();
-            app.UseHangfireDashboard();
 
         }
         private void ConfigureHangfire(ServiceConfigurationContext context, IConfiguration configuration)

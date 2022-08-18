@@ -3,6 +3,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { useAuth } from "react-oidc-context";
 import { accountApi } from "../../../apis";
 import { useDebounceEffect } from "ahooks";
+import axios from "axios";
 
 
 function Login() {
@@ -12,6 +13,9 @@ function Login() {
             auth.signinRedirect();
         }
         console.log("登录状态", auth.isAuthenticated);
+        console.log("user", auth.user);
+        axios.get('/api/abp/application-configuration').then(res => { console.log(res); });
+
     }, [auth.isAuthenticated], { wait: 500 })
     const login = () => {
         auth.signinRedirect();
