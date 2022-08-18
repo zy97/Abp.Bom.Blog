@@ -1,17 +1,17 @@
 import { Checkbox, Divider, Form, Row, Tabs } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useEffect, useState } from "react";
-import { PermissionGroup } from "../../../data/models/system/Permission";
+import { PermissionGroup, UpdatePermissionListItemDto } from "../../../data/models/system/Permission";
 
 type PermissionProp = {
-    permissionGroup: PermissionGroup
+    permissionGroup: PermissionGroup,
+    onPermissionChanged: (checkedValues: UpdatePermissionListItemDto[]) => void,
 }
 
 function Permission(props: PermissionProp) {
 
     const [permissionModalForm] = Form.useForm();
-    const { permissionGroup } = props;
-    console.log(permissionGroup);
+    const { permissionGroup, onPermissionChanged } = props;
     const [allCheckStatus, setAllCheckStatus] = useState<{ [key: string]: boolean }>({});
     const [initPermission, setInitPermission] = useState<{ [key: string]: boolean }>({});
     const init = (permissionGroup: PermissionGroup) => {
@@ -142,6 +142,18 @@ function Permission(props: PermissionProp) {
         }
         setAllCheckStatus({ ...allCheckStatus });
 
+        const temp = { ...allCheckStatus };
+        delete temp.allCheck;
+        permissionGroup.groups.forEach(g => {
+            delete temp[g.name];
+        });
+        const change: UpdatePermissionListItemDto[] = [];
+        for (const key in initPermission) {
+            if (initPermission[key] !== temp[key]) {
+                change.push({ name: key, isGranted: temp[key] });
+            }
+        }
+        onPermissionChanged(change);
     };
 
     return (
