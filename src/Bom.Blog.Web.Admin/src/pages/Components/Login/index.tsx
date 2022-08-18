@@ -1,18 +1,17 @@
 import { Button, Dropdown, Menu, Space } from "antd";
-import { useEffect, useState } from "react";
-import { DownOutlined, SmileOutlined } from '@ant-design/icons';
+import { useEffect } from "react";
+import { DownOutlined } from '@ant-design/icons';
 import { useAuth } from "react-oidc-context";
 import axios from "axios";
+import { accountApi } from "../../../apis";
 
 
 function Login() {
     const auth = useAuth();
     useEffect(() => {
-
         return auth.events.addUserSignedIn(() => {
             console.log('login success')
         });
-
     }, [auth.events, auth.signinSilent])
     useEffect(() => {
         if (auth.isAuthenticated) {
@@ -28,8 +27,9 @@ function Login() {
     const logout = () => {
         console.log('logout')
         auth.removeUser();
-        auth.revokeTokens();
-        auth.clearStaleState();
+        // auth.revokeTokens();
+        // auth.clearStaleState();
+        accountApi.logout();
     }
     const menu = (
         <Menu
