@@ -1,50 +1,36 @@
 import { Button, Dropdown, Menu, Space } from "antd";
-import { useEffect } from "react";
 import { DownOutlined } from '@ant-design/icons';
 import { useAuth } from "react-oidc-context";
-import axios from "axios";
 import { accountApi } from "../../../apis";
+import { useDebounceEffect } from "ahooks";
 
 
 function Login() {
     const auth = useAuth();
-    useEffect(() => {
-        return auth.events.addUserSignedIn(() => {
-            console.log('login success')
-        });
-    }, [auth.events, auth.signinSilent])
-    useEffect(() => {
-        if (auth.isAuthenticated) {
-            axios.get('/api/abp/application-configuration').then(res => { console.log(res); });
+    useDebounceEffect(() => {
+        if (!auth.isAuthenticated) {
+            auth.signinRedirect();
         }
-    }, [auth.isAuthenticated])
-
+        console.log("登录状态", auth.isAuthenticated);
+    }, [auth.isAuthenticated], { wait: 500 })
     const login = () => {
-        console.log('login')
-
         auth.signinRedirect();
     }
     const logout = () => {
-        console.log('logout')
-        auth.removeUser();
-        // auth.revokeTokens();
-        // auth.clearStaleState();
-        accountApi.logout();
+        accountApi.logout().then(() => {
+            auth.removeUser();
+        }).catch(err => { console.log(err) });
     }
     const menu = (
         <Menu
             items={[
                 {
                     key: '1',
-                    label: (
-                        <a onClick={() => { console.log(auth.user) }}>我的信息</a>
-                    ),
+                    label: <a onClick={() => { console.log(auth.user) }}>我的信息</a>
                 },
                 {
                     key: '2',
-                    label: (
-                        <a onClick={logout} >退出登录</a>
-                    ),
+                    label: <a onClick={logout} >退出登录</a>
                 },
             ]}
         />
@@ -60,7 +46,6 @@ function Login() {
                     </Space>
                 </a>
             </Dropdown> : <Button type="link" onClick={login}>登录</Button>}
-
         </div>
     );
 }
