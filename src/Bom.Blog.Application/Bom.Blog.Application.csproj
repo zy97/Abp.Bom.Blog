@@ -1,25 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\common.props" />
+	<Import Project="..\..\common.props" />
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Bom.Blog</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<RootNamespace>Bom.Blog</RootNamespace>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Bom.Blog.BackgroundJobs\Bom.Blog.BackgroundJobs.csproj" />
-    <ProjectReference Include="..\Bom.Blog.Domain\Bom.Blog.Domain.csproj" />
-    <ProjectReference Include="..\Bom.Blog.Application.Contracts\Bom.Blog.Application.Contracts.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Bom.Blog.BackgroundJobs\Bom.Blog.BackgroundJobs.csproj" />
+		<ProjectReference Include="..\Bom.Blog.Domain\Bom.Blog.Domain.csproj" />
+		<ProjectReference Include="..\Bom.Blog.Application.Contracts\Bom.Blog.Application.Contracts.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Volo.Abp.Account.Application" Version="5.3.4" />
-    <PackageReference Include="Volo.Abp.Identity.Application" Version="5.3.4" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="5.3.4" />
-    <PackageReference Include="Volo.Abp.TenantManagement.Application" Version="5.3.4" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="5.3.4" />
-    <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="5.3.4" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Volo.Abp.Account.Application" Version="6.0.0-rc.2" />
+		<PackageReference Include="Volo.Abp.Identity.Application" Version="6.0.0-rc.2" />
+		<PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="6.0.0-rc.2" />
+		<PackageReference Include="Volo.Abp.TenantManagement.Application" Version="6.0.0-rc.2" />
+		<PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="6.0.0-rc.2" />
+		<PackageReference Include="Volo.Abp.SettingManagement.Application" Version="6.0.0-rc.2" />
+	</ItemGroup>
 
 </Project>
