@@ -4,20 +4,20 @@ using Bom.Blog.MultiTenancy;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using OpenIddict.Validation.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Account;
 using Volo.Abp.Account.Web;
-using Volo.Abp.AspNetCore.Authentication.JwtBearer;
 using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
@@ -42,8 +42,7 @@ namespace Bom.Blog;
     typeof(BlogApplicationModule),
     typeof(BlogEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreMvcUiBasicThemeModule),
-    typeof(AbpAspNetCoreAuthenticationJwtBearerModule),
-    typeof(AbpAccountWebIdentityServerModule),
+    typeof(AbpAccountWebOpenIddictModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
     typeof(BlogBackgroundJobsModule)
@@ -58,7 +57,7 @@ public class BlogHttpApiHostModule : AbpModule
         ConfigureBundles();
         ConfigureUrls(configuration);
         ConfigureConventionalControllers();
-        ConfigureAuthentication(context, configuration);
+        ConfigureAuthentication(context);
         ConfigureLocalization();
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
@@ -147,20 +146,9 @@ public class BlogHttpApiHostModule : AbpModule
         });
     }
 
-    private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
+    private void ConfigureAuthentication(ServiceConfigurationContext context)
     {
-        context.Services.AddAuthentication()
-            .AddJwtBearer(options =>
-            {
-                options.Authority = configuration["AuthServer:Authority"];
-                options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
-                options.Audience = "Blog";
-                options.BackchannelHttpHandler = new HttpClientHandler
-                {
-                    ServerCertificateCustomValidationCallback =
-                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                };
-            });
+        context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
     }
 
     private static void ConfigureSwaggerServices(ServiceConfigurationContext context, IConfiguration configuration)
@@ -250,7 +238,7 @@ public class BlogHttpApiHostModule : AbpModule
         app.UseRouting();
         app.UseCors();
         app.UseAuthentication();
-        app.UseJwtTokenMiddleware();
+        app.UseAbpOpenIddictValidation();
 
         if (MultiTenancyConsts.IsEnabled)
         {
@@ -258,7 +246,6 @@ public class BlogHttpApiHostModule : AbpModule
         }
 
         app.UseUnitOfWork();
-        app.UseIdentityServer();
         app.UseAuthorization();
         app.UseHangfireDashboard(options: new DashboardOptions
         {
@@ -271,12 +258,23 @@ public class BlogHttpApiHostModule : AbpModule
 
             var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
             c.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
-            c.OAuthClientSecret(configuration["AuthServer:SwaggerClientSecret"]);
             c.OAuthScopes("Blog");
         });
 
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
+    }
+    public override void PreConfigureServices(ServiceConfigurationContext context)
+    {
+        PreConfigure<OpenIddictBuilder>(builder =>
+        {
+            builder.AddValidation(options =>
+            {
+                options.AddAudiences("Blog");
+                options.UseLocalServer();
+                options.UseAspNetCore();
+            });
+        });
     }
 }

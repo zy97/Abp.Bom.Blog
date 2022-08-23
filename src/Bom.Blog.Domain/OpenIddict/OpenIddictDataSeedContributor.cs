@@ -50,15 +50,15 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
 
     private async Task CreateScopesAsync()
     {
-        if (await _scopeManager.FindByNameAsync("Bom.Blog") == null)
+        if (await _scopeManager.FindByNameAsync("Blog") == null)
         {
             await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
             {
-                Name = "Bom.Blog",
+                Name = "Blog",
                 DisplayName = "Bom.Blog API",
                 Resources =
                 {
-                    "Bom.Blog"
+                    "Blog"
                 }
             });
         }

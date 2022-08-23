@@ -7,7 +7,7 @@ export const oidcConfig = {
   client_id: "Blog_React",
   redirect_uri: baseUrl,
   response_type: "code",
-  scope: "offline_access Blog profile openid email role phone address",
+  scope: "offline_access Blog profile openid email roles phone address",
   monitorSession: true,
 
   onSigninCallback: (_user: User | void): void => {
