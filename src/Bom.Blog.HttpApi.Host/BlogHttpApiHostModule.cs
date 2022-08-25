@@ -67,9 +67,18 @@ public class BlogHttpApiHostModule : AbpModule
         {
             options.Events.OnRedirectToLogin = context =>
             {
-                context.Response.Headers["Location"] = context.RedirectUri;
-                context.Response.StatusCode = 401;
-                return Task.CompletedTask;
+
+                if (context.Request.Path.Value is not "/connect/authorize")
+                {
+                    context.Response.Headers["Location"] = context.RedirectUri;
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                }
+                else
+                {
+                    context.Response.Redirect(context.RedirectUri);
+                    return Task.CompletedTask;
+                }
             };
             options.Events.OnRedirectToAccessDenied = context =>
             {
