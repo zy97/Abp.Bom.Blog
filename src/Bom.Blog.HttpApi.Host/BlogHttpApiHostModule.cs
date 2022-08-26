@@ -26,6 +26,7 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
+using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.Hangfire;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
@@ -45,7 +46,8 @@ namespace Bom.Blog;
     typeof(AbpAccountWebOpenIddictModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
-    typeof(BlogBackgroundJobsModule)
+    typeof(BlogBackgroundJobsModule),
+    typeof(AbpCachingStackExchangeRedisModule)
 )]
 public class BlogHttpApiHostModule : AbpModule
 {
