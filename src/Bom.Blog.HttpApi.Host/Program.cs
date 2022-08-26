@@ -1,15 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.Threading.Tasks;
 
 namespace Bom.Blog;
 
 public class Program
 {
+    //等后续OpenIddict升级到4.0之后集成github等第三方登录
     public async static Task<int> Main(string[] args)
     {
         Log.Logger = new LoggerConfiguration()
