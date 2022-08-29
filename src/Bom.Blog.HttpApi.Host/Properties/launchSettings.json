@@ -11,7 +11,9 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "SkyAPM.Agent.AspNetCore", //必须配置
+        "SKYWALKING__SERVICENAME": "Service1" // 必须配置，在skywalking做标识，服务名称
       },
       "applicationUrl": "https://localhost:44399"
     },

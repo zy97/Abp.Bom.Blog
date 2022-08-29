@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using SkyApm.Utilities.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -30,6 +31,8 @@ public class Program
         {
             Log.Information("Starting Bom.Blog.HttpApi.Host.");
             var builder = WebApplication.CreateBuilder(args);
+            //https://www.cnblogs.com/wei325/p/16412775.html 引入基本skywalking
+            builder.Services.AddSkyApmExtensions();
             builder.Host.AddAppSettingsSecretsJson()
                 .UseAutofac()
                 .UseSerilog();
