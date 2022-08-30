@@ -23,7 +23,7 @@ namespace Bom.Blog.Tags
             var query = from tag in await tagRepo.GetQueryableAsync()
                         join postTag in await postTagRepo.GetQueryableAsync() on tag.Id equals postTag.TagId into tpt
                         from t in tpt.DefaultIfEmpty()
-                        group t by new { tag.DisplayName, tag.TagName } into g
+                        group t by new { tag.DisplayName, tag.Name } into g
                         select new TagCountDto { TagName = g.Key.TagName, DisplayName = g.Key.DisplayName, Count = g.Count(i => i != null) };
 
             var result = await AsyncExecuter.ToListAsync(query);
@@ -31,7 +31,7 @@ namespace Bom.Blog.Tags
         }
         async Task<TagDto> ITagService.GetByNameAsync(string tagName)
         {
-            var res = await tagRepo.GetAsync(i => i.TagName == tagName);
+            var res = await tagRepo.GetAsync(i => i.Name == tagName);
             return ObjectMapper.Map<Tag, TagDto>(res);
         }
     }
@@ -50,7 +50,7 @@ namespace Bom.Blog.Tags
         protected override async Task<IQueryable<Tag>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)
         {
             var queryable = await this.ReadOnlyRepository.GetQueryableAsync().ConfigureAwait(false);
-            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.TagName), i => i.TagName.Contains(input.TagName));
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.TagName), i => i.Name.Contains(input.TagName));
             queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.DisplayName), i => i.DisplayName.Contains(input.DisplayName));
             return queryable;
         }

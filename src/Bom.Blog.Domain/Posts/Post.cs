@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Bom.Blog.Categories;
+using Bom.Blog.Tags;
+using System;
+using System.Collections.Generic;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace Bom.Blog.Posts
@@ -10,7 +13,9 @@ namespace Bom.Blog.Posts
     {
         public string Title { get; set; }
         public string Author { get; set; }
+        public string Url { get; set; }
         public string Markdown { get; set; }
-        public Guid CategoryId { get; set; }
+        public Category Category { get; set; }
+        public ICollection<Tag> Tags { get; set; }
     }
 }

@@ -22,8 +22,8 @@ namespace Bom.Blog.Categories
             var query = from category in await categoryRepo.GetQueryableAsync()
                         join post in await postRepo.GetQueryableAsync() on category.Id equals post.CategoryId into res
                         from r in res.DefaultIfEmpty()
-                        group r by new { category.CategoryName, category.DisplayName } into g
-                        select new CategoryCountDto { CategoryName = g.Key.CategoryName, DisplayName = g.Key.DisplayName, Count = g.Count(i => !string.IsNullOrWhiteSpace(i.Title)) };
+                        group r by new { category.Name, category.DisplayName } into g
+                        select new CategoryCountDto { CategoryName = g.Key.Name, DisplayName = g.Key.DisplayName, Count = g.Count(i => !string.IsNullOrWhiteSpace(i.Title)) };
 
             var result = await AsyncExecuter.ToListAsync(query);
             return result;
@@ -31,7 +31,7 @@ namespace Bom.Blog.Categories
         }
         public async Task<CategoryDto> GetByNameAsync(string categoryName)
         {
-            var res = await categoryRepo.GetAsync(i => i.CategoryName == categoryName);
+            var res = await categoryRepo.GetAsync(i => i.Name == categoryName);
             return ObjectMapper.Map<Category, CategoryDto>(res);
         }
     }
@@ -49,7 +49,7 @@ namespace Bom.Blog.Categories
         protected override async Task<IQueryable<Category>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)
         {
             var queryable = await this.ReadOnlyRepository.GetQueryableAsync().ConfigureAwait(false);
-            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.CategoryName), i => i.CategoryName.Contains(input.CategoryName));
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.CategoryName), i => i.Name.Contains(input.CategoryName));
             queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.DisplayName), i => i.DisplayName.Contains(input.DisplayName));
             return queryable;
         }

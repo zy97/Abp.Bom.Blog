@@ -46,7 +46,7 @@ namespace Bom.Blog.Posts
 
             var countQueryable = from post in queryable
                                  join category in await categoryRepo.GetQueryableAsync() on post.CategoryId equals category.Id
-                                 where category.CategoryName == input.CategoryName
+                                 where category.Name == input.CategoryName
                                  select post;
             var count = await AsyncExecuter.CountAsync(countQueryable);
 
@@ -65,7 +65,7 @@ namespace Bom.Blog.Posts
 
             var countQueryable = from postTag in await postTagRepo.GetQueryableAsync()
                                  join tag in await tagRepo.GetQueryableAsync() on postTag.TagId equals tag.Id
-                                 where tag.TagName == input.TagName
+                                 where tag.Name == input.TagName
                                  from post in queryable.Where(x => x.Id == postTag.PostId)
                                  select post;
             var count = await AsyncExecuter.CountAsync(countQueryable);

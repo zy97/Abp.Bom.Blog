@@ -34,28 +34,28 @@ namespace Bom.Blog
             if (await categoryRepo.GetCountAsync() == 0)
             {
                 await categoryRepo.InsertManyAsync(new[] {
-                    new Category(){DisplayName = ".NET",CategoryName = ".NET"},
-                    new Category(){DisplayName = "Blazor",CategoryName = "Blazor"},
-                    new Category(){DisplayName = "Python",CategoryName = "Python"},
-                    new Category(){DisplayName = "NET",CategoryName = "NET"},
-                    new Category(){DisplayName = "Database",CategoryName = "Database"},
-                    new Category(){DisplayName = "Web",CategoryName = "Web"},
-                    new Category(){DisplayName = "Summary",CategoryName = "Summary"},
-                    new Category(){DisplayName = "Other",CategoryName = "Other"},
-                    new Category(){DisplayName = "Life",CategoryName = "Life"},
+                    new Category(){DisplayName = ".NET",Name = ".NET"},
+                    new Category(){DisplayName = "Blazor",Name = "Blazor"},
+                    new Category(){DisplayName = "Python",Name = "Python"},
+                    new Category(){DisplayName = "NET",Name = "NET"},
+                    new Category(){DisplayName = "Database",Name = "Database"},
+                    new Category(){DisplayName = "Web",Name = "Web"},
+                    new Category(){DisplayName = "Summary",Name = "Summary"},
+                    new Category(){DisplayName = "Other",Name = "Other"},
+                    new Category(){DisplayName = "Life",Name = "Life"},
                 }, autoSave: true);
             }
             if (await this.tagRepo.GetCountAsync() == 0)
             {
                 await tagRepo.InsertManyAsync(new[] {
-                    new Tag(){DisplayName = ".NET Core",TagName = ".NET Core"},
-                    new Tag(){DisplayName = "Python",TagName = "Python"},
-                    new Tag(){DisplayName = "网络请求",TagName = "网络请求"},
-                    new Tag(){DisplayName = "HTTP",TagName = "HTTP"},
-                    new Tag(){DisplayName = "GET",TagName = "GET"},
-                    new Tag(){DisplayName = "POST",TagName = "POST"},
-                    new Tag(){DisplayName = "ip代理",TagName = "ip代理"},
-                    new Tag(){DisplayName = "cookie",TagName = "cookie"},
+                    new Tag(){DisplayName = ".NET Core",Name = ".NET Core"},
+                    new Tag(){DisplayName = "Python",Name = "Python"},
+                    new Tag(){DisplayName = "网络请求",Name = "网络请求"},
+                    new Tag(){DisplayName = "HTTP",Name = "HTTP"},
+                    new Tag(){DisplayName = "GET",Name = "GET"},
+                    new Tag(){DisplayName = "POST",Name = "POST"},
+                    new Tag(){DisplayName = "ip代理",Name = "ip代理"},
+                    new Tag(){DisplayName = "cookie",Name = "cookie"},
                 }, autoSave: true);
             }
             if (await this.postRepo.GetCountAsync() == 0)
@@ -67,7 +67,7 @@ namespace Bom.Blog
                     Title = "TestTitle",
                     Author = "TestAuthor",
                     Markdown = "<p>test p</p>",
-                    CategoryId = category[0].Id,
+                    //CategoryId = category[0].Id,
                 });
                 await postTagRepo.InsertManyAsync(tags.Select(i => new PostTag() { TagId = i.Id, PostId = post.Id }));
 

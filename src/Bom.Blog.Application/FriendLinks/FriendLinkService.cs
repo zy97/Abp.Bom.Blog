@@ -29,8 +29,8 @@ namespace Bom.Blog.FriendLinks
         protected override async Task<IQueryable<FriendLink>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)
         {
             var queryable = await this.ReadOnlyRepository.GetQueryableAsync().ConfigureAwait(false);
-            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.Title), i => i.Title.Contains(input.Title));
-            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.LinkUrl), i => i.LinkUrl.Contains(input.LinkUrl));
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.Title), i => i.Name.Contains(input.Title));
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.LinkUrl), i => i.Url.Contains(input.LinkUrl));
             return queryable;
         }
     }
