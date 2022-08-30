@@ -1,4 +1,5 @@
-﻿using Bom.Blog.Posts;
+﻿using Bom.Blog.Permissions;
+using Bom.Blog.Posts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,11 @@ namespace Bom.Blog.Categories
     {
         public AdminCategoryService(IRepository<Category, Guid> repository) : base(repository)
         {
+            this.GetPolicyName = BlogPermissions.Admin.Default;
+            this.GetListPolicyName = BlogPermissions.Admin.Default;
+            this.UpdatePolicyName = BlogPermissions.Admin.Update;
+            this.CreatePolicyName = BlogPermissions.Admin.Create;
+            this.DeletePolicyName = BlogPermissions.Admin.Delete;
         }
         public async Task<List<CategorySelectOptionDto>> GetAllCategories()
         {

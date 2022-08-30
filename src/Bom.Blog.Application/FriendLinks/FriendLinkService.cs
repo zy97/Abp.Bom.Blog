@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bom.Blog.Permissions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,11 @@ namespace Bom.Blog.FriendLinks
     {
         public AdminFriendLinkService(IRepository<FriendLink, Guid> repository) : base(repository)
         {
+            this.GetPolicyName = BlogPermissions.Admin.Default;
+            this.GetListPolicyName = BlogPermissions.Admin.Default;
+            this.UpdatePolicyName = BlogPermissions.Admin.Update;
+            this.CreatePolicyName = BlogPermissions.Admin.Create;
+            this.DeletePolicyName = BlogPermissions.Admin.Delete;
         }
         protected override async Task<IQueryable<FriendLink>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)
         {

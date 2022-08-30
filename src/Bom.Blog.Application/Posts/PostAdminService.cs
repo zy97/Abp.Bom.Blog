@@ -1,4 +1,5 @@
 ﻿using Bom.Blog.Categories;
+using Bom.Blog.Permissions;
 using Bom.Blog.Tags;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,17 @@ namespace Bom.Blog.Posts
     {
         private readonly IReadOnlyRepository<Category, Guid> readOnlyCategoryRepo;
         private readonly IReadOnlyRepository<Tag, Guid> readOnlyTagRepo;
-
         public PostAdminService(IRepository<Post, Guid> repository, IReadOnlyRepository<Category, Guid> readOnlyCategoryRepo,
             IReadOnlyRepository<Tag, Guid> readOnlyTagRepo) : base(repository)
         {
             this.readOnlyCategoryRepo = readOnlyCategoryRepo;
             this.readOnlyTagRepo = readOnlyTagRepo;
+
+            this.GetPolicyName = BlogPermissions.Admin.Default;
+            this.GetListPolicyName = BlogPermissions.Admin.Default;
+            this.UpdatePolicyName = BlogPermissions.Admin.Update;
+            this.CreatePolicyName = BlogPermissions.Admin.Create;
+            this.DeletePolicyName = BlogPermissions.Admin.Delete;
         }
         public override async Task<PagedResultDto<PostAdminDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
