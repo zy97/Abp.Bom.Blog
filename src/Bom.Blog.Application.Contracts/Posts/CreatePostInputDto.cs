@@ -1,33 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bom.Blog.Posts
 {
-    public class CreatePostInputDto
+    public class CreateOrUpdatePostDto
     {
-        /// <summary>
-        /// 标题
-        /// </summary>
+        [Required]
+        [StringLength(PostConst.MaxTitleLength)]
         public string Title { get; set; }
-
-        /// <summary>
-        /// 作者
-        /// </summary>
+        [Required]
+        [StringLength(PostConst.MaxAuthorLength)]
         public string Author { get; set; }
-
-        /// <summary>
-        /// Markdown
-        /// </summary>
+        [Required]
         public string Markdown { get; set; }
-
-        /// <summary>
-        /// 分类
-        /// </summary>
+        [Required]
         public Guid CategoryId { get; set; }
-
-        /// <summary>
-        /// 标签列表
-        /// </summary>
+        [Required]
         public IEnumerable<Guid> TagIds { get; set; }
+        [Required]
+        [StringLength(PostConst.MaxUrlLength)]
+        public string Url { get; set; }
     }
 }

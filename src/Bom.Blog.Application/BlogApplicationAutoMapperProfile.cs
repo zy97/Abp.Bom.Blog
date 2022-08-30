@@ -20,7 +20,7 @@ public class BlogApplicationAutoMapperProfile : Profile
         CreateMap<Post, PostBriefDto>();
         CreateMap<Post, PostPagedDto>();
         CreateMap<Post, PostAdminDto>().ForMember(i => i.Category, mp => mp.MapFrom(m => new CategoryDto() { Id = m.CategoryId }));
-        CreateMap<CreatePostInputDto, Post>();
+        CreateMap<CreateOrUpdatePostDto, Post>();
 
 
 

@@ -97,36 +97,35 @@ public class BlogDbContext :
             b.ToTable(BlogConsts.DbTablePrefix + "Posts", BlogConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.HasKey(i => i.Id);
-            b.Property(i => i.Title).IsRequired().HasMaxLength(256);
-            b.Property(i => i.Author).HasMaxLength(10);
+            b.Property(i => i.Title).IsRequired().HasMaxLength(PostConst.MaxTitleLength);
+            b.Property(i => i.Author).HasMaxLength(PostConst.MaxAuthorLength);
             b.Property(i => i.Markdown).IsRequired();
-            b.HasMany(i => i.Tags).WithMany(i => i.Posts).UsingEntity(i => i.ToTable(BlogConsts.DbTablePrefix + "PostTag"));
-            //b.HasOne(i => i.Category).WithOne(i => i.Post).HasForeignKey<Category>(i => i.PostId);
-            //b.HasOne<Category>().WithMany().HasForeignKey(i => i.CategoryId).IsRequired();
+            b.Property(i => i.Url).IsRequired().HasMaxLength(PostConst.MaxUrlLength);
+            b.HasMany(i => i.Tags).WithMany(i => i.Posts).UsingEntity(i => i.ToTable(BlogConsts.DbTablePrefix + nameof(Post) + nameof(Tag)));
         });
         builder.Entity<Category>(b =>
         {
             b.ToTable(BlogConsts.DbTablePrefix + "Categories", BlogConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.HasKey(i => i.Id);
-            b.Property(i => i.Name).IsRequired().HasMaxLength(50);
-            b.Property(i => i.DisplayName).IsRequired().HasMaxLength(50);
+            b.Property(i => i.Name).IsRequired().HasMaxLength(CategoryConst.MaxNameLength);
+            b.Property(i => i.DisplayName).IsRequired().HasMaxLength(CategoryConst.MaxDisplayNameLength);
         });
         builder.Entity<Tag>(b =>
         {
             b.ToTable(BlogConsts.DbTablePrefix + "Tags", BlogConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.HasKey(i => i.Id);
-            b.Property(i => i.Name).IsRequired().HasMaxLength(50);
-            b.Property(i => i.DisplayName).IsRequired().HasMaxLength(50);
+            b.Property(i => i.Name).IsRequired().HasMaxLength(TagConst.MaxNameLength);
+            b.Property(i => i.DisplayName).IsRequired().HasMaxLength(TagConst.MaxDisplayNameLength);
         });
         builder.Entity<FriendLink>(b =>
         {
             b.ToTable(BlogConsts.DbTablePrefix + "FriendLinks", BlogConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.HasKey(i => i.Id);
-            b.Property(i => i.Name).IsRequired().HasMaxLength(20);
-            b.Property(i => i.Url).IsRequired().HasMaxLength(100);
+            b.Property(i => i.Name).IsRequired().HasMaxLength(FriendLinkConst.MaxNameLength);
+            b.Property(i => i.Url).IsRequired().HasMaxLength(FriendLinkConst.MaxUrlLength);
         });
     }
 }
