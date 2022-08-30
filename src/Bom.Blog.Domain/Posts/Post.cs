@@ -16,6 +16,7 @@ namespace Bom.Blog.Posts
         public string Url { get; set; }
         public string Markdown { get; set; }
         public Category Category { get; set; }
+        public Guid CategoryId { get; set; }
         public ICollection<Tag> Tags { get; set; }
     }
 }

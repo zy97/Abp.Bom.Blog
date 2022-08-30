@@ -3,6 +3,7 @@ using Bom.Blog.Posts;
 using Bom.Blog.PostTags;
 using Bom.Blog.Tags;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Data;
@@ -67,10 +68,13 @@ namespace Bom.Blog
                     Title = "TestTitle",
                     Author = "TestAuthor",
                     Markdown = "<p>test p</p>",
-                    //CategoryId = category[0].Id,
+                    Category = category[0],
                 });
-                await postTagRepo.InsertManyAsync(tags.Select(i => new PostTag() { TagId = i.Id, PostId = post.Id }));
-
+                post.Tags = new List<Tag>();
+                foreach (var tag in tags)
+                {
+                    post.Tags.Add(tag);
+                }
             }
         }
     }

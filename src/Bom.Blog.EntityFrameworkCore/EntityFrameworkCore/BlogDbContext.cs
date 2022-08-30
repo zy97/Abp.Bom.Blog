@@ -102,7 +102,8 @@ public class BlogDbContext :
             b.Property(i => i.Title).IsRequired().HasMaxLength(256);
             b.Property(i => i.Author).HasMaxLength(10);
             b.Property(i => i.Markdown).IsRequired();
-            b.HasOne<Category>().WithMany().HasForeignKey(i => i.CategoryId).IsRequired();
+            //b.HasOne(i => i.Category).WithOne(i => i.Post).HasForeignKey<Category>(i => i.PostId);
+            //b.HasOne<Category>().WithMany().HasForeignKey(i => i.CategoryId).IsRequired();
         });
         builder.Entity<Category>(b =>
         {

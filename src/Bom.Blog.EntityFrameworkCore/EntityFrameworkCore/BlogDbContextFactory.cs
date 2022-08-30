@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace Bom.Blog.EntityFrameworkCore;
 
@@ -17,7 +16,7 @@ public class BlogDbContextFactory : IDesignTimeDbContextFactory<BlogDbContext>
         var configuration = BuildConfiguration();
 
         var builder = new DbContextOptionsBuilder<BlogDbContext>()
-            .UseSqlServer(configuration.GetConnectionString("Default"));
+            .UseMySql(configuration.GetConnectionString("Default"), ServerVersion.AutoDetect(configuration.GetConnectionString("Default")));
 
         return new BlogDbContext(builder.Options);
     }

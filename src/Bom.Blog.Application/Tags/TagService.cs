@@ -24,7 +24,7 @@ namespace Bom.Blog.Tags
                         join postTag in await postTagRepo.GetQueryableAsync() on tag.Id equals postTag.TagId into tpt
                         from t in tpt.DefaultIfEmpty()
                         group t by new { tag.DisplayName, tag.Name } into g
-                        select new TagCountDto { TagName = g.Key.TagName, DisplayName = g.Key.DisplayName, Count = g.Count(i => i != null) };
+                        select new TagCountDto { TagName = g.Key.Name, DisplayName = g.Key.DisplayName, Count = g.Count(i => i != null) };
 
             var result = await AsyncExecuter.ToListAsync(query);
             return result;

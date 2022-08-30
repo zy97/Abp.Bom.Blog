@@ -1,5 +1,6 @@
 ﻿using Bom.Blog.Posts;
 using System;
+using System.Collections.Generic;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace Bom.Blog.Categories
@@ -9,7 +10,6 @@ namespace Bom.Blog.Categories
         public string Name { get; set; }
         public string DisplayName { get; set; }
 
-        public Guid PostId { get; set; }
-        public Post Post { get; set; }
+        public List<Post> Posts { get; set; }
     }
 }
