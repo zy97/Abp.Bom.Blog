@@ -100,7 +100,6 @@ public class BlogDbContext :
             b.Property(i => i.Title).IsRequired().HasMaxLength(PostConst.MaxTitleLength);
             b.Property(i => i.Author).HasMaxLength(PostConst.MaxAuthorLength);
             b.Property(i => i.Markdown).IsRequired();
-            b.Property(i => i.Url).IsRequired().HasMaxLength(PostConst.MaxUrlLength);
             b.HasMany(i => i.Tags).WithMany(i => i.Posts).UsingEntity(i => i.ToTable(BlogConsts.DbTablePrefix + nameof(Post) + nameof(Tag)));
         });
         builder.Entity<Category>(b =>

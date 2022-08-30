@@ -20,6 +20,5 @@
     {
         public const int MaxTitleLength = 24;
         public const int MaxAuthorLength = 24;
-        public const int MaxUrlLength = 100;
     }
 }

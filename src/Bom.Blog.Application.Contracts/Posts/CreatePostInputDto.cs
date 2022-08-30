@@ -18,8 +18,5 @@ namespace Bom.Blog.Posts
         public Guid CategoryId { get; set; }
         [Required]
         public IEnumerable<Guid> TagIds { get; set; }
-        [Required]
-        [StringLength(PostConst.MaxUrlLength)]
-        public string Url { get; set; }
     }
 }
