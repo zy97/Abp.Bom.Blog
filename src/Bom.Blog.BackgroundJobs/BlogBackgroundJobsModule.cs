@@ -1,15 +1,20 @@
+using Bom.Blog.Jobs;
 using Hangfire;
 using Hangfire.MySql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Transactions;
 using Volo.Abp;
+using Volo.Abp.BackgroundJobs;
 using Volo.Abp.BackgroundJobs.Hangfire;
+using Volo.Abp.BackgroundWorkers;
+using Volo.Abp.BackgroundWorkers.Hangfire;
 using Volo.Abp.Modularity;
 
 namespace Bom.Blog.BackgroundJobs
 {
-    [DependsOn(typeof(AbpBackgroundJobsHangfireModule))]
+    [DependsOn(typeof(AbpBackgroundJobsHangfireModule),
+        typeof(AbpBackgroundWorkersHangfireModule))]
     public class BlogBackgroundJobsModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
@@ -17,9 +22,12 @@ namespace Bom.Blog.BackgroundJobs
             var config = context.Services.GetConfiguration();
             ConfigureHangfire(context, config);
         }
-        public override void OnApplicationInitialization(ApplicationInitializationContext context)
+        public override async void OnApplicationInitialization(ApplicationInitializationContext context)
         {
             var app = context.GetApplicationBuilder();
+            var backgroundJobManager = app.ApplicationServices.GetService<IBackgroundJobManager>();
+            backgroundJobManager.EnqueueAsync(new TestJobArgs() { Name = "Hello Test" });
+            await context.AddBackgroundWorkerAsync<Test2Job>();
 
         }
         private void ConfigureHangfire(ServiceConfigurationContext context, IConfiguration configuration)
