@@ -29,7 +29,7 @@ else
                 </div>
             </header>
             <div class="post-content" id="content">
-                @((MarkupString)_post.Html)
+                @*@((MarkupString)_post.Html)*@
             </div>
             <section class="post-copyright">
                 <p class="copyright-item">
@@ -38,7 +38,7 @@ else
                 </p>
                 <p class="copyright-item">
                     <span>Permalink:</span>
-                    <span><a href="/post@_post.Url">https://meowv.com/post@_post.Url</a></span>
+                    @*<span><a href="/post@_post.Url">https://meowv.com/post@_post.Url</a></span>*@
                 </p>
                 <p class="copyright-item">
                     <span>License:</span>
