@@ -1,6 +1,8 @@
 using Hangfire;
+using Hangfire.MySql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Transactions;
 using Volo.Abp;
 using Volo.Abp.BackgroundJobs.Hangfire;
 using Volo.Abp.Modularity;
@@ -24,7 +26,17 @@ namespace Bom.Blog.BackgroundJobs
         {
             context.Services.AddHangfire(config =>
             {
-                config.UseSqlServerStorage(configuration.GetConnectionString("Default"));
+                config.UseStorage(new MySqlStorage(configuration.GetConnectionString("Default") + ";Allow User Variables=True", new MySqlStorageOptions
+                {
+                    TransactionIsolationLevel = IsolationLevel.ReadCommitted,
+                    QueuePollInterval = TimeSpan.FromSeconds(15),
+                    JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                    CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                    PrepareSchemaIfNecessary = true,
+                    DashboardJobListLimit = 50000,
+                    TransactionTimeout = TimeSpan.FromMinutes(1),
+                    TablesPrefix = "Hangfire"
+                }));
             });
         }
     }
