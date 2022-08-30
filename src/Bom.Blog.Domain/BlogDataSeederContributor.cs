@@ -1,6 +1,5 @@
 ﻿using Bom.Blog.Categories;
 using Bom.Blog.Posts;
-using Bom.Blog.PostTags;
 using Bom.Blog.Tags;
 using System;
 using System.Collections.Generic;
@@ -17,18 +16,15 @@ namespace Bom.Blog
         private readonly IRepository<Category, Guid> categoryRepo;
         private readonly IRepository<Tag, Guid> tagRepo;
         private readonly IRepository<Post, Guid> postRepo;
-        private readonly IRepository<PostTag, Guid> postTagRepo;
 
         public BlogDataSeederContributor(
             IRepository<Category, Guid> categoryRepo,
             IRepository<Tag, Guid> tagRepo,
-            IRepository<Post, Guid> postRepo,
-            IRepository<PostTag, Guid> postTagRepo)
+            IRepository<Post, Guid> postRepo)
         {
             this.categoryRepo = categoryRepo;
             this.tagRepo = tagRepo;
             this.postRepo = postRepo;
-            this.postTagRepo = postTagRepo;
         }
         public async Task SeedAsync(DataSeedContext context)
         {

@@ -416,31 +416,6 @@ namespace Bom.Blog.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AppPostTags",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    PostId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    TagId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    ExtraProperties = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppPostTags", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AppTags",
                 columns: table => new
                 {
@@ -921,7 +896,7 @@ namespace Bom.Blog.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "PostTag",
+                name: "AppPostTag",
                 columns: table => new
                 {
                     PostsId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -929,15 +904,15 @@ namespace Bom.Blog.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostTag", x => new { x.PostsId, x.TagsId });
+                    table.PrimaryKey("PK_AppPostTag", x => new { x.PostsId, x.TagsId });
                     table.ForeignKey(
-                        name: "FK_PostTag_AppPosts_PostsId",
+                        name: "FK_AppPostTag_AppPosts_PostsId",
                         column: x => x.PostsId,
                         principalTable: "AppPosts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PostTag_AppTags_TagsId",
+                        name: "FK_AppPostTag_AppTags_TagsId",
                         column: x => x.TagsId,
                         principalTable: "AppTags",
                         principalColumn: "Id",
@@ -1155,6 +1130,11 @@ namespace Bom.Blog.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppPostTag_TagsId",
+                table: "AppPostTag",
+                column: "TagsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 table: "OpenIddictApplications",
                 column: "ClientId");
@@ -1183,11 +1163,6 @@ namespace Bom.Blog.Migrations
                 name: "IX_OpenIddictTokens_ReferenceId",
                 table: "OpenIddictTokens",
                 column: "ReferenceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostTag_TagsId",
-                table: "PostTag",
-                column: "TagsId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -1247,16 +1222,13 @@ namespace Bom.Blog.Migrations
                 name: "AppFriendLinks");
 
             migrationBuilder.DropTable(
-                name: "AppPostTags");
+                name: "AppPostTag");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictTokens");
-
-            migrationBuilder.DropTable(
-                name: "PostTag");
 
             migrationBuilder.DropTable(
                 name: "AbpEntityChanges");
@@ -1274,22 +1246,22 @@ namespace Bom.Blog.Migrations
                 name: "AbpUsers");
 
             migrationBuilder.DropTable(
-                name: "OpenIddictAuthorizations");
-
-            migrationBuilder.DropTable(
                 name: "AppPosts");
 
             migrationBuilder.DropTable(
                 name: "AppTags");
 
             migrationBuilder.DropTable(
+                name: "OpenIddictAuthorizations");
+
+            migrationBuilder.DropTable(
                 name: "AbpAuditLogs");
 
             migrationBuilder.DropTable(
-                name: "OpenIddictApplications");
+                name: "AppCategories");
 
             migrationBuilder.DropTable(
-                name: "AppCategories");
+                name: "OpenIddictApplications");
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Bom.Blog.Categories;
 using Bom.Blog.FriendLinks;
 using Bom.Blog.Posts;
-using Bom.Blog.PostTags;
 using Bom.Blog.Tags;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -34,7 +33,6 @@ public class BlogDbContext :
     public DbSet<Post> Posts { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Tag> Tags { get; set; }
-    public DbSet<PostTag> PostTags { get; set; }
     public DbSet<FriendLink> FriendLinks { get; set; }
 
     #region Entities from the modules
@@ -102,6 +100,7 @@ public class BlogDbContext :
             b.Property(i => i.Title).IsRequired().HasMaxLength(256);
             b.Property(i => i.Author).HasMaxLength(10);
             b.Property(i => i.Markdown).IsRequired();
+            b.HasMany(i => i.Tags).WithMany(i => i.Posts).UsingEntity(i => i.ToTable(BlogConsts.DbTablePrefix + "PostTag"));
             //b.HasOne(i => i.Category).WithOne(i => i.Post).HasForeignKey<Category>(i => i.PostId);
             //b.HasOne<Category>().WithMany().HasForeignKey(i => i.CategoryId).IsRequired();
         });
@@ -120,14 +119,6 @@ public class BlogDbContext :
             b.HasKey(i => i.Id);
             b.Property(i => i.Name).IsRequired().HasMaxLength(50);
             b.Property(i => i.DisplayName).IsRequired().HasMaxLength(50);
-        });
-        builder.Entity<PostTag>(b =>
-        {
-            b.ToTable(BlogConsts.DbTablePrefix + "PostTags", BlogConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
-            b.HasKey(i => i.Id);
-            b.Property(i => i.PostId).IsRequired();
-            b.Property(i => i.TagId).IsRequired();
         });
         builder.Entity<FriendLink>(b =>
         {
