@@ -95,7 +95,7 @@ function AddOrEditPost() {
 
         <Form.Item
           label="标签"
-          name="tagIds"
+          name="tags"
           rules={[{ required: true, message: "Please input your password!" }]}
         >
           <Select

@@ -17,6 +17,6 @@ namespace Bom.Blog.Posts
         [Required]
         public Guid CategoryId { get; set; }
         [Required]
-        public IEnumerable<Guid> TagIds { get; set; }
+        public IEnumerable<Guid> Tags { get; set; }
     }
 }

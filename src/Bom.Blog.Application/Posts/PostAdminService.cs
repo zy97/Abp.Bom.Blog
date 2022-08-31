@@ -3,6 +3,7 @@ using Bom.Blog.Permissions;
 using Bom.Blog.Tags;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -53,11 +54,16 @@ namespace Bom.Blog.Posts
         }
         public override async Task<PostAdminDto> CreateAsync(CreateOrUpdatePostDto input)
         {
-            var post = await base.CreateAsync(input);
-            await SavePostTagsAsync(post.Id, input.TagIds);
-            post.Category = ObjectMapper.Map<Category, CategoryAdminDto>(await FindPostCategoryAsync(input.CategoryId));
-            post.Tags = ObjectMapper.Map<List<Tag>, List<TagDto>>(await FindPostTagsAsync(post.Id));
-            return post;
+            await CheckCreatePolicyAsync();
+
+            var tags = await readOnlyTagRepo.GetListAsync(i => input.Tags.Contains(i.Id));
+            var entity = await MapToEntityAsync(input);
+            entity.Tags = tags;
+            TryToSetTenantId(entity);
+
+            await Repository.InsertAsync(entity, autoSave: true);
+
+            return await MapToGetOutputDtoAsync(entity);
         }
         private async Task<List<Tag>> FindPostTagsAsync(Guid postId)
         {
@@ -71,10 +77,6 @@ namespace Bom.Blog.Posts
         {
             var category = await readOnlyCategoryRepo.FindAsync(categoryId);
             return category;
-        }
-        private async Task SavePostTagsAsync(Guid postId, IEnumerable<Guid> tagIds)
-        {
-            //await postTagRepo.InsertManyAsync(tagIds.Select(i => new PostTag { PostId = postId, TagId = i }), true);
         }
     }
 }

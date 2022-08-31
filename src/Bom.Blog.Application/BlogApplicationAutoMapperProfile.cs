@@ -4,6 +4,7 @@ using Bom.Blog.Categories;
 using Bom.Blog.FriendLinks;
 using Bom.Blog.Posts;
 using Bom.Blog.Tags;
+using System.Linq;
 using Volo.Abp.AuditLogging;
 
 namespace Bom.Blog;
@@ -20,7 +21,7 @@ public class BlogApplicationAutoMapperProfile : Profile
         CreateMap<Post, PostBriefDto>();
         CreateMap<Post, PostPagedDto>();
         CreateMap<Post, PostAdminDto>();
-        CreateMap<CreateOrUpdatePostDto, Post>();
+        CreateMap<CreateOrUpdatePostDto, Post>().ForMember(i => i.Tags, config => config.MapFrom(i => i.Tags.Select(i => new Tag(i))));
 
 
 
