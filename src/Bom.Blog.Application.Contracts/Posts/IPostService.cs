@@ -8,7 +8,7 @@ namespace Bom.Blog.Posts
     public interface IPostService : IApplicationService
     {
         Task<PostDto> GetAsync(Guid id);
-        Task<PagedResultDto<PostBriefDto>> GetListAsync(GetPostListDto input);
+        Task<PagedResultDto<QueryPostDto>> GetListAsync(GetPostListDto input);
         Task<PagedResultDto<PostBriefDto>> GetListByCategoryNameAsync(GetPostByCategoryNameListDto input);
         Task<PagedResultDto<PostBriefDto>> GetListByTagNameNameAsync(GetPostByTagNameListDto input);
     }

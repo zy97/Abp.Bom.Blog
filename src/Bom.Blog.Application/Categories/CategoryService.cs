@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Caching;
 using Volo.Abp.Domain.Repositories;
 namespace Bom.Blog.Categories
 {
@@ -12,23 +13,25 @@ namespace Bom.Blog.Categories
     {
         private readonly IRepository<Category, Guid> categoryRepo;
         private readonly IRepository<Post, Guid> postRepo;
+        private readonly IDistributedCache<IEnumerable<CategoryCountDto>> cache;
 
-        public CategoryService(IRepository<Category, Guid> categoryRepo, IRepository<Post, Guid> postRepo)
+        public CategoryService(IRepository<Category, Guid> categoryRepo, IRepository<Post, Guid> postRepo, IDistributedCache<IEnumerable<CategoryCountDto>> cache)
         {
             this.categoryRepo = categoryRepo;
             this.postRepo = postRepo;
+            this.cache = cache;
         }
         public async Task<IEnumerable<CategoryCountDto>> GetCountAsync()
         {
-            var query = from category in await categoryRepo.GetQueryableAsync()
-                        join post in await postRepo.GetQueryableAsync() on category.Id equals post.CategoryId into res
-                        from r in res.DefaultIfEmpty()
-                        group r by new { category.Name, category.DisplayName } into g
-                        select new CategoryCountDto { CategoryName = g.Key.Name, DisplayName = g.Key.DisplayName, Count = g.Count(i => !string.IsNullOrWhiteSpace(i.Title)) };
+            var result = await cache.GetOrAddAsync("all", async () =>
+            {
+                var query = await categoryRepo.WithDetailsAsync(i => i.Posts);
+                var categoryQuery = query.Select(i => new CategoryCountDto { Id = i.Id, CategoryName = i.Name, DisplayName = i.DisplayName, Count = i.Posts.Count });
 
-            var result = await AsyncExecuter.ToListAsync(query);
+                var result = await AsyncExecuter.ToListAsync(categoryQuery);
+                return result;
+            });
             return result;
-
         }
         public async Task<CategoryDto> GetByNameAsync(string categoryName)
         {

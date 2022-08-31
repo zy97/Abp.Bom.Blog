@@ -1,5 +1,7 @@
-﻿using Volo.Abp.Account;
+﻿using System;
+using Volo.Abp.Account;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.Caching;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
@@ -26,6 +28,10 @@ public class BlogApplicationModule : AbpModule
         Configure<AbpAutoMapperOptions>(options =>
         {
             options.AddMaps<BlogApplicationModule>();
+        });
+        Configure<AbpDistributedCacheOptions>(options =>
+        {
+            options.GlobalCacheEntryOptions.SlidingExpiration = TimeSpan.FromHours(1);
         });
     }
 }
