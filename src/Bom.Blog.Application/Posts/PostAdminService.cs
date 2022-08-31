@@ -2,7 +2,6 @@
 using Bom.Blog.Permissions;
 using Bom.Blog.Tags;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
@@ -46,10 +45,14 @@ namespace Bom.Blog.Posts
                 entityDtos
             );
         }
+        protected override async Task<Post> GetEntityByIdAsync(Guid id)
+        {
+            var queryable = await Repository.WithDetailsAsync(i => i.Tags, i => i.Category);
+            return await AsyncExecuter.FirstOrDefaultAsync(queryable.Where(i => i.Id == id));
+        }
         public override async Task<PostAdminDto> GetAsync(Guid id)
         {
             var post = await base.GetAsync(id);
-            post.Tags = ObjectMapper.Map<List<Tag>, List<TagDto>>(await FindPostTagsAsync(post.Id));
             return post;
         }
         public override async Task<PostAdminDto> CreateAsync(CreateOrUpdatePostDto input)
@@ -64,19 +67,6 @@ namespace Bom.Blog.Posts
             await Repository.InsertAsync(entity, autoSave: true);
 
             return await MapToGetOutputDtoAsync(entity);
-        }
-        private async Task<List<Tag>> FindPostTagsAsync(Guid postId)
-        {
-            //var tagIds = await postTagRepo.GetListAsync(i => i.PostId == postId);
-            //var tagQueryable = await readOnlyTagRepo.GetQueryableAsync();
-            //var tags = await AsyncExecuter.ToListAsync(tagQueryable.Where($"Id in @0", tagIds.Select(i => i.TagId).ToArray()));
-            //return tags;
-            return default;
-        }
-        private async Task<Category> FindPostCategoryAsync(Guid categoryId)
-        {
-            var category = await readOnlyCategoryRepo.FindAsync(categoryId);
-            return category;
         }
     }
 }

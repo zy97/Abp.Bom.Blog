@@ -22,8 +22,8 @@ function AddOrEditPost() {
           }
           form.setFieldsValue({
             ...post,
-            categoryId: post.category.id,
-            tagIds: post.tags?.map((tag) => tag.id),
+            categoryId: post.category?.id,
+            tags: post.tags?.map((tag) => tag.id),
           });
         })
         .catch((error) => {
