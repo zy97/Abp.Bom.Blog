@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Caching;
 using Volo.Abp.Domain.Repositories;
 
 namespace Bom.Blog.FriendLinks
@@ -11,15 +12,21 @@ namespace Bom.Blog.FriendLinks
     public class FriendLinkService : BlogAppService, IFriendLinkService
     {
         private readonly IRepository<FriendLink, Guid> friendLinkRepo;
+        private readonly IDistributedCache<List<FriendLinkDto>> cache;
 
-        public FriendLinkService(IRepository<FriendLink, Guid> friendLinkRepo)
+        public FriendLinkService(IRepository<FriendLink, Guid> friendLinkRepo, IDistributedCache<List<FriendLinkDto>> cache)
         {
             this.friendLinkRepo = friendLinkRepo;
+            this.cache = cache;
         }
         public async Task<List<FriendLinkDto>> GetAllAsync()
         {
-            var res = await friendLinkRepo.GetListAsync();
-            return ObjectMapper.Map<List<FriendLink>, List<FriendLinkDto>>(res);
+            var result = await cache.GetOrAddAsync("all", async () =>
+            {
+                var res = await friendLinkRepo.GetListAsync();
+                return ObjectMapper.Map<List<FriendLink>, List<FriendLinkDto>>(res);
+            });
+            return result;
         }
     }
     public class AdminFriendLinkService : CrudAppService<FriendLink, AdminFriendLinkDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdateFriendLinkDto>, IAdminFriendLinkService

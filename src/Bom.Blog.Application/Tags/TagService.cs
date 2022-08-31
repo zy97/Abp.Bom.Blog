@@ -4,30 +4,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Caching;
 using Volo.Abp.Domain.Repositories;
 namespace Bom.Blog.Tags
 {
     public class TagService : BlogAppService, ITagService
     {
         private readonly IRepository<Tag, Guid> tagRepo;
+        private readonly IDistributedCache<IEnumerable<TagCountDto>> cache;
 
-        public TagService(IRepository<Tag, Guid> tagRepo)
+        public TagService(IRepository<Tag, Guid> tagRepo, IDistributedCache<IEnumerable<TagCountDto>> cache)
         {
             this.tagRepo = tagRepo;
+            this.cache = cache;
         }
-        async Task<List<TagCountDto>> ITagService.GetCountAsync()
+        public async Task<IEnumerable<TagCountDto>> GetCountAsync()
         {
-            throw new NotImplementedException();
-            //var query = from tag in await tagRepo.GetQueryableAsync()
-            //            join postTag in await postTagRepo.GetQueryableAsync() on tag.Id equals postTag.TagId into tpt
-            //            from t in tpt.DefaultIfEmpty()
-            //            group t by new { tag.DisplayName, tag.Name } into g
-            //            select new TagCountDto { TagName = g.Key.Name, DisplayName = g.Key.DisplayName, Count = g.Count(i => i != null) };
+            var result = await cache.GetOrAddAsync("all", async () =>
+            {
+                var query = await tagRepo.WithDetailsAsync(i => i.Posts);
+                var categoryQuery = query.Select(i => new TagCountDto { Id = i.Id, TagName = i.Name, DisplayName = i.DisplayName, Count = i.Posts.Count });
 
-            //var result = await AsyncExecuter.ToListAsync(query);
-            //return result;
+                var result = await AsyncExecuter.ToListAsync(categoryQuery);
+                return result;
+            });
+            return result;
         }
-        async Task<TagDto> ITagService.GetByNameAsync(string tagName)
+        public async Task<TagDto> GetByNameAsync(string tagName)
         {
             var res = await tagRepo.GetAsync(i => i.Name == tagName);
             return ObjectMapper.Map<Tag, TagDto>(res);

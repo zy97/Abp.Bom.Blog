@@ -8,7 +8,7 @@ namespace Bom.Blog.Tags
     public interface ITagService : IApplicationService
     {
         Task<TagDto> GetByNameAsync(string tagName);
-        Task<List<TagCountDto>> GetCountAsync();
+        Task<IEnumerable<TagCountDto>> GetCountAsync();
     }
     public interface IAdminTagService : ICrudAppService<AdminTagDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdateTagDto>
     {

@@ -1,7 +1,6 @@
 ﻿using Bom.Blog.Categories;
 using Bom.Blog.Tags;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -48,45 +47,43 @@ namespace Bom.Blog.Posts
              });
             return result;
         }
-        public async Task<PagedResultDto<PostBriefDto>> GetListByCategoryNameAsync(GetPostByCategoryNameListDto input)
+        public async Task<PagedResultDto<QueryPostDto>> GetListByCategoryNameAsync(GetPostByCategoryNameListDto input)
         {
-            var queryable = await repository.GetQueryableAsync();
+            var result = await pageCache.GetOrAddAsync(serializer.Serialize(input), async () =>
+            {
+                var query = await repository.WithDetailsAsync(i => i.Category);
+                query = query.Where(i => i.Category.Name == input.CategoryName);
 
-            var countQueryable = from post in queryable
-                                 join category in await categoryRepo.GetQueryableAsync() on post.CategoryId equals category.Id
-                                 where category.Name == input.CategoryName
-                                 select post;
-            var count = await AsyncExecuter.CountAsync(countQueryable);
+                var count = await AsyncExecuter.CountAsync(query);
 
-            var query = countQueryable.OrderBy(nameof(Post.CreationTime))
-               .Skip(input.SkipCount)
-               .Take(input.MaxResultCount);
-
-            var queryResult = await AsyncExecuter.ToListAsync(query);
-            var posts = ObjectMapper.Map<List<Post>, List<PostBriefDto>>(queryResult);
-
-            return new PagedResultDto<PostBriefDto>(count, posts);
+                var queryPost = query.OrderByDescending(i => i.CreationTime)
+                   .Skip(input.SkipCount)
+                   .Take(input.MaxResultCount)
+                   .Select(i => new PostBriefDto { Id = i.Id, Year = i.CreationTime.Year, Title = i.Title, CreationiTime = i.CreationTime });
+                var queryResult = await AsyncExecuter.ToListAsync(queryPost);
+                var ressult = queryResult.GroupBy(i => i.Year).Select(i => new QueryPostDto { Year = i.Key, Posts = i }).ToList();
+                return new PagedResultDto<QueryPostDto>(count, ressult);
+            });
+            return result;
         }
-        public async Task<PagedResultDto<PostBriefDto>> GetListByTagNameNameAsync(GetPostByTagNameListDto input)
+        public async Task<PagedResultDto<QueryPostDto>> GetListByTagNameNameAsync(GetPostByTagNameListDto input)
         {
-            //var queryable = await repository.GetQueryableAsync();
+            var result = await pageCache.GetOrAddAsync(serializer.Serialize(input), async () =>
+            {
+                var query = await repository.WithDetailsAsync(i => i.Tags);
+                query = query.Where(i => i.Tags.Select(i => i.Name).Contains(input.TagName));
 
-            //var countQueryable = from postTag in await postTagRepo.GetQueryableAsync()
-            //                     join tag in await tagRepo.GetQueryableAsync() on postTag.TagId equals tag.Id
-            //                     where tag.Name == input.TagName
-            //                     from post in queryable.Where(x => x.Id == postTag.PostId)
-            //                     select post;
-            //var count = await AsyncExecuter.CountAsync(countQueryable);
+                var count = await AsyncExecuter.CountAsync(query);
 
-            //var query = countQueryable.OrderBy(nameof(Post.CreationTime))
-            //   .Skip(input.SkipCount)
-            //   .Take(input.MaxResultCount);
-
-            //var queryResult = await AsyncExecuter.ToListAsync(query);
-            //var posts = ObjectMapper.Map<List<Post>, List<PostBriefDto>>(queryResult);
-
-            //return new PagedResultDto<PostBriefDto>(count, posts);
-            throw new NotImplementedException();
+                var queryPost = query.OrderByDescending(i => i.CreationTime)
+                   .Skip(input.SkipCount)
+                   .Take(input.MaxResultCount)
+                   .Select(i => new PostBriefDto { Id = i.Id, Year = i.CreationTime.Year, Title = i.Title, CreationiTime = i.CreationTime });
+                var queryResult = await AsyncExecuter.ToListAsync(queryPost);
+                var ressult = queryResult.GroupBy(i => i.Year).Select(i => new QueryPostDto { Year = i.Key, Posts = i }).ToList();
+                return new PagedResultDto<QueryPostDto>(count, ressult);
+            });
+            return result;
         }
         public async Task<PostDto> GetAsync(Guid id)
         {
