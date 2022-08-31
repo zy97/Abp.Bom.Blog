@@ -56,6 +56,10 @@ public class BlogHttpApiHostModule : AbpModule
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
+        context.Services.AddMiniProfiler(options =>
+        {
+            options.RouteBasePath = "/profiler";
+        });
         ConfigureBundles();
         ConfigureUrls(configuration);
         ConfigureConventionalControllers();
@@ -231,7 +235,7 @@ public class BlogHttpApiHostModule : AbpModule
 
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
-
+        app.UseMiniProfiler();
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -266,7 +270,7 @@ public class BlogHttpApiHostModule : AbpModule
         app.UseAbpSwaggerUI(c =>
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "Blog API");
-
+            c.HeadContent += """<script async id="mini-profiler" src="/profiler/includes.min.js?v=4.2.22+4563a9e1ab" data-version="4.2.22+4563a9e1ab" data-path="/profiler/" data-position="Left" data-scheme="Light" data-authorized="true" data-max-traces="15" data-toggle-shortcut="Alt+P" data-trivial-milliseconds="2.0" data-ignored-duplicate-execute-types="Open,OpenAsync,Close,CloseAsync"></script>""";
             var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
             c.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
             c.OAuthScopes("Blog");
