@@ -16,11 +16,16 @@ else
         {
             @foreach (var item in datas.Items)
             {
+                <h3>@item.Year</h3>
 
-                <article class="archive-item">
-                    <NavLink href="@("/post/" + item.Id)">@item.Title</NavLink>
-                    <span class="archive-item-date">@item.CreationiTime</span>
-                </article>
+                @foreach (var post in item.Posts)
+                {
+                    <article class="archive-item">
+                        <NavLink href="@("/post/" + post.Id)">@post.Title</NavLink>
+                        <span class="archive-item-date">@post.CreationiTime</span>
+                    </article>
+                }
+
 
             }
             <nav class="pagination">
@@ -54,7 +59,7 @@ else
     private int totalPage;
     private int maxResultCount = 1;
     private int skipCount = 0;
-    private PagedResultDto<PostBriefDto> datas = null;
+    private PagedResultDto<QueryPostDto> datas = null;
     protected override async Task OnInitializedAsync()
     {
         await GetData(1);

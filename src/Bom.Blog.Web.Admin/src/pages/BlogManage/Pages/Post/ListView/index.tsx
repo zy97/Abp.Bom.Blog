@@ -131,7 +131,7 @@ function ListView() {
             title="标签"
             dataIndex="tags"
             render={(e: TagDto[]) => {
-              return e.map((item, index) => {
+              return e?.map((item, index) => {
                 return (
                   <Tag color="green" key={index}>
                     {item.displayName}

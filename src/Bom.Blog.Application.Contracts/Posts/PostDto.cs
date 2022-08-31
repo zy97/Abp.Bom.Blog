@@ -71,7 +71,7 @@ namespace Bom.Blog.Posts
         /// <summary>
         /// 分类
         /// </summary>
-        public CategoryDto Category { get; set; }
+        public CategoryAdminDto Category { get; set; }
 
         /// <summary>
         /// 标签列表

@@ -25,11 +25,16 @@ else
             {
                 @foreach (var item in posts)
                 {
-                    <article class="archive-item">
-                        <NavLink href="@("$/post/" +item.Id)">@item.Title</NavLink>
-                        <span class="archive-item-date">@item.CreationiTime</span>
-                    </article>
+                    <h3>@item.Year</h3>
+                    @foreach (var post in item.Posts)
+                    {
+                        <article class="archive-item">
+                            <NavLink href="@("$/post/" +post.Id)">@post.Title</NavLink>
+                            <span class="archive-item-date">@post.CreationiTime</span>
+                        </article>
+                    }
                 }
+
                 <nav class="pagination">
                     @for (int i = 1; i <= totalPage; i++)
                     {
@@ -65,7 +70,7 @@ else
     private int totalPage;
     private int maxResultCount = 1;
     private int skipCount = 0;
-    private IEnumerable<PostBriefDto> posts;
+    private IEnumerable<QueryPostDto> posts;
 
     protected override async Task OnInitializedAsync()
     {

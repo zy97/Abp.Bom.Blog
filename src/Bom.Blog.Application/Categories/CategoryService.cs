@@ -26,7 +26,7 @@ namespace Bom.Blog.Categories
             var result = await cache.GetOrAddAsync("all", async () =>
             {
                 var query = await categoryRepo.WithDetailsAsync(i => i.Posts);
-                var categoryQuery = query.Select(i => new CategoryCountDto { Id = i.Id, CategoryName = i.Name, DisplayName = i.DisplayName, Count = i.Posts.Count });
+                var categoryQuery = query.Select(i => new CategoryCountDto { Id = i.Id, Name = i.Name, DisplayName = i.DisplayName, Count = i.Posts.Count });
 
                 var result = await AsyncExecuter.ToListAsync(categoryQuery);
                 return result;

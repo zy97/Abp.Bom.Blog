@@ -28,13 +28,22 @@ namespace Bom.Blog.Posts
         }
         public override async Task<PagedResultDto<PostAdminDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
-            var posts = await base.GetListAsync(input);
-            foreach (var post in posts.Items)
-            {
-                post.Category = ObjectMapper.Map<Category, CategoryDto>(await FindPostCategoryAsync(post.Category.Id));
-                post.Tags = ObjectMapper.Map<List<Tag>, List<TagDto>>(await FindPostTagsAsync(post.Id));
-            }
-            return posts;
+            await CheckGetListPolicyAsync();
+
+            var query = await CreateFilteredQueryAsync(input);
+            var totalCount = await AsyncExecuter.CountAsync(query);
+            query = await ReadOnlyRepository.WithDetailsAsync(i => i.Category, i => i.Tags);
+
+            query = ApplySorting(query, input);
+            query = ApplyPaging(query, input);
+
+            var entities = await AsyncExecuter.ToListAsync(query);
+            var entityDtos = await MapToGetListOutputDtosAsync(entities);
+
+            return new PagedResultDto<PostAdminDto>(
+                totalCount,
+                entityDtos
+            );
         }
         public override async Task<PostAdminDto> GetAsync(Guid id)
         {
@@ -46,7 +55,7 @@ namespace Bom.Blog.Posts
         {
             var post = await base.CreateAsync(input);
             await SavePostTagsAsync(post.Id, input.TagIds);
-            post.Category = ObjectMapper.Map<Category, CategoryDto>(await FindPostCategoryAsync(input.CategoryId));
+            post.Category = ObjectMapper.Map<Category, CategoryAdminDto>(await FindPostCategoryAsync(input.CategoryId));
             post.Tags = ObjectMapper.Map<List<Tag>, List<TagDto>>(await FindPostTagsAsync(post.Id));
             return post;
         }
