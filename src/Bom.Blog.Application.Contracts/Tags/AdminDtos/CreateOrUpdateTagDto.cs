@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Bom.Blog.Tags
+namespace Bom.Blog.Tags.AdminDtos
 {
     public class CreateOrUpdateTagDto
     {

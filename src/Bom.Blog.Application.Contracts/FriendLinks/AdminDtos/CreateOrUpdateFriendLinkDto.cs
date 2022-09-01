@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Bom.Blog.FriendLinks
+namespace Bom.Blog.FriendLinks.AdminDtos
 {
     public class CreateOrUpdateFriendLinkDto
     {

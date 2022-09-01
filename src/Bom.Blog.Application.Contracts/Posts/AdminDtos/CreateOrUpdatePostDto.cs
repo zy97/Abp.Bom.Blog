@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bom.Blog.Posts
+namespace Bom.Blog.Posts.AdminDtos
 {
     public class CreateOrUpdatePostDto
     {

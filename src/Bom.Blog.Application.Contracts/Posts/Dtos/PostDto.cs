@@ -1,11 +1,10 @@
-﻿using Bom.Blog.Categories;
-using Bom.Blog.Categories.Dtos;
-using Bom.Blog.Tags;
+﻿using Bom.Blog.Categories.Dtos;
+using Bom.Blog.Tags.Dtos;
 using System;
 using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
-namespace Bom.Blog.Posts
+namespace Bom.Blog.Posts.Dtos
 {
     public class PostDto : EntityDto<Guid>
     {
@@ -49,35 +48,5 @@ namespace Bom.Blog.Posts
         /// 下一篇
         /// </summary>
         public PostPagedDto Next { get; set; }
-    }
-
-    public class PostAdminDto : EntityDto<Guid>
-    {
-        /// <summary>
-        /// 标题
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// 作者
-        /// </summary>
-        public string Author { get; set; }
-
-
-        /// <summary>
-        /// Markdown
-        /// </summary>
-        public string Markdown { get; set; }
-
-        /// <summary>
-        /// 分类
-        /// </summary>
-        public CategoryAdminDto Category { get; set; }
-
-        /// <summary>
-        /// 标签列表
-        /// </summary>
-        public IEnumerable<TagDto> Tags { get; set; }
-
     }
 }

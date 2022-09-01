@@ -1,4 +1,5 @@
 ﻿using Bom.Blog.Categories;
+using Bom.Blog.Posts.Dtos;
 using Bom.Blog.Tags;
 using System;
 using System.Linq;

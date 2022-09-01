@@ -4,8 +4,12 @@ using Bom.Blog.Categories;
 using Bom.Blog.Categories.AdminDtos;
 using Bom.Blog.Categories.Dtos;
 using Bom.Blog.FriendLinks;
+using Bom.Blog.FriendLinks.AdminDtos;
 using Bom.Blog.Posts;
+using Bom.Blog.Posts.AdminDtos;
+using Bom.Blog.Posts.Dtos;
 using Bom.Blog.Tags;
+using Bom.Blog.Tags.AdminDtos;
 using System.Linq;
 using Volo.Abp.AuditLogging;
 
@@ -19,28 +23,28 @@ public class BlogApplicationAutoMapperProfile : Profile
          * Alternatively, you can split your mapping configurations
          * into multiple profile classes for a better organization. */
 
-        CreateMap<Post, PostDto>();
+        CreateMap<Post, Posts.Dtos.PostDto>();
         CreateMap<Post, PostBriefDto>();
         CreateMap<Post, PostPagedDto>();
-        CreateMap<Post, PostAdminDto>();
+        CreateMap<Post, Posts.AdminDtos.PostDto>();
         CreateMap<CreateOrUpdatePostDto, Post>().ForMember(i => i.Tags, config => config.MapFrom(i => i.Tags.Select(i => new Tag(i))));
 
 
 
-        CreateMap<Category, CategoryDto>();
-        CreateMap<Category, CategoryAdminDto>();
+        CreateMap<Category, Categories.Dtos.CategoryDto>();
+        CreateMap<Category, Categories.AdminDtos.CategoryDto>();
         CreateMap<Category, CategoryWithCountDto>().ForMember(i => i.Count, config => config.MapFrom(i => i.Posts.Count));
-        CreateMap<Category, CategorySelectOptionDto>();
+        CreateMap<Category, CategoryLookupDto>();
         CreateMap<CreateOrUpdateCategoryDto, Category>();
 
-        CreateMap<Tag, TagDto>();
-        CreateMap<Tag, AdminTagDto>();
-        CreateMap<Tag, TagSelectOptionDto>();
+        CreateMap<Tag, Tags.Dtos.TagDto>();
+        CreateMap<Tag, Tags.AdminDtos.TagDto>();
+        CreateMap<Tag, TagLookupDto>();
         CreateMap<CreateOrUpdateTagDto, Tag>();
 
 
         CreateMap<FriendLink, FriendLinkDto>();
-        CreateMap<FriendLink, AdminFriendLinkDto>();
+        CreateMap<FriendLink, FriendLinks.Dtos.FriendLinkDto>();
         CreateMap<CreateOrUpdateFriendLinkDto, FriendLink>();
 
         CreateMap<AuditLog, AuditLogDto>();

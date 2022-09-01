@@ -1,7 +1,7 @@
 ﻿using System;
 using Volo.Abp.Application.Dtos;
 
-namespace Bom.Blog.Posts
+namespace Bom.Blog.Posts.Dtos
 {
     public class PostPagedDto : EntityDto<Guid>
     {

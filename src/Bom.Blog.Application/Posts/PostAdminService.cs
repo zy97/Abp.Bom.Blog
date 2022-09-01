@@ -1,7 +1,10 @@
 ﻿using Bom.Blog.Categories;
 using Bom.Blog.Permissions;
+using Bom.Blog.Posts.AdminDtos;
 using Bom.Blog.Tags;
+using Microsoft.AspNetCore.Authorization;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
@@ -10,7 +13,8 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Bom.Blog.Posts
 {
-    public class PostAdminService : CrudAppService<Post, PostAdminDto, Guid, PagedAndSortedResultRequestDto, CreateOrUpdatePostDto>, IAdminPostService
+    [Authorize(BlogPermissions.Admin.Default)]
+    public class PostAdminService : CrudAppService<Post, PostDto, Guid, PagedAndSortedResultRequestDto, CreateOrUpdatePostDto>, IPostAdminService
     {
         private readonly IReadOnlyRepository<Category, Guid> readOnlyCategoryRepo;
         private readonly IReadOnlyRepository<Tag, Guid> readOnlyTagRepo;
@@ -26,7 +30,7 @@ namespace Bom.Blog.Posts
             this.CreatePolicyName = BlogPermissions.Admin.Create;
             this.DeletePolicyName = BlogPermissions.Admin.Delete;
         }
-        public override async Task<PagedResultDto<PostAdminDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public override async Task<PagedResultDto<PostDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             await CheckGetListPolicyAsync();
 
@@ -40,7 +44,7 @@ namespace Bom.Blog.Posts
             var entities = await AsyncExecuter.ToListAsync(query);
             var entityDtos = await MapToGetListOutputDtosAsync(entities);
 
-            return new PagedResultDto<PostAdminDto>(
+            return new PagedResultDto<PostDto>(
                 totalCount,
                 entityDtos
             );
@@ -50,12 +54,12 @@ namespace Bom.Blog.Posts
             var queryable = await Repository.WithDetailsAsync(i => i.Tags, i => i.Category);
             return await AsyncExecuter.FirstOrDefaultAsync(queryable.Where(i => i.Id == id));
         }
-        public override async Task<PostAdminDto> GetAsync(Guid id)
+        public override async Task<PostDto> GetAsync(Guid id)
         {
             var post = await base.GetAsync(id);
             return post;
         }
-        public override async Task<PostAdminDto> CreateAsync(CreateOrUpdatePostDto input)
+        public override async Task<PostDto> CreateAsync(CreateOrUpdatePostDto input)
         {
             await CheckCreatePolicyAsync();
 
@@ -67,6 +71,18 @@ namespace Bom.Blog.Posts
             await Repository.InsertAsync(entity, autoSave: true);
 
             return await MapToGetOutputDtoAsync(entity);
+        }
+
+        public async Task<ListResultDto<CategoryLookupDto>> GetCategoryLookupAsync()
+        {
+            var categories = await this.readOnlyCategoryRepo.GetListAsync();
+            return new ListResultDto<CategoryLookupDto>(ObjectMapper.Map<List<Category>, List<CategoryLookupDto>>(categories));
+        }
+
+        public async Task<ListResultDto<TagLookupDto>> GetTagLookupAsync()
+        {
+            var tags = await this.readOnlyTagRepo.GetListAsync();
+            return new ListResultDto<TagLookupDto>(ObjectMapper.Map<List<Tag>, List<TagLookupDto>>(tags));
         }
     }
 }
