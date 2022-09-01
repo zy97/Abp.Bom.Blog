@@ -1,6 +1,7 @@
 using AutoMapper;
 using Bom.Blog.AuditLogs;
 using Bom.Blog.Categories;
+using Bom.Blog.Categories.AdminDtos;
 using Bom.Blog.Categories.Dtos;
 using Bom.Blog.FriendLinks;
 using Bom.Blog.Posts;

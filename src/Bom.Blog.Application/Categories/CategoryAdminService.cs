@@ -1,4 +1,6 @@
-﻿using Bom.Blog.Permissions;
+﻿using Bom.Blog.Categories.AdminDtos;
+using Bom.Blog.Permissions;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +12,42 @@ namespace Bom.Blog.Categories
 {
     public class CategoryAdminService : CrudAppService<Category, CategoryAdminDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdateCategoryDto>, ICategoryAdminService
     {
-        public CategoryAdminService(IRepository<Category, Guid> repository) : base(repository)
+        private readonly ICategoryRepository categoryRepository;
+        private readonly CategoryManager categoryManager;
+
+        public CategoryAdminService(IRepository<Category, Guid> repository, ICategoryRepository categoryRepository, CategoryManager categoryManager) : base(repository)
         {
             this.GetPolicyName = BlogPermissions.Admin.Default;
             this.GetListPolicyName = BlogPermissions.Admin.Default;
             this.UpdatePolicyName = BlogPermissions.Admin.Update;
             this.CreatePolicyName = BlogPermissions.Admin.Create;
             this.DeletePolicyName = BlogPermissions.Admin.Delete;
+            this.categoryRepository = categoryRepository;
+            this.categoryManager = categoryManager;
         }
         public async Task<List<CategorySelectOptionDto>> GetAllCategories()
         {
             var categories = await this.ReadOnlyRepository.GetListAsync();
             return ObjectMapper.Map<List<Category>, List<CategorySelectOptionDto>>(categories);
+        }
+
+        [Authorize(BlogPermissions.Admin.Create)]
+        public override async Task<CategoryAdminDto> CreateAsync(CreateOrUpdateCategoryDto input)
+        {
+            var category = await categoryManager.CreateAsync(input.Name, input.DisplayName);
+            await categoryRepository.InsertAsync(category);
+            return ObjectMapper.Map<Category, CategoryAdminDto>(category);
+        }
+        [Authorize(BlogPermissions.Admin.Update)]
+        public override async Task<CategoryAdminDto> UpdateAsync(Guid id, CreateOrUpdateCategoryDto input)
+        {
+            var category = await categoryRepository.GetAsync(id);
+            if (category.Name != input.Name)
+            {
+                await categoryManager.ChangeAsync(category, input.Name, input.DisplayName);
+            }
+            await categoryRepository.UpdateAsync(category);
+            return ObjectMapper.Map<Category, CategoryAdminDto>(category);
         }
 
         protected override async Task<IQueryable<Category>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)

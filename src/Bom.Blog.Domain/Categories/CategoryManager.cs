@@ -25,5 +25,16 @@ namespace Bom.Blog.Categories
             }
             return new Category(GuidGenerator.Create(), name, displayName);
         }
+        public async Task ChangeAsync([NotNull] Category category, [NotNull] string name, [NotNull] string displayName)
+        {
+            Check.NotNull(name, nameof(name));
+            Check.NotNull(displayName, nameof(displayName));
+            var existingCategory = await categoryRepository.FindByNameAsync(name);
+            if (existingCategory != null && existingCategory.Id != category.Id)
+            {
+                throw new CategoryAlreadyExistingException(name);
+            }
+            category.Change(name, displayName);
+        }
     }
 }
