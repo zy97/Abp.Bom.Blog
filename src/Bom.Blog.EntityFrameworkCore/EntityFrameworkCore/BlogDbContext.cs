@@ -109,6 +109,7 @@ public class BlogDbContext :
             b.HasKey(i => i.Id);
             b.Property(i => i.Name).IsRequired().HasMaxLength(CategoryConst.MaxNameLength);
             b.Property(i => i.DisplayName).IsRequired().HasMaxLength(CategoryConst.MaxDisplayNameLength);
+            b.HasIndex(i => i.Name);
         });
         builder.Entity<Tag>(b =>
         {

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Bom.Blog.AuditLogs;
 using Bom.Blog.Categories;
+using Bom.Blog.Categories.Dtos;
 using Bom.Blog.FriendLinks;
 using Bom.Blog.Posts;
 using Bom.Blog.Tags;
@@ -27,7 +28,7 @@ public class BlogApplicationAutoMapperProfile : Profile
 
         CreateMap<Category, CategoryDto>();
         CreateMap<Category, CategoryAdminDto>();
-        CreateMap<Category, CategoryCountDto>();
+        CreateMap<Category, CategoryWithCountDto>().ForMember(i => i.Count, config => config.MapFrom(i => i.Posts.Count));
         CreateMap<Category, CategorySelectOptionDto>();
         CreateMap<CreateOrUpdateCategoryDto, Category>();
 

@@ -30,17 +30,17 @@ namespace Bom.Blog
         {
             if (await categoryRepo.GetCountAsync() == 0)
             {
-                await categoryRepo.InsertManyAsync(new[] {
-                    new Category(){DisplayName = ".NET",Name = ".NET"},
-                    new Category(){DisplayName = "Blazor",Name = "Blazor"},
-                    new Category(){DisplayName = "Python",Name = "Python"},
-                    new Category(){DisplayName = "NET",Name = "NET"},
-                    new Category(){DisplayName = "Database",Name = "Database"},
-                    new Category(){DisplayName = "Web",Name = "Web"},
-                    new Category(){DisplayName = "Summary",Name = "Summary"},
-                    new Category(){DisplayName = "Other",Name = "Other"},
-                    new Category(){DisplayName = "Life",Name = "Life"},
-                }, autoSave: true);
+                //await categoryRepo.InsertManyAsync(new[] {
+                //    new Category(){DisplayName = ".NET",Name = ".NET"},
+                //    new Category(){DisplayName = "Blazor",Name = "Blazor"},
+                //    new Category(){DisplayName = "Python",Name = "Python"},
+                //    new Category(){DisplayName = "NET",Name = "NET"},
+                //    new Category(){DisplayName = "Database",Name = "Database"},
+                //    new Category(){DisplayName = "Web",Name = "Web"},
+                //    new Category(){DisplayName = "Summary",Name = "Summary"},
+                //    new Category(){DisplayName = "Other",Name = "Other"},
+                //    new Category(){DisplayName = "Life",Name = "Life"},
+                //}, autoSave: true);
             }
             if (await this.tagRepo.GetCountAsync() == 0)
             {
