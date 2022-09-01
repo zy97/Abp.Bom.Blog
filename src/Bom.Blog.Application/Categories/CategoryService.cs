@@ -30,11 +30,6 @@ namespace Bom.Blog.Categories
             });
             return result;
         }
-        public async Task<CategoryDto> GetByNameAsync(string categoryName)
-        {
-            var res = await categoryRepo.GetAsync(i => i.Name == categoryName);
-            return ObjectMapper.Map<Category, CategoryDto>(res);
-        }
     }
 
 }

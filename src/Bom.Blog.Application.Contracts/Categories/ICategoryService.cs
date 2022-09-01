@@ -7,7 +7,6 @@ namespace Bom.Blog.Categories
 {
     public interface ICategoryService : IApplicationService
     {
-        Task<CategoryDto> GetByNameAsync(string categoryName);
         Task<IEnumerable<CategoryWithCountDto>> GetCountAsync();
     }
 
