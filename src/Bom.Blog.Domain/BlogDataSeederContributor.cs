@@ -14,45 +14,51 @@ namespace Bom.Blog
     public class BlogDataSeederContributor : IDataSeedContributor, ITransientDependency
     {
         private readonly IRepository<Category, Guid> categoryRepo;
+        private readonly CategoryManager categoryManager;
         private readonly IRepository<Tag, Guid> tagRepo;
+        private readonly TagManager tagManager;
         private readonly IRepository<Post, Guid> postRepo;
 
         public BlogDataSeederContributor(
             IRepository<Category, Guid> categoryRepo,
+            CategoryManager categoryManager,
             IRepository<Tag, Guid> tagRepo,
+            TagManager tagManager,
             IRepository<Post, Guid> postRepo)
         {
             this.categoryRepo = categoryRepo;
+            this.categoryManager = categoryManager;
             this.tagRepo = tagRepo;
+            this.tagManager = tagManager;
             this.postRepo = postRepo;
         }
         public async Task SeedAsync(DataSeedContext context)
         {
             if (await categoryRepo.GetCountAsync() == 0)
             {
-                //await categoryRepo.InsertManyAsync(new[] {
-                //    new Category(){DisplayName = ".NET",Name = ".NET"},
-                //    new Category(){DisplayName = "Blazor",Name = "Blazor"},
-                //    new Category(){DisplayName = "Python",Name = "Python"},
-                //    new Category(){DisplayName = "NET",Name = "NET"},
-                //    new Category(){DisplayName = "Database",Name = "Database"},
-                //    new Category(){DisplayName = "Web",Name = "Web"},
-                //    new Category(){DisplayName = "Summary",Name = "Summary"},
-                //    new Category(){DisplayName = "Other",Name = "Other"},
-                //    new Category(){DisplayName = "Life",Name = "Life"},
-                //}, autoSave: true);
+                await categoryRepo.InsertManyAsync(new[] {
+                   await categoryManager.CreateAsync(".NET","\".NET\""),
+                     await categoryManager.CreateAsync( "Blazor", "Blazor"),
+                     await categoryManager.CreateAsync("Python" , "Python"),
+                     await categoryManager.CreateAsync("NET" , "NET"),
+                     await categoryManager.CreateAsync("Database" , "Database"),
+                     await categoryManager.CreateAsync("Web" , "Web"),
+                     await categoryManager.CreateAsync("Summary" , "Summary"),
+                     await categoryManager.CreateAsync("Other", "Other"),
+                     await categoryManager.CreateAsync("Life",  "Life"),
+                }, autoSave: true);
             }
             if (await this.tagRepo.GetCountAsync() == 0)
             {
                 await tagRepo.InsertManyAsync(new[] {
-                    new Tag(){DisplayName = ".NET Core",Name = ".NET Core"},
-                    new Tag(){DisplayName = "Python",Name = "Python"},
-                    new Tag(){DisplayName = "网络请求",Name = "网络请求"},
-                    new Tag(){DisplayName = "HTTP",Name = "HTTP"},
-                    new Tag(){DisplayName = "GET",Name = "GET"},
-                    new Tag(){DisplayName = "POST",Name = "POST"},
-                    new Tag(){DisplayName = "ip代理",Name = "ip代理"},
-                    new Tag(){DisplayName = "cookie",Name = "cookie"},
+                   await tagManager.CreateAsync(".NET Core", ".NET Core"),
+                    await tagManager.CreateAsync("Python","Python"),
+                    await tagManager.CreateAsync("网络请求", "网络请求"),
+                    await tagManager.CreateAsync("HTTP", "HTTP"),
+                    await tagManager.CreateAsync("GET", "GET"),
+                    await tagManager.CreateAsync("POST", "POST"),
+                    await tagManager.CreateAsync("ip代理", "ip代理"),
+                    await tagManager.CreateAsync("cookie", "cookie"),
                 }, autoSave: true);
             }
             if (await this.postRepo.GetCountAsync() == 0)

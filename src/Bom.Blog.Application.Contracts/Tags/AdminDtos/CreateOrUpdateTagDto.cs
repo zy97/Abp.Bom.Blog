@@ -6,7 +6,7 @@ namespace Bom.Blog.Tags.AdminDtos
     {
         [Required]
         [StringLength(TagConst.MaxNameLength)]
-        public string TagName { get; set; }
+        public string Name { get; set; }
         [Required]
         [StringLength(TagConst.MaxDisplayNameLength)]
         public string DisplayName { get; set; }

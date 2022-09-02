@@ -4,7 +4,7 @@ namespace Bom.Blog.Categories.AdminDtos
 {
     public class PagedAndSortedAndFilteredResultRequestDto : PagedAndSortedResultRequestDto
     {
-        public string CategoryName { get; set; }
+        public string Name { get; set; }
         public string DisplayName { get; set; }
     }
 }

@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Bom.Blog.Categories
+namespace Bom.Blog.Tags
 {
-    public class EfCoreCategoryRepository : EfCoreRepository<BlogDbContext, Category, Guid>, ICategoryRepository
+    public class EfCoreTagRepository : EfCoreRepository<BlogDbContext, Tag, Guid>, ITagRepository
     {
-        public EfCoreCategoryRepository(IDbContextProvider<BlogDbContext> dbContextProvider) : base(dbContextProvider)
+        public EfCoreTagRepository(IDbContextProvider<BlogDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
 
-        public async Task<Category> FindByNameAsync(string name)
+        public async Task<Tag> FindByNameAsync(string name)
         {
             var dbSet = await GetDbSetAsync();
-            return await dbSet.FirstOrDefaultAsync(i => i.Name == name);
+            return await dbSet.AsNoTracking().FirstOrDefaultAsync(i => i.Name == name);
         }
 
-        public async Task<IEnumerable<Category>> GetWithPostCountAsync()
+        public async Task<IEnumerable<Tag>> GetWithPostCountAsync()
         {
             var dbSet = await GetDbSetAsync();
             return await dbSet.AsNoTracking().Include(i => i.Posts).ToListAsync();

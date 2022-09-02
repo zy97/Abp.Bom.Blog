@@ -12,6 +12,6 @@ namespace Bom.Blog.Categories
     public interface ICategoryRepository : IRepository<Category, Guid>
     {
         Task<Category> FindByNameAsync(string name);
-        Task<IEnumerable<Category>> GetWithPostCount();
+        Task<IEnumerable<Category>> GetWithPostCountAsync();
     }
 }

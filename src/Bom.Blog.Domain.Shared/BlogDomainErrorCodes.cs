@@ -6,4 +6,5 @@ public static class BlogDomainErrorCodes
 
     public const string CategoryAlreadyExists = "Blog:00001";
     public const string FriendLinkAlreadyExists = "Blog:00002";
+    public const string TagAlreadyExists = "Blog:00003";
 }
