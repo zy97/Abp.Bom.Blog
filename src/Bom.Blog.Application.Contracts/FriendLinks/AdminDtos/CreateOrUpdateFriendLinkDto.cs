@@ -6,9 +6,9 @@ namespace Bom.Blog.FriendLinks.AdminDtos
     {
         [Required]
         [StringLength(FriendLinkConst.MaxNameLength)]
-        public string Title { get; set; }
+        public string Name { get; set; }
         [Required]
         [StringLength(FriendLinkConst.MaxUrlLength)]
-        public string LinkUrl { get; set; }
+        public string Url { get; set; }
     }
 }

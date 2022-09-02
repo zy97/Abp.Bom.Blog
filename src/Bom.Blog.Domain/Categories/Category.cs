@@ -21,28 +21,8 @@ namespace Bom.Blog.Categories
         }
         internal Category(Guid id, [NotNull] string name, [NotNull] string displayName) : base(id)
         {
-            //SetName(name);
-            //SetDisplayName(displayName);
             Set(name, displayName);
         }
-        //private void SetName([NotNull] string name)
-        //{
-        //    Name = Check.NotNullOrWhiteSpace(name, nameof(name), CategoryConst.MaxNameLength);
-        //}
-        //private void SetDisplayName([NotNull] string displayName)
-        //{
-        //    DisplayName = Check.NotNullOrWhiteSpace(displayName, nameof(displayName), CategoryConst.MaxDisplayNameLength);
-        //}
-        //internal Category ChangeName([NotNull] string name)
-        //{
-        //    SetName(name);
-        //    return this;
-        //}
-        //internal Category ChangeDiaplayName([NotNull] string displayName)
-        //{
-        //    SetDisplayName(displayName);
-        //    return this;
-        //}
         internal Category Change([NotNull] string name, [NotNull] string displayName)
         {
             Set(name, displayName);

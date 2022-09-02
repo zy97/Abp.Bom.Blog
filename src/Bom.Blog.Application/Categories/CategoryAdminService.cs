@@ -25,8 +25,6 @@ namespace Bom.Blog.Categories
             this.categoryRepository = categoryRepository;
             this.categoryManager = categoryManager;
         }
-
-
         [Authorize(BlogPermissions.Admin.Create)]
         public override async Task<CategoryDto> CreateAsync(CreateOrUpdateCategoryDto input)
         {
@@ -38,10 +36,9 @@ namespace Bom.Blog.Categories
         public override async Task<CategoryDto> UpdateAsync(Guid id, CreateOrUpdateCategoryDto input)
         {
             var category = await categoryRepository.GetAsync(id);
-            if (category.Name != input.Name)
-            {
-                await categoryManager.ChangeAsync(category, input.Name, input.DisplayName);
-            }
+
+            await categoryManager.ChangeAsync(category, input.Name, input.DisplayName);
+
             await categoryRepository.UpdateAsync(category);
             return ObjectMapper.Map<Category, CategoryDto>(category);
         }

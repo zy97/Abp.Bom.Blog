@@ -4,7 +4,6 @@ namespace Bom.Blog.FriendLinks.AdminDtos
 {
     public class PagedAndSortedAndFilteredResultRequestDto : PagedAndSortedResultRequestDto
     {
-        public string Title { get; set; }
-        public string LinkUrl { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -43,7 +43,7 @@ public class BlogDomainSharedModule : AbpModule
         Configure<AbpLocalizationOptions>(options =>
         {
             options.Resources
-                .Add<BlogResource>("en")
+                .Add<BlogResource>("zh-Hans")
                 .AddBaseTypes(typeof(AbpValidationResource))
                 .AddVirtualJson("/Localization/Blog");
 

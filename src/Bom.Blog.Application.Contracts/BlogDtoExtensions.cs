@@ -18,7 +18,7 @@ public static class BlogDtoExtensions
                  * Example:
                  *
                  * ObjectExtensionManager.Instance
-                 *   .AddOrUpdateProperty<IdentityRoleDto, string>("Title");
+                 *   .AddOrUpdateProperty<IdentityRoleDto, string>("Name");
                  *
                  * See the documentation for more:
                  * https://docs.abp.io/en/abp/latest/Object-Extensions
