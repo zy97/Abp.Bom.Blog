@@ -6,7 +6,7 @@ using Volo.Abp.Application.Services;
 
 namespace Bom.Blog.Posts
 {
-    public interface IPostAdminService : ICrudAppService<PostDto, Guid, PagedAndSortedResultRequestDto, CreateOrUpdatePostDto>
+    public interface IPostAdminService : ICrudAppService<PostEditDto, PostDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdatePostDto, CreateOrUpdatePostDto>
     {
         Task<ListResultDto<CategoryLookupDto>> GetCategoryLookupAsync();
         Task<ListResultDto<TagLookupDto>> GetTagLookupAsync();

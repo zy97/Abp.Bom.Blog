@@ -14,13 +14,15 @@ using Volo.Abp.Domain.Repositories;
 namespace Bom.Blog.Posts
 {
     [Authorize(BlogPermissions.Admin.Default)]
-    public class PostAdminService : CrudAppService<Post, PostDto, Guid, PagedAndSortedResultRequestDto, CreateOrUpdatePostDto>, IPostAdminService
+    public class PostAdminService : CrudAppService<Post, PostEditDto, PostDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdatePostDto, CreateOrUpdatePostDto>, IPostAdminService
     {
+        private readonly IPostRepository repository;
         private readonly IReadOnlyRepository<Category, Guid> readOnlyCategoryRepo;
         private readonly IReadOnlyRepository<Tag, Guid> readOnlyTagRepo;
-        public PostAdminService(IRepository<Post, Guid> repository, IReadOnlyRepository<Category, Guid> readOnlyCategoryRepo,
+        public PostAdminService(IPostRepository repository, IReadOnlyRepository<Category, Guid> readOnlyCategoryRepo,
             IReadOnlyRepository<Tag, Guid> readOnlyTagRepo) : base(repository)
         {
+            this.repository = repository;
             this.readOnlyCategoryRepo = readOnlyCategoryRepo;
             this.readOnlyTagRepo = readOnlyTagRepo;
 
@@ -30,36 +32,26 @@ namespace Bom.Blog.Posts
             this.CreatePolicyName = BlogPermissions.Admin.Create;
             this.DeletePolicyName = BlogPermissions.Admin.Delete;
         }
-        public override async Task<PagedResultDto<PostDto>> GetListAsync(PagedAndSortedResultRequestDto input)
-        {
-            await CheckGetListPolicyAsync();
+        //public override async Task<PagedResultDto<PostDto>> GetListAsync(PagedAndSortedAndFilteredResultRequestDto input)
+        //{
+        //    await CheckGetListPolicyAsync();
 
-            var query = await CreateFilteredQueryAsync(input);
-            var totalCount = await AsyncExecuter.CountAsync(query);
-            query = await ReadOnlyRepository.WithDetailsAsync(i => i.Category, i => i.Tags);
+        //    var query = await CreateFilteredQueryAsync(input);
+        //    var totalCount = await AsyncExecuter.CountAsync(query);
+        //    query = await ReadOnlyRepository.WithDetailsAsync(i => i.Category, i => i.Tags);
 
-            query = ApplySorting(query, input);
-            query = ApplyPaging(query, input);
+        //    query = ApplySorting(query, input);
+        //    query = ApplyPaging(query, input);
 
-            var entities = await AsyncExecuter.ToListAsync(query);
-            var entityDtos = await MapToGetListOutputDtosAsync(entities);
+        //    var entities = await AsyncExecuter.ToListAsync(query);
+        //    var entityDtos = await MapToGetListOutputDtosAsync(entities);
 
-            return new PagedResultDto<PostDto>(
-                totalCount,
-                entityDtos
-            );
-        }
-        protected override async Task<Post> GetEntityByIdAsync(Guid id)
-        {
-            var queryable = await Repository.WithDetailsAsync(i => i.Tags, i => i.Category);
-            return await AsyncExecuter.FirstOrDefaultAsync(queryable.Where(i => i.Id == id));
-        }
-        public override async Task<PostDto> GetAsync(Guid id)
-        {
-            var post = await base.GetAsync(id);
-            return post;
-        }
-        public override async Task<PostDto> CreateAsync(CreateOrUpdatePostDto input)
+        //    return new PagedResultDto<PostDto>(
+        //        totalCount,
+        //        entityDtos
+        //    );
+        //}
+        public override async Task<PostEditDto> CreateAsync(CreateOrUpdatePostDto input)
         {
             await CheckCreatePolicyAsync();
 
@@ -83,6 +75,16 @@ namespace Bom.Blog.Posts
         {
             var tags = await this.readOnlyTagRepo.GetListAsync();
             return new ListResultDto<TagLookupDto>(ObjectMapper.Map<List<Tag>, List<TagLookupDto>>(tags));
+        }
+        protected override async Task<IQueryable<Post>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)
+        {
+            var queryable = await this.ReadOnlyRepository.WithDetailsAsync(i => i.Tags, i => i.Category);
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.Title), i => i.Title.Contains(input.Title));
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.Author), i => i.Author.Contains(input.Author));
+            queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.Markdown), i => i.Markdown.Contains(input.Markdown));
+            queryable = queryable.WhereIf(input.CategoryId != null, i => i.CategoryId == input.CategoryId);
+            queryable = queryable.WhereIf(input.TagId != null, i => i.Tags.Any(i => i.Id == input.TagId));
+            return queryable;
         }
     }
 }

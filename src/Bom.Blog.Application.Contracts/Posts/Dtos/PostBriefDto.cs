@@ -7,6 +7,5 @@ namespace Bom.Blog.Posts.Dtos
     {
         public string Title { get; set; }
         public DateTime CreationiTime { get; set; }
-        public int Year { get; set; }
     }
 }

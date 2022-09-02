@@ -5,6 +5,9 @@ using Volo.Abp.Domain.Services;
 
 namespace Bom.Blog.Tags
 {
+    /// <summary>
+    /// 不要引入域服务，除非真的需要与执行一些核心业务规则，比如现在确保目录名是唯一的
+    /// </summary>
     public class TagManager : DomainService
     {
         private readonly ITagRepository tagRepository;

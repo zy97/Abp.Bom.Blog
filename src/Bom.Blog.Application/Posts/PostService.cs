@@ -1,32 +1,26 @@
-﻿using Bom.Blog.Categories;
-using Bom.Blog.Posts.Dtos;
-using Bom.Blog.Tags;
+﻿using Bom.Blog.Posts.Dtos;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Caching;
-using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Json;
 
 namespace Bom.Blog.Posts
 {
     public class PostService : ApplicationService, IPostService
     {
-        private readonly IRepository<Post, Guid> repository;
-        private readonly IRepository<Category, Guid> categoryRepo;
-        private readonly IRepository<Tag, Guid> tagRepo;
+        private readonly IPostRepository repository;
         private readonly IDistributedCache<PagedResultDto<QueryPostDto>> pageCache;
         private readonly IJsonSerializer serializer;
         private readonly IDistributedCache<PostDto, Guid> postCache;
 
-        public PostService(IRepository<Post, Guid> repository, IRepository<Category, Guid> categoryRepo, IRepository<Tag, Guid> tagRepo, IDistributedCache<PagedResultDto<QueryPostDto>> pageCache, IJsonSerializer serializer, IDistributedCache<PostDto, Guid> postCache)
+        public PostService(IPostRepository repository, IDistributedCache<PagedResultDto<QueryPostDto>> pageCache, IJsonSerializer serializer, IDistributedCache<PostDto, Guid> postCache)
         {
             this.repository = repository;
-            this.categoryRepo = categoryRepo;
-            this.tagRepo = tagRepo;
             this.pageCache = pageCache;
             this.serializer = serializer;
             this.postCache = postCache;
@@ -36,15 +30,9 @@ namespace Bom.Blog.Posts
             var key = serializer.Serialize(input);
             var result = await pageCache.GetOrAddAsync(key, async () =>
              {
-                 var queryable = await repository.GetQueryableAsync();
-                 var query = queryable.OrderByDescending(i => i.CreationTime)
-                    .Skip(input.SkipCount)
-                    .Take(input.MaxResultCount)
-                    .Select(i => new PostBriefDto { Id = i.Id, Year = i.CreationTime.Year, Title = i.Title, CreationiTime = i.CreationTime });
-                 var queryResult = await AsyncExecuter.ToListAsync(query);
-                 var ressult = queryResult.GroupBy(i => i.Year).Select(i => new QueryPostDto { Year = i.Key, Posts = i }).ToList();
-                 var totalCount = await repository.GetCountAsync();
-                 return new PagedResultDto<QueryPostDto>(totalCount, ressult);
+                 var posts = await repository.GetListAsync(input.SkipCount, input.MaxResultCount);
+                 var items = posts.items.GroupBy(i => i.CreationTime.Year).Select(i => new QueryPostDto { Year = i.Key, Posts = ObjectMapper.Map<IEnumerable<Post>, IEnumerable<PostBriefDto>>(i) }).ToList();
+                 return new PagedResultDto<QueryPostDto>(posts.count, items);
              });
             return result;
         }
@@ -52,37 +40,19 @@ namespace Bom.Blog.Posts
         {
             var result = await pageCache.GetOrAddAsync(serializer.Serialize(input), async () =>
             {
-                var query = await repository.WithDetailsAsync(i => i.Category);
-                query = query.Where(i => i.Category.Name == input.CategoryName);
-
-                var count = await AsyncExecuter.CountAsync(query);
-
-                var queryPost = query.OrderByDescending(i => i.CreationTime)
-                   .Skip(input.SkipCount)
-                   .Take(input.MaxResultCount)
-                   .Select(i => new PostBriefDto { Id = i.Id, Year = i.CreationTime.Year, Title = i.Title, CreationiTime = i.CreationTime });
-                var queryResult = await AsyncExecuter.ToListAsync(queryPost);
-                var ressult = queryResult.GroupBy(i => i.Year).Select(i => new QueryPostDto { Year = i.Key, Posts = i }).ToList();
-                return new PagedResultDto<QueryPostDto>(count, ressult);
+                var posts = await repository.GetListByCategoryNameAsync(input.CategoryName, input.SkipCount, input.MaxResultCount);
+                var items = posts.items.GroupBy(i => i.CreationTime.Year).Select(i => new QueryPostDto { Year = i.Key, Posts = ObjectMapper.Map<IEnumerable<Post>, IEnumerable<PostBriefDto>>(i) }).ToList();
+                return new PagedResultDto<QueryPostDto>(posts.count, items);
             });
             return result;
         }
-        public async Task<PagedResultDto<QueryPostDto>> GetListByTagNameNameAsync(GetPostByTagNameListDto input)
+        public async Task<PagedResultDto<QueryPostDto>> GetListByTagNameAsync(GetPostByTagNameListDto input)
         {
             var result = await pageCache.GetOrAddAsync(serializer.Serialize(input), async () =>
             {
-                var query = await repository.WithDetailsAsync(i => i.Tags);
-                query = query.Where(i => i.Tags.Select(i => i.Name).Contains(input.TagName));
-
-                var count = await AsyncExecuter.CountAsync(query);
-
-                var queryPost = query.OrderByDescending(i => i.CreationTime)
-                   .Skip(input.SkipCount)
-                   .Take(input.MaxResultCount)
-                   .Select(i => new PostBriefDto { Id = i.Id, Year = i.CreationTime.Year, Title = i.Title, CreationiTime = i.CreationTime });
-                var queryResult = await AsyncExecuter.ToListAsync(queryPost);
-                var ressult = queryResult.GroupBy(i => i.Year).Select(i => new QueryPostDto { Year = i.Key, Posts = i }).ToList();
-                return new PagedResultDto<QueryPostDto>(count, ressult);
+                var posts = await repository.GetListByTagNameAsync(input.TagName, input.SkipCount, input.MaxResultCount);
+                var items = posts.items.GroupBy(i => i.CreationTime.Year).Select(i => new QueryPostDto { Year = i.Key, Posts = ObjectMapper.Map<IEnumerable<Post>, IEnumerable<PostBriefDto>>(i) }).ToList();
+                return new PagedResultDto<QueryPostDto>(posts.count, items);
             });
             return result;
         }
@@ -90,18 +60,10 @@ namespace Bom.Blog.Posts
         {
             var result = await postCache.GetOrAddAsync(id, async () =>
              {
-                 var queryable = await repository.WithDetailsAsync(i => i.Category, i => i.Tags);
-                 queryable = queryable.Where(i => i.Id == id);
-                 var post = await AsyncExecuter.FirstOrDefaultAsync(queryable);
-
+                 var post = await this.repository.GetAsync(id);
                  var postDto = ObjectMapper.Map<Post, PostDto>(post);
-                 queryable = (await repository.GetQueryableAsync()).OrderByDescending(i => i.CreationTime);
-                 var previous = queryable.Where(i => i.CreationTime < post.CreationTime);
-                 var next = queryable.Where(i => i.CreationTime > post.CreationTime);
-                 var previousResult = await AsyncExecuter.FirstOrDefaultAsync(previous);
-                 var nextResult = await AsyncExecuter.FirstOrDefaultAsync(next);
-                 postDto.Next = ObjectMapper.Map<Post, PostPagedDto>(nextResult);
-                 postDto.Previous = ObjectMapper.Map<Post, PostPagedDto>(previousResult);
+                 postDto.Next = ObjectMapper.Map<Post, PostPagedDto>(await repository.GetNextAsync(post.CreationTime));
+                 postDto.Previous = ObjectMapper.Map<Post, PostPagedDto>(await repository.GetPreviousAsync(post.CreationTime));
                  return postDto;
              });
             return result;
