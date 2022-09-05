@@ -17,7 +17,7 @@ namespace Bom.Blog.FriendLinks
         }
         public async Task<List<FriendLinkDto>> GetAllAsync()
         {
-            var result = await cache.GetOrAddAsync("all", async () =>
+            var result = await cache.GetOrAddAsync(CacheConsts.FriendLinkList, async () =>
             {
                 var res = await friendLinkRepo.GetListAsync();
                 return ObjectMapper.Map<List<FriendLink>, List<FriendLinkDto>>(res);

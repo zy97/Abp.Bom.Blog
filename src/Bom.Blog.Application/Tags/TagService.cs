@@ -16,7 +16,7 @@ namespace Bom.Blog.Tags
         }
         public async Task<IEnumerable<TagWithCountDto>> GetCountAsync()
         {
-            var result = await cache.GetOrAddAsync("all", async () =>
+            var result = await cache.GetOrAddAsync(CacheConsts.AllTagWithCount, async () =>
             {
                 var tags = await tagRepo.GetWithPostCountAsync();
                 return ObjectMapper.Map<IEnumerable<Tag>, IEnumerable<TagWithCountDto>>(tags);

@@ -1,6 +1,8 @@
 ﻿using Bom.Blog.Categories;
 using Bom.Blog.Permissions;
 using Bom.Blog.Posts.AdminDtos;
+using Bom.Blog.Posts.Dtos;
+using Bom.Blog.Servives;
 using Bom.Blog.Tags;
 using Microsoft.AspNetCore.Authorization;
 using System;
@@ -10,6 +12,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using PostDto = Bom.Blog.Posts.AdminDtos.PostDto;
 
 namespace Bom.Blog.Posts
 {
@@ -19,13 +22,15 @@ namespace Bom.Blog.Posts
         private readonly IPostRepository repository;
         private readonly IReadOnlyRepository<Category, Guid> readOnlyCategoryRepo;
         private readonly IReadOnlyRepository<Tag, Guid> readOnlyTagRepo;
+        private readonly ICacheRemoveService cacheRemoveService;
+
         public PostAdminService(IPostRepository repository, IReadOnlyRepository<Category, Guid> readOnlyCategoryRepo,
-            IReadOnlyRepository<Tag, Guid> readOnlyTagRepo) : base(repository)
+            IReadOnlyRepository<Tag, Guid> readOnlyTagRepo, ICacheRemoveService cacheRemoveService) : base(repository)
         {
             this.repository = repository;
             this.readOnlyCategoryRepo = readOnlyCategoryRepo;
             this.readOnlyTagRepo = readOnlyTagRepo;
-
+            this.cacheRemoveService = cacheRemoveService;
             this.GetPolicyName = BlogPermissions.Admin.Default;
             this.GetListPolicyName = BlogPermissions.Admin.Default;
             this.UpdatePolicyName = BlogPermissions.Admin.Update;
@@ -61,6 +66,7 @@ namespace Bom.Blog.Posts
             await MapToEntityAsync(input, entity);
             entity.Tags = tags;
             await Repository.UpdateAsync(entity, autoSave: true);
+            await RemovePostCache();
             return await MapToGetOutputDtoAsync(entity);
         }
         public override async Task<PostEditDto> CreateAsync(CreateOrUpdatePostDto input)
@@ -71,10 +77,14 @@ namespace Bom.Blog.Posts
             var entity = await MapToEntityAsync(input);
             entity.Tags = tags;
             TryToSetTenantId(entity);
-
             await Repository.InsertAsync(entity, autoSave: true);
-
+            await RemovePostCache();
             return await MapToGetOutputDtoAsync(entity);
+        }
+        public override async Task DeleteAsync(Guid id)
+        {
+            await base.DeleteAsync(id);
+            await RemovePostCache();
         }
 
         public async Task<ListResultDto<CategoryLookupDto>> GetCategoryLookupAsync()
@@ -97,6 +107,15 @@ namespace Bom.Blog.Posts
             queryable = queryable.WhereIf(input.CategoryId != null, i => i.CategoryId == input.CategoryId);
             queryable = queryable.WhereIf(input.TagId != null, i => i.Tags.Any(i => i.Id == input.TagId));
             return queryable;
+        }
+
+        private async Task RemovePostCache()
+        {
+            await cacheRemoveService.RemoveAsync<PagedResultDto<QueryPostDto>>("");
+        }
+        private async Task RemovePostCacheByIdAsync()
+        {
+            await cacheRemoveService.RemoveAsync<Dtos.PostDto>("");
         }
     }
 }

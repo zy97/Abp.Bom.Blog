@@ -1,4 +1,8 @@
-﻿using System;
+﻿using CSRedis;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Redis;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using Volo.Abp.Account;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Caching;
@@ -33,5 +37,12 @@ public class BlogApplicationModule : AbpModule
         {
             options.GlobalCacheEntryOptions.SlidingExpiration = TimeSpan.FromHours(1);
         });
+
+        var configuration = context.Services.GetConfiguration();
+        var csredis = new CSRedisClient(configuration["Redis"]);
+        RedisHelper.Initialization(csredis);
+        context.Services.AddSingleton<IDistributedCache>(new CSRedisCache(RedisHelper.Instance));
+
+        //context.Services.AddSingleton<ICacheRemoveService, CacheRemoveService>();
     }
 }
