@@ -1,5 +1,5 @@
 import axios from "axios";
-import { PagedList } from "../data/models/PagedList";
+import { List, PagedList } from "../data/models/PagedList";
 import PageRequest from "../data/models/PageRequest";
 import { AddTagDto, TagDto, TagSelectOptionDto } from "../data/models/Tag";
 
@@ -25,4 +25,4 @@ export const updateTag = (id: string, tag: AddTagDto) =>
 
 // 获取所有标签
 export const getAllTags = () =>
-  axios.get<TagSelectOptionDto[]>(`/api/app/admin-tag/tags`, {});
+  axios.get<List<TagSelectOptionDto>>(`/api/app/post-admin/tag-lookup`, {});

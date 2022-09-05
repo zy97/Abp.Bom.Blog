@@ -1,7 +1,7 @@
 import axios from "axios";
 import CategoryDto, { CategorySelectOptionDto } from "../data/models/Category";
 import AddCategoryDto from "../data/models/Category";
-import PagedList from "../data/models/PagedList";
+import PagedList, { List } from "../data/models/PagedList";
 import PageRequest from "../data/models/PageRequest";
 
 // 添加博客
@@ -26,7 +26,7 @@ export const updateCategory = (id: string, Category: AddCategoryDto) =>
 
 // 获取所有目录
 export const getAllCategories = () =>
-  axios.get<CategorySelectOptionDto[]>(
-    `/api/app/admin-Category/categories`,
+  axios.get<List<CategorySelectOptionDto>>(
+    `/api/app/post-admin/category-lookup`,
     {}
   );

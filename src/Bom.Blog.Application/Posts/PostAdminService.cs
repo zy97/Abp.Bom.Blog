@@ -51,6 +51,18 @@ namespace Bom.Blog.Posts
         //        entityDtos
         //    );
         //}
+        public override async Task<PostEditDto> UpdateAsync(Guid id, CreateOrUpdatePostDto input)
+        {
+            await CheckUpdatePolicyAsync();
+
+            var entity = await GetEntityByIdAsync(id);
+            var tags = await readOnlyTagRepo.GetListAsync(i => input.Tags.Contains(i.Id));
+            //TODO: Check if input has id different than given id and normalize if it's default value, throw ex otherwise
+            await MapToEntityAsync(input, entity);
+            entity.Tags = tags;
+            await Repository.UpdateAsync(entity, autoSave: true);
+            return await MapToGetOutputDtoAsync(entity);
+        }
         public override async Task<PostEditDto> CreateAsync(CreateOrUpdatePostDto input)
         {
             await CheckCreatePolicyAsync();

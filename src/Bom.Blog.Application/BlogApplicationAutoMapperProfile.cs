@@ -13,6 +13,7 @@ using Bom.Blog.Tags.AdminDtos;
 using Bom.Blog.Tags.Dtos;
 using System.Linq;
 using Volo.Abp.AuditLogging;
+using Volo.Abp.AutoMapper;
 
 namespace Bom.Blog;
 
@@ -29,7 +30,7 @@ public class BlogApplicationAutoMapperProfile : Profile
         CreateMap<Post, PostPagedDto>();
         CreateMap<Post, PostEditDto>().ForMember(i => i.Tags, config => config.MapFrom(i => i.Tags.Select(i => i.Id)));
         CreateMap<Post, Posts.AdminDtos.PostDto>().ForMember(i => i.Tags, config => config.MapFrom(i => i.Tags.Select(i => i.DisplayName)));
-        //CreateMap<CreateOrUpdatePostDto, Post>().ForMember(i => i.Tags, config => config.MapFrom(i => i.Tags.Select(i => new Tag(i))));
+        CreateMap<CreateOrUpdatePostDto, Post>().Ignore(i => i.Tags);
 
 
 

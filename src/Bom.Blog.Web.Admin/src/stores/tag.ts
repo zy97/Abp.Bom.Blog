@@ -55,7 +55,7 @@ class TagStore {
   async getAllTags() {
     try {
       const tags = await tagApi.getAllTags();
-      return tags.data;
+      return tags.data.items;
     } catch (error) {
       console.log(error);
       return [];
