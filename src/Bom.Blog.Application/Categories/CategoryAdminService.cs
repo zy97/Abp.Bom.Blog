@@ -1,6 +1,7 @@
 ﻿using Bom.Blog.Categories.AdminDtos;
 using Bom.Blog.Categories.Dtos;
 using Bom.Blog.Permissions;
+using Bom.Blog.Servives;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
@@ -17,8 +18,9 @@ namespace Bom.Blog.Categories
         private readonly ICategoryRepository categoryRepository;
         private readonly CategoryManager categoryManager;
         private readonly IDistributedCache<IEnumerable<CategoryWithCountDto>> cache;
+        private readonly ICacheRemoveService cacheRemoveService;
 
-        public CategoryAdminService(ICategoryRepository categoryRepository, CategoryManager categoryManager, IDistributedCache<IEnumerable<CategoryWithCountDto>> cache) : base(categoryRepository)
+        public CategoryAdminService(ICategoryRepository categoryRepository, CategoryManager categoryManager, IDistributedCache<IEnumerable<CategoryWithCountDto>> cache, ICacheRemoveService cacheRemoveService) : base(categoryRepository)
         {
             this.GetPolicyName = BlogPermissions.Admin.Default;
             this.GetListPolicyName = BlogPermissions.Admin.Default;
@@ -28,28 +30,29 @@ namespace Bom.Blog.Categories
             this.categoryRepository = categoryRepository;
             this.categoryManager = categoryManager;
             this.cache = cache;
+            this.cacheRemoveService = cacheRemoveService;
         }
         [Authorize(BlogPermissions.Admin.Create)]
         public override async Task<CategoryDto> CreateAsync(CreateOrUpdateCategoryDto input)
         {
             var category = await categoryManager.CreateAsync(input.Name, input.DisplayName);
             await categoryRepository.InsertAsync(category);
+            await RemoveAllCategoryCacheAsync();
             return ObjectMapper.Map<Category, CategoryDto>(category);
         }
         [Authorize(BlogPermissions.Admin.Update)]
         public override async Task<CategoryDto> UpdateAsync(Guid id, CreateOrUpdateCategoryDto input)
         {
             var category = await categoryRepository.GetAsync(id);
-
             await categoryManager.ChangeAsync(category, input.Name, input.DisplayName);
-
             await categoryRepository.UpdateAsync(category);
+            await RemoveAllCategoryCacheAsync();
             return ObjectMapper.Map<Category, CategoryDto>(category);
         }
         public override async Task DeleteAsync(Guid id)
         {
             await base.DeleteAsync(id);
-            await cache.RemoveAsync("all");
+            await RemoveAllCategoryCacheAsync();
         }
         protected override async Task<IQueryable<Category>> CreateFilteredQueryAsync(PagedAndSortedAndFilteredResultRequestDto input)
         {
@@ -57,6 +60,10 @@ namespace Bom.Blog.Categories
             queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.Name), i => i.Name.Contains(input.Name));
             queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(input.DisplayName), i => i.DisplayName.Contains(input.DisplayName));
             return queryable;
+        }
+        private async Task RemoveAllCategoryCacheAsync()
+        {
+            await cacheRemoveService.RemoveAsync<IEnumerable<CategoryWithCountDto>>(CacheConsts.AllCategoryWithCount);
         }
     }
 }

@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import useStores from "../../../../../hooks/useStore";
 import { PostDto } from "../../../../../data/models/post";
 import AdvancedSearchForm from "../../../../../components/AdvanceSearchForm";
-import { CategoryDto } from "../../../../../data/models/Category";
-import { TagDto } from "../../../../../data/models/Tag";
 function ListView() {
   const navigate = useNavigate();
   const { postStore } = useStores();
@@ -82,7 +80,7 @@ function ListView() {
           search.submit();
         }
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   return (
     <div>
@@ -119,22 +117,14 @@ function ListView() {
         >
           <Table.Column<PostDto> title="Id" dataIndex="id" />
           <Table.Column<PostDto> title="作者" dataIndex="author" />
-          <Table.Column<PostDto>
-            title="目录"
-            dataIndex="category"
-            render={(e: CategoryDto) => {
-              return <div>{e.displayName}</div>;
-            }}
-          />
+          <Table.Column<PostDto> title="目录" dataIndex="categoryName" />
           <Table.Column<PostDto> title="标题" dataIndex="title" />
-          <Table.Column<PostDto>
-            title="标签"
-            dataIndex="tags"
-            render={(e: TagDto[]) => {
+          <Table.Column<PostDto> title="标签" dataIndex="tags"
+            render={(e: string[]) => {
               return e?.map((item, index) => {
                 return (
                   <Tag color="green" key={index}>
-                    {item.displayName}
+                    {item}
                   </Tag>
                 );
               });

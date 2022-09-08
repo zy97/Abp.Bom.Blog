@@ -59,13 +59,13 @@ namespace Bom.Blog.Posts
         public async Task<PostDto> GetAsync(Guid id)
         {
             var result = await postCache.GetOrAddAsync(id, async () =>
-             {
-                 var post = await this.repository.GetAsync(id);
-                 var postDto = ObjectMapper.Map<Post, PostDto>(post);
-                 postDto.Next = ObjectMapper.Map<Post, PostPagedDto>(await repository.GetNextAsync(post.CreationTime));
-                 postDto.Previous = ObjectMapper.Map<Post, PostPagedDto>(await repository.GetPreviousAsync(post.CreationTime));
-                 return postDto;
-             });
+            {
+                var post = await this.repository.GetAsync(id);
+                var postDto = ObjectMapper.Map<Post, PostDto>(post);
+                postDto.Next = ObjectMapper.Map<Post, PostPagedDto>(await repository.GetNextAsync(post.CreationTime));
+                postDto.Previous = ObjectMapper.Map<Post, PostPagedDto>(await repository.GetPreviousAsync(post.CreationTime));
+                return postDto;
+            });
             return result;
         }
     }

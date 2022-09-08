@@ -210,10 +210,10 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
         }
 
         // Swagger Client
-        var swaggerClientId = configurationSection["Bom.Blog_Swagger:ClientId"];
+        var swaggerClientId = configurationSection["Blog_Swagger:ClientId"];
         if (!swaggerClientId.IsNullOrWhiteSpace())
         {
-            var swaggerRootUrl = configurationSection["Bom.Blog_Swagger:RootUrl"].TrimEnd('/');
+            var swaggerRootUrl = configurationSection["Blog_Swagger:RootUrl"].TrimEnd('/');
 
             await CreateApplicationAsync(
                 name: swaggerClientId,

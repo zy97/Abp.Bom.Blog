@@ -55,7 +55,7 @@ class CategoryStore {
   async getAllCategories() {
     try {
       const categories = await categoryApi.getAllCategories();
-      return categories.data;
+      return categories.data.items;
     } catch (error) {
       console.log(error);
       return [];

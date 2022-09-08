@@ -16,7 +16,7 @@ namespace Bom.Blog.Categories
         }
         public async Task<IEnumerable<CategoryWithCountDto>> GetCountAsync()
         {
-            var result = await cache.GetOrAddAsync("all", async () =>
+            var result = await cache.GetOrAddAsync(CacheConsts.AllCategoryWithCount, async () =>
             {
                 var categories = await categoryRepository.GetWithPostCountAsync();
                 return ObjectMapper.Map<IEnumerable<Category>, IEnumerable<CategoryWithCountDto>>(categories);

@@ -20,11 +20,7 @@ function AddOrEditPost() {
             message.error("文章不存在");
             return;
           }
-          form.setFieldsValue({
-            ...post,
-            categoryId: post.category?.id,
-            tags: post.tags?.map((tag) => tag.id),
-          });
+          form.setFieldsValue({ ...post, });
         })
         .catch((error) => {
           console.log(error);
@@ -38,10 +34,15 @@ function AddOrEditPost() {
     debounceWait: 500,
   });
   const onFinish = async (values: any) => {
-    console.log("Success:", values);
+    console.log(values);
     try {
-      const post = await postStore.addPost(values);
-      console.log(post);
+      if (postid === undefined) {
+        await postStore.addPost(values);
+      }
+      else {
+        await postStore.updatePost(postid, values);
+      }
+      cancel();
     } catch (error) {
       console.log(error);
     }
@@ -124,15 +125,9 @@ function AddOrEditPost() {
           style={{ marginBottom: "0px" }}
         >
           <div className="space-x-6">
-            <Button type="primary" htmlType="submit">
-              提交
-            </Button>
-            <Button type="primary" onClick={reset}>
-              重置
-            </Button>
-            <Button type="primary" onClick={cancel}>
-              取消
-            </Button>
+            <Button type="primary" htmlType="submit">提交</Button>
+            {!postid && <Button type="primary" onClick={reset}>重置</Button>}
+            <Button type="primary" onClick={cancel}>取消</Button>
           </div>
         </Form.Item>
       </Form>
