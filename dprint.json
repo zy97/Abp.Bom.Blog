@@ -7,5 +7,6 @@
   ],
   "plugins": [
     "https://plugins.dprint.dev/json-0.15.6.wasm",
+    "https://plugins.dprint.dev/roslyn-0.9.0.json@11a68b84e6d6a8f38075a1297f80c32f4663651eed12bcdb2583e6c6dfc9e2f2"
   ]
 }
