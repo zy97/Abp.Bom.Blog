@@ -10,7 +10,7 @@ function Login() {
     const auth = useAuth();
     useDebounceEffect(() => {
         if (!auth.isAuthenticated) {
-            auth.signinRedirect();
+            // auth.signinRedirect();
         }
         // console.log("登录状态", auth.isAuthenticated);
         // console.log("user", auth.user);

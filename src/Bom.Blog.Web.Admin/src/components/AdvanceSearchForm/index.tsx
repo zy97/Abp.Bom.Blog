@@ -8,7 +8,7 @@ type AdvanceSearchFormProps = {
   submit: () => void;
   reset: () => void;
   extraActions: Array<extraActionProps>;
-  children: React.ReactNode[];
+  children: React.ReactNode[] | React.ReactNode;
 };
 type extraActionProps = {
   content: string;
@@ -16,16 +16,21 @@ type extraActionProps = {
 };
 const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
   const { form, submit, reset, extraActions } = props;
-  const formCount = props.children.length;
+  let totalChildren: React.ReactNode[] = [];
+  if (props.children instanceof Array) {
+    totalChildren = props.children;
+  } else {
+    totalChildren.push(props.children);
+  }
+  const formCount = totalChildren.length;
   const [expand, setExpand] = useState(false);
-
   const getFields = () => {
     const count = formCount <= 6 ? formCount : expand ? formCount : 6;
     const children = [];
     for (let i = 0; i < count; i++) {
       children.push(
         <Col span={8} key={i}>
-          {props.children[i]}
+          {totalChildren[i]}
         </Col>
       );
     }
