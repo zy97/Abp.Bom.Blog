@@ -1,14 +1,7 @@
-import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu } from "antd";
 import React, { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Login from "./pages/Components/Login";
 import { Route, routerConfig } from "./router";
 
@@ -24,6 +17,8 @@ type MenuItemProps = {
 };
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location);
   const getItem = (
     label: React.ReactNode,
     key: React.Key,
@@ -36,7 +31,6 @@ function App() {
       children,
       label,
       onClick: (item: any, key: string, keyPath: any, domEvent: any) => {
-        // console.log(item, key, keyPath, domEvent);
         navigate(item.key + "");
       },
     } as MenuItemProps;
@@ -46,15 +40,12 @@ function App() {
     nodes: Route[],
     arr: MenuItemProps[]
   ) => {
-    for (let item of nodes) {
+    for (const item of nodes) {
       if (
         item.path &&
         (item.showInMenu === undefined || item.showInMenu === true)
       ) {
         const menu = getItem(item.title, rootPath + "" + item.path, null);
-        // const sdf = {} as ItemType;
-        // sdf.children
-        // console.log(sdf);
         arr.push(menu);
 
         if (item.children && item.children.length) {
@@ -72,7 +63,7 @@ function App() {
   };
   const menu = createMenu("", routerConfig[0].children!, []);
   const clearMenu = (nodes: MenuItemProps[]) => {
-    for (let item of nodes) {
+    for (const item of nodes) {
       if (item.children && item.children.length === 0) {
         item.children = null;
       }
@@ -85,8 +76,24 @@ function App() {
   // console.log(menu);
 
   const items: MenuItem[] = [...menu];
-
+  console.log(items);
   const [collapsed, setCollapsed] = useState(false);
+  const breadcrumbs = () => {
+    const names = [];
+    const url = location.pathname;
+    for (const menu of items) {
+      if (url.startsWith(menu.key)) {
+        names.push(menu.label);
+        for (const submenu of menu.children) {
+          if (url === submenu.key) {
+            names.push(submenu.label);
+          }
+        }
+      }
+    }
+    return names;
+  };
+  console.log(breadcrumbs())
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
@@ -113,7 +120,9 @@ function App() {
         <Content style={{ margin: "0 16px" }}>
           <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+            <Breadcrumb.Item>Bill</Breadcrumb.Item>{
+              breadcrumbs().map(i => { return <Breadcrumb.Item key={i}>{i}</Breadcrumb.Item> })
+            }
           </Breadcrumb>
           <div className="h-full">
             <div className="p-6 bg-white h-full">
