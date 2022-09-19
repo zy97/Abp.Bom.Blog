@@ -69,6 +69,14 @@ public class BlogHttpApiHostModule : AbpModule
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
         ConfigureAntiForgery();
+
+        context.Services.AddAuthentication().AddGitHub(github =>
+        {
+            github.ClientId = configuration["Authentication:GitHub:ClientId"];
+            github.ClientSecret = configuration["Authentication:GitHub:ClientSecret"];
+            github.Scope.Add("user:email");
+            github.Scope.Add("user:profile");
+        });
         context.Services.ConfigureApplicationCookie(options =>
         {
             options.Events.OnRedirectToLogin = context =>
