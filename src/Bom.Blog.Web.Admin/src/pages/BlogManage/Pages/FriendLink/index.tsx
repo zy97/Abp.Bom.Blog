@@ -3,7 +3,7 @@ import { Button, Form, Input, message, Modal, Table } from 'antd';
 import { useState } from 'react';
 import AdvancedSearchForm from '../../../../components/AdvanceSearchForm';
 import { FriendLinkDto } from '../../../../data/models/FriendLink';
-import useStores from '../../../../hooks/useStore';
+import { useStores } from '../../../../hooks/useStore';
 
 function FriendLink() {
     const { friendLinkStore } = useStores();
@@ -51,7 +51,7 @@ function FriendLink() {
                 console.log(tag);
                 setVisible(true);
             }
-        } catch (error) {}
+        } catch (error) { }
     };
     const addOrUpdateTag = async (data: FriendLinkDto) => {
         try {
@@ -75,7 +75,7 @@ function FriendLink() {
                     search.submit();
                 }
             }
-        } catch (error) {}
+        } catch (error) { }
     };
     return (
         <div>

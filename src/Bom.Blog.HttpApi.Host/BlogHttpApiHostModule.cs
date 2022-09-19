@@ -75,7 +75,6 @@ public class BlogHttpApiHostModule : AbpModule
             github.ClientId = configuration["Authentication:GitHub:ClientId"];
             github.ClientSecret = configuration["Authentication:GitHub:ClientSecret"];
             github.Scope.Add("user:email");
-            github.Scope.Add("user:profile");
         });
         context.Services.ConfigureApplicationCookie(options =>
         {

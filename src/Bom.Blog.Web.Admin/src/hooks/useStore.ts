@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { storesContext } from '../stores';
+import { abpApplicationConfigurationContext } from '../stores/Abp';
 
-const useStores = () => useContext(storesContext);
-export default useStores;
+export const useStores = () => useContext(storesContext);
+export const useAppConfig = () => useContext(abpApplicationConfigurationContext);

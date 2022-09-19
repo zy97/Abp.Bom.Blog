@@ -3,7 +3,7 @@ import { Button, Form, Input, message, Modal, Table } from "antd";
 import { useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { TagDto } from "../../../../data/models/Tag";
-import useStores from "../../../../hooks/useStore";
+import { useStores } from "../../../../hooks/useStore";
 function Tags() {
   const { tagStore } = useStores();
   const [visible, setVisible] = useState(false);

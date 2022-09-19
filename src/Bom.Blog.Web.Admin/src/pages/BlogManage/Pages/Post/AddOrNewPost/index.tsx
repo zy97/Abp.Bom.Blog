@@ -3,7 +3,7 @@ import { Button, Form, Input, message, Select } from "antd";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Editor from "../../../../../components/Editor";
-import useStores from "../../../../../hooks/useStore";
+import { useStores } from "../../../../../hooks/useStore";
 
 function AddOrEditPost() {
   const { postid } = useParams();

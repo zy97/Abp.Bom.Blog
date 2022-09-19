@@ -93,7 +93,6 @@ function App() {
     }
     return names;
   };
-  console.log(breadcrumbs())
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider

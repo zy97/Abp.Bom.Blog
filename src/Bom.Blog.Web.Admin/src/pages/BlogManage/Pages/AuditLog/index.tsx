@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { AuditLogDto } from "../../../../data/models/AuditLog";
-import useStores from "../../../../hooks/useStore";
+import { useStores } from "../../../../hooks/useStore";
 
 function AuditLog() {
   const { audit_logStore } = useStores();

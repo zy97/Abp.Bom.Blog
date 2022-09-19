@@ -5,7 +5,7 @@ import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { PermissionGroup, UpdatePermissionListItemDto, } from "../../../../data/models/system/Permission";
 import { RoleDto } from "../../../../data/models/system/Role";
 import { AddUpdateUserBaseDto, UserDto } from "../../../../data/models/system/User";
-import useStores from "../../../../hooks/useStore";
+import { useStores } from "../../../../hooks/useStore";
 import Permission from "../../../Components/Permission";
 
 function User() {

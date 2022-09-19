@@ -2,9 +2,8 @@ import { useAntdTable, useRequest } from "ahooks";
 import { Button, Form, Input, message, Modal, Table } from "antd";
 import { useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
-import CategoryDto from "../../../../data/models/Category";
-import useStores from "../../../../hooks/useStore";
-
+import { CategoryDto } from "../../../../data/models/Category";
+import { useStores } from "../../../../hooks/useStore";
 function Category() {
   const { categoryStore } = useStores();
   const [visible, setVisible] = useState(false);

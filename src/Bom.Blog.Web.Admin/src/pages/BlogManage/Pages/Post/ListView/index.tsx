@@ -2,9 +2,9 @@ import { Button, Form, Input, message, Modal, Select, Table, Tag } from "antd";
 import { useState } from "react";
 import { useAntdTable, useRequest } from "ahooks";
 import { useNavigate } from "react-router-dom";
-import useStores from "../../../../../hooks/useStore";
 import { PostDto } from "../../../../../data/models/post";
 import AdvancedSearchForm from "../../../../../components/AdvanceSearchForm";
+import { useStores } from "../../../../../hooks/useStore";
 function ListView() {
   const navigate = useNavigate();
   const { postStore } = useStores();
