@@ -1,3 +1,5 @@
+using Bom.Blog.Permissions;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,7 +8,7 @@ using Volo.Abp.AuditLogging;
 using Volo.Abp.Domain.Repositories;
 namespace Bom.Blog.AuditLogs
 {
-
+    [Authorize(BlogPermissions.Admin.Default)]
     public class AuditLogService : ReadOnlyAppService<AuditLog, AuditLogDto, Guid, PagedAndSortedAndFilteredResultRequestDto>, IAuditLogService
     {
         public AuditLogService(IRepository<AuditLog, Guid> repository) : base(repository)

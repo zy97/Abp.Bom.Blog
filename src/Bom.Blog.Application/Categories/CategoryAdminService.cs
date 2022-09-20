@@ -13,6 +13,7 @@ using CategoryDto = Bom.Blog.Categories.AdminDtos.CategoryDto;
 
 namespace Bom.Blog.Categories
 {
+    [Authorize(BlogPermissions.Admin.Default)]
     public class CategoryAdminService : CrudAppService<Category, CategoryDto, Guid, PagedAndSortedAndFilteredResultRequestDto, CreateOrUpdateCategoryDto>, ICategoryAdminService
     {
         private readonly ICategoryRepository categoryRepository;
@@ -22,11 +23,6 @@ namespace Bom.Blog.Categories
 
         public CategoryAdminService(ICategoryRepository categoryRepository, CategoryManager categoryManager, IDistributedCache<IEnumerable<CategoryWithCountDto>> cache, ICacheRemoveService cacheRemoveService) : base(categoryRepository)
         {
-            this.GetPolicyName = BlogPermissions.Admin.Default;
-            this.GetListPolicyName = BlogPermissions.Admin.Default;
-            this.UpdatePolicyName = BlogPermissions.Admin.Update;
-            this.CreatePolicyName = BlogPermissions.Admin.Create;
-            this.DeletePolicyName = BlogPermissions.Admin.Delete;
             this.categoryRepository = categoryRepository;
             this.categoryManager = categoryManager;
             this.cache = cache;
@@ -49,6 +45,7 @@ namespace Bom.Blog.Categories
             await RemoveAllCategoryCacheAsync();
             return ObjectMapper.Map<Category, CategoryDto>(category);
         }
+        [Authorize(BlogPermissions.Admin.Delete)]
         public override async Task DeleteAsync(Guid id)
         {
             await base.DeleteAsync(id);

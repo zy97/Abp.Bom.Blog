@@ -21,11 +21,6 @@ namespace Bom.Blog.Tags
 
         public TagAdminService(ITagRepository repository, TagManager tagManager, ICacheRemoveService cacheRemoveService) : base(repository)
         {
-            this.GetPolicyName = BlogPermissions.Admin.Default;
-            this.GetListPolicyName = BlogPermissions.Admin.Default;
-            this.UpdatePolicyName = BlogPermissions.Admin.Update;
-            this.CreatePolicyName = BlogPermissions.Admin.Create;
-            this.DeletePolicyName = BlogPermissions.Admin.Delete;
             this.repository = repository;
             this.tagManager = tagManager;
             this.cacheRemoveService = cacheRemoveService;
@@ -47,6 +42,7 @@ namespace Bom.Blog.Tags
             await RemoveAllTagCache();
             return ObjectMapper.Map<Tag, TagDto>(tag);
         }
+        [Authorize(BlogPermissions.Admin.Delete)]
         public override async Task DeleteAsync(Guid id)
         {
             await base.DeleteAsync(id);

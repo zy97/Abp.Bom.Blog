@@ -19,11 +19,6 @@ namespace Bom.Blog.FriendLinks
 
         public FriendLinkAdminService(IFriendLinkRepository repository, FriendLinkManager friendLinkManager, ICacheRemoveService cacheRemoveService) : base(repository)
         {
-            this.GetPolicyName = BlogPermissions.Admin.Default;
-            this.GetListPolicyName = BlogPermissions.Admin.Default;
-            this.UpdatePolicyName = BlogPermissions.Admin.Update;
-            this.CreatePolicyName = BlogPermissions.Admin.Create;
-            this.DeletePolicyName = BlogPermissions.Admin.Delete;
             this.repository = repository;
             this.friendLinkManager = friendLinkManager;
             this.cacheRemoveService = cacheRemoveService;
@@ -45,6 +40,7 @@ namespace Bom.Blog.FriendLinks
             await RemoveFriendLinkCache();
             return ObjectMapper.Map<FriendLink, FriendLinkDto>(friendLink);
         }
+        [Authorize(BlogPermissions.Admin.Delete)]
         public override async Task DeleteAsync(Guid id)
         {
             await base.DeleteAsync(id);

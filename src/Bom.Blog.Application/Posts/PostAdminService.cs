@@ -31,31 +31,8 @@ namespace Bom.Blog.Posts
             this.readOnlyCategoryRepo = readOnlyCategoryRepo;
             this.readOnlyTagRepo = readOnlyTagRepo;
             this.cacheRemoveService = cacheRemoveService;
-            this.GetPolicyName = BlogPermissions.Admin.Default;
-            this.GetListPolicyName = BlogPermissions.Admin.Default;
-            this.UpdatePolicyName = BlogPermissions.Admin.Update;
-            this.CreatePolicyName = BlogPermissions.Admin.Create;
-            this.DeletePolicyName = BlogPermissions.Admin.Delete;
         }
-        //public override async Task<PagedResultDto<PostDto>> GetListAsync(PagedAndSortedAndFilteredResultRequestDto input)
-        //{
-        //    await CheckGetListPolicyAsync();
-
-        //    var query = await CreateFilteredQueryAsync(input);
-        //    var totalCount = await AsyncExecuter.CountAsync(query);
-        //    query = await ReadOnlyRepository.WithDetailsAsync(i => i.Category, i => i.Tags);
-
-        //    query = ApplySorting(query, input);
-        //    query = ApplyPaging(query, input);
-
-        //    var entities = await AsyncExecuter.ToListAsync(query);
-        //    var entityDtos = await MapToGetListOutputDtosAsync(entities);
-
-        //    return new PagedResultDto<PostDto>(
-        //        totalCount,
-        //        entityDtos
-        //    );
-        //}
+        [Authorize(BlogPermissions.Admin.Update)]
         public override async Task<PostEditDto> UpdateAsync(Guid id, CreateOrUpdatePostDto input)
         {
             await CheckUpdatePolicyAsync();
@@ -69,6 +46,7 @@ namespace Bom.Blog.Posts
             await RemovePostCache();
             return await MapToGetOutputDtoAsync(entity);
         }
+        [Authorize(BlogPermissions.Admin.Create)]
         public override async Task<PostEditDto> CreateAsync(CreateOrUpdatePostDto input)
         {
             await CheckCreatePolicyAsync();
@@ -81,6 +59,7 @@ namespace Bom.Blog.Posts
             await RemovePostCache();
             return await MapToGetOutputDtoAsync(entity);
         }
+        [Authorize(BlogPermissions.Admin.Delete)]
         public override async Task DeleteAsync(Guid id)
         {
             await base.DeleteAsync(id);
