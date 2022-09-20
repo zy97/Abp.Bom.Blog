@@ -1,9 +1,11 @@
 ﻿using Bom.Blog.Categories.Dtos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Caching;
 namespace Bom.Blog.Categories
 {
+    [RemoteService(false)]
     public class CategoryService : BlogAppService, ICategoryService
     {
         private readonly IDistributedCache<IEnumerable<CategoryWithCountDto>> cache;

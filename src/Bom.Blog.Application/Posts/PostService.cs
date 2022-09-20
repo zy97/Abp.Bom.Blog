@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Caching;
@@ -11,6 +12,7 @@ using Volo.Abp.Json;
 
 namespace Bom.Blog.Posts
 {
+    [RemoteService(false)]
     public class PostService : ApplicationService, IPostService
     {
         private readonly IPostRepository repository;

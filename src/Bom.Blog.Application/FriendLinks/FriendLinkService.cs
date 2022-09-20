@@ -1,10 +1,12 @@
 ﻿using Bom.Blog.FriendLinks.Dtos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Caching;
 
 namespace Bom.Blog.FriendLinks
 {
+    [RemoteService(false)]
     public class FriendLinkService : BlogAppService, IFriendLinkService
     {
         private readonly IFriendLinkRepository friendLinkRepo;

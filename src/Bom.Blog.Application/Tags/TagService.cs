@@ -1,9 +1,11 @@
 ﻿using Bom.Blog.Tags.Dtos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Caching;
 namespace Bom.Blog.Tags
 {
+    [RemoteService(false)]
     public class TagService : BlogAppService, ITagService
     {
         private readonly ITagRepository tagRepo;
