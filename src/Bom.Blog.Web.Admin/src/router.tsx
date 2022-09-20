@@ -10,12 +10,18 @@ import ListView from "./pages/BlogManage/Pages/Post/ListView";
 import AuditLog from "./pages/BlogManage/Pages/AuditLog";
 import User from "./pages/BlogManage/Pages/User";
 import Role from "./pages/BlogManage/Pages/Role";
+import { useDebounceEffect } from "ahooks";
+import { useAppConfig } from "./hooks/useStore";
+import { toJS } from "mobx";
+import { filterPermissionRoute } from "./util/permission";
+import { useState } from "react";
 //https://reactrouter.com/docs/en/v6/getting-started/overview#nested-routes
 //嵌套的的父级需要有一个letout容器才行
 export interface Route extends RouteObject {
   title?: string;
   showInMenu?: boolean;
   children?: Route[];
+  permission?: string
 }
 
 export const routerConfig: Route[] = [
@@ -82,6 +88,7 @@ export const routerConfig: Route[] = [
             title: "友情链接",
             path: "friendlink",
             element: <FriendLink />,
+            permission: "Blog.Admin"
           },
         ],
       },
@@ -92,7 +99,36 @@ export const routerConfig: Route[] = [
     ],
   },
 ];
+
 export function RenderRoutes() {
-  const routes = useRoutes(routerConfig);
-  return routes;
+  const checkPermission = (routes: Route[], permissions: Record<string, boolean>) => {
+    const returnRoute: Route[] = [];
+    for (const route of routes) {
+      if (route.children && route.children.length > 0) {
+        const newRoute: Route = { ...route, children: [] };
+        const children = checkPermission(route.children, permissions);
+        if (children) {
+          newRoute.children = children;
+          returnRoute.push(newRoute);
+        }
+      }
+      else {
+        if (route.permission === undefined || (route.permission && permissions[route.permission])) {
+          returnRoute.push(route);
+        }
+      }
+    }
+    return returnRoute;
+  }
+  const [routes, setRoutes] = useState([] as Route[])
+
+  const { applicationConfigurationStore } = useAppConfig();
+  useDebounceEffect(() => {
+    applicationConfigurationStore.Get().then((config) => {
+      const routes = filterPermissionRoute(routerConfig, toJS(config.auth.grantedPolicies));
+      console.log(routes);
+      setRoutes(routes);
+    });
+  }, [], {});
+  return useRoutes(routes);
 }

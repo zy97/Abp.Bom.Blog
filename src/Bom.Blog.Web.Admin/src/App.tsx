@@ -1,9 +1,13 @@
+import { useDebounceEffect } from "ahooks";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu } from "antd";
-import React, { useState } from "react";
+import { toJS } from "mobx";
+import React, { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useAppConfig } from "./hooks/useStore";
 import Login from "./pages/Components/Login";
 import { Route, routerConfig } from "./router";
+import { filterPermissionRoute } from "./util/permission";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -18,8 +22,20 @@ type MenuItemProps = {
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
-  const getItem = (
+  const { applicationConfigurationStore } = useAppConfig();
+  const [routes, setRoutes] = useState([] as Route[])
+  const [menues, setMenues] = useState([] as MenuItem[])
+  useDebounceEffect(() => {
+    applicationConfigurationStore.Get().then((config) => {
+      const routes = filterPermissionRoute(routerConfig, toJS(config.auth.grantedPolicies));
+      const m = createMenu("", routes[0].children!, [])
+      removeInvalidChildrenMenu(m);
+      setMenues([...m])
+      console.log(routes);
+      setRoutes(routes);
+    });
+  }, [], {});
+  const getMenuItem = (
     label: React.ReactNode,
     key: React.Key,
     icon?: React.ReactNode,
@@ -45,7 +61,7 @@ function App() {
         item.path &&
         (item.showInMenu === undefined || item.showInMenu === true)
       ) {
-        const menu = getItem(item.title, rootPath + "" + item.path, null);
+        const menu = getMenuItem(item.title, rootPath + "" + item.path, null);
         arr.push(menu);
 
         if (item.children && item.children.length) {
@@ -61,27 +77,28 @@ function App() {
     }
     return arr;
   };
-  const menu = createMenu("", routerConfig[0].children!, []);
-  const clearMenu = (nodes: MenuItemProps[]) => {
+  // const menu = createMenu("", routes[0].children, []);
+  const removeInvalidChildrenMenu = (nodes: MenuItemProps[]) => {
     for (const item of nodes) {
       if (item.children && item.children.length === 0) {
         item.children = null;
       }
       if (item.children && item.children.length) {
-        clearMenu(item.children);
+        removeInvalidChildrenMenu(item.children);
       }
     }
   };
-  clearMenu(menu);
+  // removeInvalidChildrenMenu(menu);
   // console.log(menu);
 
-  const items: MenuItem[] = [...menu];
-  console.log(items);
+  // const items: MenuItem[] = [];
+  // const items: MenuItem[] = [...menu];
+  // console.log(items);
   const [collapsed, setCollapsed] = useState(false);
   const breadcrumbs = () => {
     const names = [];
     const url = location.pathname;
-    for (const menu of items) {
+    for (const menu of menues) {
       if (url.startsWith(menu.key)) {
         names.push(menu.label);
         for (const submenu of menu.children) {
@@ -107,7 +124,7 @@ function App() {
           theme="dark"
           defaultSelectedKeys={["2"]}
           mode="inline"
-          items={items}
+          items={menues}
         />
       </Sider>
       <Layout className="site-layout">

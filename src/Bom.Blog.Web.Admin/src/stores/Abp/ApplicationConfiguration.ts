@@ -9,17 +9,12 @@ class ApplicationConfigurationStore {
         this.config = null;
     }
     async Get() {
-        try {
-            if (this.config == null) {
-                const config = await applicationConfiguration.getApplicationConfiguration();
-                this.config = config.data;
-                return this.config;
-            }
+        if (this.config == null) {
+            const config = await applicationConfiguration.getApplicationConfiguration();
+            this.config = config.data;
             return this.config;
         }
-        catch {
-            return null;
-        }
+        return this.config;
     }
 }
 

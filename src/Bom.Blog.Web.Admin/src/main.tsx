@@ -14,6 +14,7 @@ import * as isLeapYear from 'dayjs/plugin/isLeapYear'; // import plugin
 import * as format from 'dayjs/plugin/localizedFormat'; // import plugin
 import 'dayjs/locale/zh-cn'; // import locale
 import interceptors from './Interceptors';
+import App from './App';
 
 dayjs.extend(isLeapYear); // use plugin
 dayjs.extend(format); // use plugin
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <ConfigProvider locale={zhCN}>
                 <BrowserRouter>
                     <RenderRoutes />
+                    {/* <App /> */}
                 </BrowserRouter>
             </ConfigProvider>
         </AuthProvider>

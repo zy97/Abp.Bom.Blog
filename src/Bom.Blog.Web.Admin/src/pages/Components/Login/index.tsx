@@ -11,13 +11,13 @@ function Login() {
     const { applicationConfigurationStore } = useAppConfig();
     useDebounceEffect(() => {
         if (!auth.isAuthenticated) {
-            // auth.signinRedirect();
+            auth.signinRedirect();
         }
-        else {
-            applicationConfigurationStore.Get().then(config => {
-                console.log(config);
-            }).catch(console.log);
-        }
+        // else {
+        //     applicationConfigurationStore.Get().then(config => {
+        //         console.log(config);
+        //     }).catch(console.log);
+        // }
         // console.log("登录状态", auth.isAuthenticated);
         // console.log("user", auth.user);
     }, [auth.isAuthenticated], { wait: 500 })
