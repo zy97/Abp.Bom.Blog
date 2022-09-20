@@ -34,9 +34,9 @@ export const routerConfig: Route[] = [
         title: "系统管理",
         path: "/sysmanage",
         children: [
-          { title: "用户管理", path: "user", element: <User /> },
-          { title: "角色管理", path: "role", element: <Role /> },
-          { title: "审计日志", path: "auditlog", element: <AuditLog /> },
+          { title: "用户管理", path: "user", element: <User />, permission: "AbpIdentity.Users" },
+          { title: "角色管理", path: "role", element: <Role />, permission: "AbpIdentity.Roles" },
+          { title: "审计日志", path: "auditlog", element: <AuditLog />, permission: "Blog.Admin" },
         ],
       },
       {
@@ -50,6 +50,7 @@ export const routerConfig: Route[] = [
           {
             title: "博客",
             path: "post",
+            permission: "Blog.Admin",
             element: <Post />,
             children: [
               {
@@ -69,19 +70,16 @@ export const routerConfig: Route[] = [
               },
             ],
           },
-          // {
-          //     title: '博客+',
-          //     path: 'post/add',
-          //     element: <AddOrEditPost />,
-          // },
           {
             title: "标签",
             path: "tag",
+            permission: "Blog.Admin",
             element: <Tags />,
           },
           {
             title: "目录",
             path: "category",
+            permission: "Blog.Admin",
             element: <Category />,
           },
           {

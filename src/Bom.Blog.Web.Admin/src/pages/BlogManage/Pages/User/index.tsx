@@ -1,14 +1,15 @@
 import { useAntdTable, useRequest } from "ahooks";
 import { Button, Checkbox, Form, Input, message, Modal, Row, Switch, Table, Tabs } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { PermissionGroup, UpdatePermissionListItemDto, } from "../../../../data/models/system/Permission";
 import { RoleDto } from "../../../../data/models/system/Role";
 import { AddUpdateUserBaseDto, UserDto } from "../../../../data/models/system/User";
-import { useStores } from "../../../../hooks/useStore";
+import { useAppConfig, useStores } from "../../../../hooks/useStore";
 import Permission from "../../../Components/Permission";
 
 function User() {
+  const { applicationConfigurationStore } = useAppConfig();
   const { userStore, permissionStore } = useStores();
   const [visible, setVisible] = useState(false);
   const [permissionModalVisible, setPermissionModalVisible] = useState(false);
@@ -19,9 +20,14 @@ function User() {
   const [userId, setUserId] = useState("");
   const [permissionGroup, setPermissionGroup] = useState<PermissionGroup>({} as PermissionGroup);
   let changedPermession: UpdatePermissionListItemDto[];
-
   const { tableProps, search } = useAntdTable(userStore.getUsers, { defaultPageSize: 10, form, debounceWait: 500, });
   const { runAsync } = useRequest(userStore.getUserById, { manual: true, });
+  const [permissions, setpermissions] = useState({} as Record<string, boolean>);
+  useEffect(() => {
+    applicationConfigurationStore.Get().then(config => {
+      setpermissions(config.auth.grantedPolicies);
+    });
+  }, []);
   const deleteUser = (record: UserDto) => {
     Modal.confirm({
       title: "删除标签", content: "确定删除吗？",
@@ -96,7 +102,7 @@ function User() {
   }
   return (
     <div>
-      <AdvancedSearchForm form={form} {...search} extraActions={[{ content: "添加", action: addUser, },]}>
+      <AdvancedSearchForm form={form} {...search} extraActions={[permissions["AbpIdentity.Users.Create"] ? { content: "添加", action: addUser } : null]}>
         <Form.Item name="title" label="标题">
           <Input placeholder="请输入标题" />
         </Form.Item>
@@ -133,9 +139,9 @@ function User() {
             render={(recode) => {
               return (
                 <div className="space-x-4">
-                  <Button type="primary" onClick={() => getUser(recode)}>编辑</Button>
-                  <Button type="primary" onClick={() => showPermissionModal(recode.id)}>权限</Button>
-                  <Button type="primary" danger onClick={() => deleteUser(recode)} >删除</Button>
+                  {permissions["AbpIdentity.Users.Update"] && <Button type="primary" onClick={() => getUser(recode)}>编辑</Button>}
+                  {permissions["AbpIdentity.Users.ManagePermissions"] && <Button type="primary" onClick={() => showPermissionModal(recode.id)}>权限</Button>}
+                  {permissions["AbpIdentity.Users.Delete"] && <Button type="primary" danger onClick={() => deleteUser(recode)} >删除</Button>}
                 </div>
               );
             }}

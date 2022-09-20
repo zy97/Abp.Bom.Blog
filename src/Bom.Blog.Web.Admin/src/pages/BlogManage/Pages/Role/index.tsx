@@ -1,13 +1,14 @@
 import { useAntdTable, useRequest } from "ahooks";
 import { Button, Checkbox, Form, Input, message, Modal, Table } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { PermissionGroup, UpdatePermissionListItemDto } from "../../../../data/models/system/Permission";
 import { RoleDto } from "../../../../data/models/system/Role";
-import { useStores } from "../../../../hooks/useStore";
+import { useAppConfig, useStores } from "../../../../hooks/useStore";
 import Permission from "../../../Components/Permission";
 
 function Role() {
+  const { applicationConfigurationStore } = useAppConfig();
   const { roleStore, permissionStore } = useStores();
   const [modalTitle, setModalTitle] = useState("");
   const [visible, setVisible] = useState(false);
@@ -19,6 +20,12 @@ function Role() {
   const { tableProps, search } = useAntdTable(roleStore.getRoles, { defaultPageSize: 10, form, debounceWait: 500, });
   const { runAsync } = useRequest(roleStore.getRoleById, { manual: true, });
   let changedPermession: UpdatePermissionListItemDto[];
+  const [permissions, setpermissions] = useState({} as Record<string, boolean>);
+  useEffect(() => {
+    applicationConfigurationStore.Get().then(config => {
+      setpermissions(config.auth.grantedPolicies);
+    });
+  }, []);
   const deleteRole = (record: RoleDto) => {
     Modal.confirm({
       title: "删除标签", content: "确定删除吗？",
@@ -87,7 +94,7 @@ function Role() {
   }
   return (
     <div>
-      <AdvancedSearchForm form={form} {...search} extraActions={[{ content: "添加", action: showModal, },]}>
+      <AdvancedSearchForm form={form} {...search} extraActions={[permissions["AbpIdentity.Roles.Create"] ? { content: "添加", action: showModal } : null]}>
         <Form.Item name="title" label="标题"><Input placeholder="请输入标题" /></Form.Item>
         <Form.Item name="linkUrl" label="链接地址"><Input placeholder="请输入链接地址" /></Form.Item>
       </AdvancedSearchForm>
@@ -113,9 +120,9 @@ function Role() {
             render={(recode) => {
               return (
                 <div className="space-x-4">
-                  <Button type="primary" onClick={() => getRole(recode)}>编辑</Button>
-                  <Button type="primary" onClick={() => showPermissionModal(recode.name)}>权限</Button>
-                  <Button type="primary" danger onClick={() => deleteRole(recode)}>删除</Button>
+                  {permissions["AbpIdentity.Roles.Update"] && <Button type="primary" onClick={() => getRole(recode)}>编辑</Button>}
+                  {permissions["AbpIdentity.Roles.ManagePermissions"] && <Button type="primary" onClick={() => showPermissionModal(recode.name)}>权限</Button>}
+                  {permissions["AbpIdentity.Roles.Delete"] && <Button type="primary" danger onClick={() => deleteRole(recode)}>删除</Button>}
                 </div>
               );
             }}

@@ -1,14 +1,21 @@
 import { useAntdTable, useRequest } from "ahooks";
 import { Button, Form, Input, message, Modal, Table } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { CategoryDto } from "../../../../data/models/Category";
-import { useStores } from "../../../../hooks/useStore";
+import { useAppConfig, useStores } from "../../../../hooks/useStore";
 function Category() {
+  const { applicationConfigurationStore } = useAppConfig();
   const { categoryStore } = useStores();
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
   const [modalForm] = Form.useForm();
+  const [permissions, setpermissions] = useState({} as Record<string, boolean>);
+  useEffect(() => {
+    applicationConfigurationStore.Get().then(config => {
+      setpermissions(config.auth.grantedPolicies);
+    });
+  }, []);
   const { tableProps, search } = useAntdTable(categoryStore.getCategories, {
     defaultPageSize: 10,
     form,
@@ -77,12 +84,7 @@ function Category() {
       <AdvancedSearchForm
         form={form}
         {...search}
-        extraActions={[
-          {
-            content: "添加",
-            action: showModal,
-          },
-        ]}
+        extraActions={[permissions["Blog.Admin.Create"] ? { content: "添加", action: showModal } : null]}
       >
         <Form.Item name="categoryName" label="目录名">
           <Input placeholder="请输入目录名" />
@@ -113,16 +115,8 @@ function Category() {
             render={(recode) => {
               return (
                 <div className="space-x-4">
-                  <Button type="primary" onClick={() => getTag(recode)}>
-                    编辑
-                  </Button>
-                  <Button
-                    type="primary"
-                    danger
-                    onClick={() => deleteTag(recode)}
-                  >
-                    删除
-                  </Button>
+                  {permissions["Blog.Admin.Update"] && <Button type="primary" onClick={() => getTag(recode)}>编辑</Button>}
+                  {permissions["Blog.Admin.Delete"] && <Button type="primary" danger onClick={() => deleteTag(recode)}>删除</Button>}
                 </div>
               );
             }}

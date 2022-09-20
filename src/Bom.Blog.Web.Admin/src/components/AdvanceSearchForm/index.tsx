@@ -7,7 +7,7 @@ type AdvanceSearchFormProps = {
   form: FormInstance;
   submit: () => void;
   reset: () => void;
-  extraActions: Array<extraActionProps>;
+  extraActions: Array<extraActionProps | null>;
   children: React.ReactNode[] | React.ReactNode;
 };
 type extraActionProps = {
@@ -42,7 +42,7 @@ const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
       <Row gutter={24}>{getFields()}</Row>
       <Row>
         <Col span={24} className="space-x-4 text-right">
-          {extraActions.map((i: extraActionProps, key: number) => {
+          {extraActions.filter(i => i !== null).map((i: extraActionProps, key: number) => {
             return (
               <Button type="primary" key={key} onClick={i.action}>
                 {i.content}

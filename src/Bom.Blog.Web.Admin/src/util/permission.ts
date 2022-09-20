@@ -1,3 +1,5 @@
+import { toJS } from "mobx";
+import { useAppConfig } from "../hooks/useStore";
 import { Route } from "../router";
 
 export const filterPermissionRoute = (routes: Route[], permissions: Record<string, boolean>) => {

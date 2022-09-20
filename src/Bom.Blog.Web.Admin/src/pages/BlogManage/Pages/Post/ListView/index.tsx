@@ -1,16 +1,23 @@
 import { Button, Form, Input, message, Modal, Select, Table, Tag } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAntdTable, useRequest } from "ahooks";
 import { useNavigate } from "react-router-dom";
 import { PostDto } from "../../../../../data/models/post";
 import AdvancedSearchForm from "../../../../../components/AdvanceSearchForm";
-import { useStores } from "../../../../../hooks/useStore";
+import { useAppConfig, useStores } from "../../../../../hooks/useStore";
 function ListView() {
+  const { applicationConfigurationStore } = useAppConfig();
   const navigate = useNavigate();
   const { postStore } = useStores();
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
   const [modalForm] = Form.useForm();
+  const [permissions, setpermissions] = useState({} as Record<string, boolean>);
+  useEffect(() => {
+    applicationConfigurationStore.Get().then(config => {
+      setpermissions(config.auth.grantedPolicies);
+    });
+  }, []);
   const { tableProps, search } = useAntdTable(postStore.getPosts, {
     defaultPageSize: 10,
     form,
@@ -87,12 +94,7 @@ function ListView() {
       <AdvancedSearchForm
         form={form}
         {...search}
-        extraActions={[
-          {
-            content: "添加",
-            action: navigateToNewPage,
-          },
-        ]}
+        extraActions={[permissions["Blog.Admin.Create"] ? { content: "添加", action: navigateToNewPage } : null]}
       >
         <Form.Item name="tagName" label="标签名">
           <Input placeholder="请输入标签名" />
@@ -135,19 +137,8 @@ function ListView() {
             render={(recode) => {
               return (
                 <div className="space-x-4">
-                  <Button
-                    type="primary"
-                    onClick={() => navigateToEditPost(recode)}
-                  >
-                    编辑
-                  </Button>
-                  <Button
-                    type="primary"
-                    danger
-                    onClick={() => deletePost(recode)}
-                  >
-                    删除
-                  </Button>
+                  {permissions["Blog.Admin.Update"] && <Button type="primary" onClick={() => navigateToEditPost(recode)}>编辑</Button>}
+                  {permissions["Blog.Admin.Delete"] && <Button type="primary" danger onClick={() => deletePost(recode)}>删除</Button>}
                 </div>
               );
             }}

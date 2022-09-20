@@ -1,15 +1,22 @@
 import { useAntdTable, useRequest } from 'ahooks';
 import { Button, Form, Input, message, Modal, Table } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdvancedSearchForm from '../../../../components/AdvanceSearchForm';
 import { FriendLinkDto } from '../../../../data/models/FriendLink';
-import { useStores } from '../../../../hooks/useStore';
+import { useAppConfig, useStores } from '../../../../hooks/useStore';
 
 function FriendLink() {
+    const { applicationConfigurationStore } = useAppConfig();
     const { friendLinkStore } = useStores();
     const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
     const [modalForm] = Form.useForm();
+    const [permissions, setpermissions] = useState({} as Record<string, boolean>);
+    useEffect(() => {
+        applicationConfigurationStore.Get().then(config => {
+            setpermissions(config.auth.grantedPolicies);
+        });
+    }, []);
     const { tableProps, search } = useAntdTable(
         friendLinkStore.getFriendLinks,
         {
@@ -82,12 +89,7 @@ function FriendLink() {
             <AdvancedSearchForm
                 form={form}
                 {...search}
-                extraActions={[
-                    {
-                        content: '添加',
-                        action: showModal,
-                    },
-                ]}
+                extraActions={[permissions["Blog.Admin.Create"] ? { content: "添加", action: showModal } : null]}
             >
                 <Form.Item name="title" label="标题">
                     <Input placeholder="请输入标题" />
@@ -124,19 +126,8 @@ function FriendLink() {
                         render={(recode) => {
                             return (
                                 <div className="space-x-4">
-                                    <Button
-                                        type="primary"
-                                        onClick={() => getTag(recode)}
-                                    >
-                                        编辑
-                                    </Button>
-                                    <Button
-                                        type="primary"
-                                        danger
-                                        onClick={() => deleteTag(recode)}
-                                    >
-                                        删除
-                                    </Button>
+                                    {permissions["Blog.Admin.Update"] && <Button type="primary" onClick={() => getTag(recode)}>编辑</Button>}
+                                    {permissions["Blog.Admin.Delete"] && <Button type="primary" danger onClick={() => deleteTag(recode)}>删除</Button>}
                                 </div>
                             );
                         }}
