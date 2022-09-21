@@ -26,7 +26,8 @@ namespace Bom.Blog.BackgroundJobs
         {
             var app = context.GetApplicationBuilder();
             var backgroundJobManager = app.ApplicationServices.GetService<IBackgroundJobManager>();
-            backgroundJobManager.EnqueueAsync(new TestJobArgs() { Name = "Hello Test" });
+            //backgroundJobManager.EnqueueAsync(new TestJobArgs() { Name = "Hello Test" });
+            //backgroundJobManager.EnqueueAsync(new EmailJobArgs() { Email = "1654002016@qq.com", Subject = "123", Body = "1234546" });
             await context.AddBackgroundWorkerAsync<Test2Job>();
 
         }

@@ -8,5 +8,10 @@ public class BlogSettingDefinitionProvider : SettingDefinitionProvider
     {
         //Define your own settings here. Example:
         //context.Add(new SettingDefinition(BlogSettings.MySetting1));
+        var smtpPassword = context.GetOrNull("Abp.Mailing.Smtp.Password");
+        if (smtpPassword != null)
+        {
+            smtpPassword.IsEncrypted = false;
+        }
     }
 }
