@@ -28,7 +28,7 @@ const interceptors = () => {
         message.error(error.response.data.error.message);
       }
       if (error.response.status === 403) {
-        message.error("未授权，请联系管理员");
+        message.error("未授权，请联系管理员：" + error.response.data.error.message);
       }
       // const code = get(error, 'response.data.code');
       // const err = get(error, 'response.data.message');
