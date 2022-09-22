@@ -145,7 +145,7 @@ function App() {
             </div>
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>Footer</Footer>
+        <Footer style={{ textAlign: "center" }}></Footer>
       </Layout>
     </Layout>
   );
