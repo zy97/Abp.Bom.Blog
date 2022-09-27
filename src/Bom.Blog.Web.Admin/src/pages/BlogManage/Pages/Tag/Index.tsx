@@ -1,9 +1,10 @@
 import { useAntdTable, useRequest } from "ahooks";
-import { Button, Form, Input, message, Modal, Table } from "antd";
+import { Button, Form, Input, message, Modal, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { TagDto } from "../../../../data/models/Tag";
 import { useAppConfig, useStores } from "../../../../hooks/useStore";
+import styles from "./index.module.less"
 function Tags() {
   const { applicationConfigurationStore } = useAppConfig();
   const { tagStore } = useStores();
@@ -93,7 +94,7 @@ function Tags() {
           <Input placeholder="请输入展示名" />
         </Form.Item>
       </AdvancedSearchForm>
-      <div className="mt-4">
+      <div className={styles.table}>
         <Table<TagDto>
           rowKey="id"
           {...{
@@ -114,10 +115,10 @@ function Tags() {
             title="操作"
             render={(recode) => {
               return (
-                <div className="space-x-4">
+                <Space>
                   {permissions["Blog.Admin.Update"] && <Button type="primary" onClick={() => getTag(recode)}>编辑</Button>}
                   {permissions["Blog.Admin.Delete"] && <Button type="primary" danger onClick={() => deleteTag(recode)}>删除</Button>}
-                </div>
+                </Space>
               );
             }}
           />

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import 'virtual:windi.css';
+// import 'virtual:windi.css';
 import 'antd/dist/antd.css';
 import { RenderRoutes } from './router';
 import { BrowserRouter } from 'react-router-dom';

@@ -1,5 +1,5 @@
 import { useAntdTable, useRequest } from "ahooks";
-import { Button, Checkbox, Form, Input, message, Modal, Row, Switch, Table, Tabs } from "antd";
+import { Button, Checkbox, Form, Input, message, Modal, Row, Space, Switch, Table, Tabs } from "antd";
 import { useEffect, useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { PermissionGroup, UpdatePermissionListItemDto, } from "../../../../data/models/system/Permission";
@@ -7,7 +7,7 @@ import { RoleDto } from "../../../../data/models/system/Role";
 import { AddUpdateUserBaseDto, UserDto } from "../../../../data/models/system/User";
 import { useAppConfig, useStores } from "../../../../hooks/useStore";
 import Permission from "../../../Components/Permission";
-
+import styles from "./index.module.less";
 function User() {
   const { applicationConfigurationStore } = useAppConfig();
   const { userStore, permissionStore } = useStores();
@@ -110,7 +110,7 @@ function User() {
           <Input placeholder="请输入链接地址" />
         </Form.Item>
       </AdvancedSearchForm>
-      <div className="mt-4">
+      <div className={styles.table}>
         <Table<UserDto> size="small"
           rowKey="id"
           {...{
@@ -138,11 +138,11 @@ function User() {
             title="操作"
             render={(recode) => {
               return (
-                <div className="space-x-4">
+                <Space>
                   {permissions["AbpIdentity.Users.Update"] && <Button type="primary" onClick={() => getUser(recode)}>编辑</Button>}
                   {permissions["AbpIdentity.Users.ManagePermissions"] && <Button type="primary" onClick={() => showPermissionModal(recode.id)}>权限</Button>}
                   {permissions["AbpIdentity.Users.Delete"] && <Button type="primary" danger onClick={() => deleteUser(recode)} >删除</Button>}
-                </div>
+                </Space>
               );
             }}
           />

@@ -1,10 +1,10 @@
 import { useRequest } from "ahooks";
-import { Button, Form, Input, message, Select } from "antd";
+import { Button, Form, Input, message, Select, Space } from "antd";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Editor from "../../../../../components/Editor";
 import { useStores } from "../../../../../hooks/useStore";
-
+import styles from "./index.module.less";
 function AddOrEditPost() {
   const { postid } = useParams();
 
@@ -54,7 +54,7 @@ function AddOrEditPost() {
     form.resetFields();
   };
   return (
-    <div className="h-full">
+    <div className={styles.AddPostContainer}>
       <Form
         form={form}
         name="basic"
@@ -124,11 +124,11 @@ function AddOrEditPost() {
           wrapperCol={{ offset: 10, span: 16 }}
           style={{ marginBottom: "0px" }}
         >
-          <div className="space-x-6">
+          <Space>
             <Button type="primary" htmlType="submit">提交</Button>
             {!postid && <Button type="primary" onClick={reset}>重置</Button>}
             <Button type="primary" onClick={cancel}>取消</Button>
-          </div>
+          </Space>
         </Form.Item>
       </Form>
     </div>

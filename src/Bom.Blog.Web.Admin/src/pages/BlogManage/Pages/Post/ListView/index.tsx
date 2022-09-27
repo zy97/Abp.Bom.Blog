@@ -1,10 +1,11 @@
-import { Button, Form, Input, message, Modal, Select, Table, Tag } from "antd";
+import { Button, Form, Input, message, Modal, Select, Space, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { useAntdTable, useRequest } from "ahooks";
 import { useNavigate } from "react-router-dom";
 import { PostDto } from "../../../../../data/models/post";
 import AdvancedSearchForm from "../../../../../components/AdvanceSearchForm";
 import { useAppConfig, useStores } from "../../../../../hooks/useStore";
+import styles from "./index.module.less";
 function ListView() {
   const { applicationConfigurationStore } = useAppConfig();
   const navigate = useNavigate();
@@ -103,7 +104,7 @@ function ListView() {
           <Input placeholder="请输入展示名" />
         </Form.Item>
       </AdvancedSearchForm>
-      <div className="mt-4">
+      <div className={styles.table}>
         <Table<PostDto>
           rowKey="id"
           {...{
@@ -136,10 +137,10 @@ function ListView() {
             title="操作"
             render={(recode) => {
               return (
-                <div className="space-x-4">
+                <Space>
                   {permissions["Blog.Admin.Update"] && <Button type="primary" onClick={() => navigateToEditPost(recode)}>编辑</Button>}
                   {permissions["Blog.Admin.Delete"] && <Button type="primary" danger onClick={() => deletePost(recode)}>删除</Button>}
-                </div>
+                </Space>
               );
             }}
           />

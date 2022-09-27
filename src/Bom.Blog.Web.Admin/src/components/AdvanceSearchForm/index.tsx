@@ -1,8 +1,8 @@
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Row } from "antd";
+import { Button, Col, Form, Row, Space } from "antd";
 import { FormInstance } from "antd/es/form/Form";
 import { useState } from "react";
-
+import styles from "./index.module.less";
 type AdvanceSearchFormProps = {
   form: FormInstance;
   submit: () => void;
@@ -41,28 +41,31 @@ const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
     <Form form={form} name="advanced_search">
       <Row gutter={24}>{getFields()}</Row>
       <Row>
-        <Col span={24} className="space-x-4 text-right">
-          {extraActions.filter(i => i !== null).map((i: extraActionProps, key: number) => {
-            return (
-              <Button type="primary" key={key} onClick={i.action}>
-                {i.content}
-              </Button>
-            );
-          })}
-          <Button type="primary" htmlType="submit" onClick={submit}>
-            搜索
-          </Button>
-          <Button onClick={reset}>重置</Button>
-          {formCount >= 6 && (
-            <a
-              style={{ fontSize: 12 }}
-              onClick={() => {
-                setExpand(!expand);
-              }}
-            >
-              {expand ? <UpOutlined /> : <DownOutlined />} 折叠
-            </a>
-          )}
+        <Col span={24} className={styles.search}>
+          <Space>
+            {extraActions.filter(i => i !== null).map((i: extraActionProps, key: number) => {
+              return (
+                <Button type="primary" key={key} onClick={i.action}>
+                  {i.content}
+                </Button>
+              );
+            })}
+            <Button type="primary" htmlType="submit" onClick={submit}>
+              搜索
+            </Button>
+            <Button onClick={reset}>重置</Button>
+            {formCount >= 6 && (
+              <a
+                style={{ fontSize: 12 }}
+                onClick={() => {
+                  setExpand(!expand);
+                }}
+              >
+                {expand ? <UpOutlined /> : <DownOutlined />} 折叠
+              </a>
+            )}
+          </Space>
+
         </Col>
       </Row>
     </Form>

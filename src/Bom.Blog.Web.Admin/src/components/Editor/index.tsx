@@ -1,5 +1,6 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import styles from "./index.module.less";
 //https://github.com/zenoamaro/react-quill#custom-editing-area
 //如果不指定自定义区域，会出现两个工具栏
 const modules = {
@@ -42,7 +43,7 @@ function Editor(props: Props) {
   return (
     <>
       <ReactQuill
-        className="h-[360px]"
+        className={styles.h}
         theme="snow"
         value={value || ""}
         modules={modules}

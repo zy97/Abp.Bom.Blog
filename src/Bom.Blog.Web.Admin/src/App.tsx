@@ -8,7 +8,7 @@ import { useAppConfig } from "./hooks/useStore";
 import Login from "./pages/Components/Login";
 import { Route, routerConfig } from "./router";
 import { filterPermissionRoute } from "./util/permission";
-
+import styles from "./App.module.less";
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -117,7 +117,7 @@ function App() {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div className="logo text-white h-16 text-lg text-center  leading-[64px]">
+        <div className={styles.logo}>
           <div>logo</div>
         </div>
         <Menu
@@ -127,9 +127,9 @@ function App() {
           items={menues}
         />
       </Sider>
-      <Layout className="site-layout">
-        <Header className="site-layout-background " style={{ padding: 0 }}>
-          <span className="text-white absolute right-8">
+      <Layout >
+        <Header style={{ padding: 0 }}>
+          <span className={styles.login}>
             <Login />
           </span>
         </Header>
@@ -139,15 +139,13 @@ function App() {
               breadcrumbs().map(i => { return <Breadcrumb.Item key={i}>{i}</Breadcrumb.Item> })
             }
           </Breadcrumb>
-          <div className="h-full">
-            <div className="p-6 bg-white h-full">
-              <Outlet />
-            </div>
+          <div>
+            <Outlet />
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}></Footer>
       </Layout>
-    </Layout>
+    </Layout >
   );
 }
 

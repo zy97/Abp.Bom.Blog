@@ -1,12 +1,12 @@
 import { useAntdTable, useRequest } from "ahooks";
-import { Button, Checkbox, Form, Input, message, Modal, Table } from "antd";
+import { Button, Checkbox, Form, Input, message, Modal, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { PermissionGroup, UpdatePermissionListItemDto } from "../../../../data/models/system/Permission";
 import { RoleDto } from "../../../../data/models/system/Role";
 import { useAppConfig, useStores } from "../../../../hooks/useStore";
 import Permission from "../../../Components/Permission";
-
+import styles from "./index.module.less";
 function Role() {
   const { applicationConfigurationStore } = useAppConfig();
   const { roleStore, permissionStore } = useStores();
@@ -98,7 +98,7 @@ function Role() {
         <Form.Item name="title" label="标题"><Input placeholder="请输入标题" /></Form.Item>
         <Form.Item name="linkUrl" label="链接地址"><Input placeholder="请输入链接地址" /></Form.Item>
       </AdvancedSearchForm>
-      <div className="mt-4">
+      <div className={styles.table}>
         <Table<RoleDto>
           rowKey="id"
           {...{
@@ -119,11 +119,11 @@ function Role() {
             title="操作"
             render={(recode) => {
               return (
-                <div className="space-x-4">
+                <Space>
                   {permissions["AbpIdentity.Roles.Update"] && <Button type="primary" onClick={() => getRole(recode)}>编辑</Button>}
                   {permissions["AbpIdentity.Roles.ManagePermissions"] && <Button type="primary" onClick={() => showPermissionModal(recode.name)}>权限</Button>}
                   {permissions["AbpIdentity.Roles.Delete"] && <Button type="primary" danger onClick={() => deleteRole(recode)}>删除</Button>}
-                </div>
+                </Space>
               );
             }}
           />

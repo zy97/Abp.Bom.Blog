@@ -1,11 +1,11 @@
 import { useAntdTable, useRequest } from "ahooks";
-import { Button, Form, Input, message, Modal, Table } from "antd";
+import { Button, Form, Input, message, Modal, Space, Table } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
 import { AuditLogDto } from "../../../../data/models/AuditLog";
 import { useStores } from "../../../../hooks/useStore";
-
+import styles from "./index.module.less";
 function AuditLog() {
   const { audit_logStore } = useStores();
   const [visible, setVisible] = useState(false);
@@ -52,7 +52,7 @@ function AuditLog() {
           <Input placeholder="请输入链接地址" />
         </Form.Item>
       </AdvancedSearchForm>
-      <div className="mt-4">
+      <div className={styles.table}>
         <Table<AuditLogDto>
           rowKey="id"
           {...{
@@ -75,11 +75,11 @@ function AuditLog() {
             title="操作"
             render={(recode) => {
               return (
-                <div className="space-x-4">
+                <Space>
                   <Button type="primary" onClick={() => getAuditLog(recode)}>
                     详情
                   </Button>
-                </div>
+                </Space>
               );
             }}
           />
