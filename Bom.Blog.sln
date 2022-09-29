@@ -58,6 +58,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Bom.Blog.Web.Admin", "src\B
 		SlnRelativePath = "src\Bom.Blog.Web.Admin\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bom.Blog.Openiddict", "src\Bom.Blog.Openiddict\Bom.Blog.Openiddict.csproj", "{1AC11972-C051-40E8-AF5D-17A8119827C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +130,10 @@ Global
 		{35607467-9549-4BB9-8F92-5DB2F0BA10E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35607467-9549-4BB9-8F92-5DB2F0BA10E5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{35607467-9549-4BB9-8F92-5DB2F0BA10E5}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{1AC11972-C051-40E8-AF5D-17A8119827C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AC11972-C051-40E8-AF5D-17A8119827C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AC11972-C051-40E8-AF5D-17A8119827C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AC11972-C051-40E8-AF5D-17A8119827C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,6 +155,7 @@ Global
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{35607467-9549-4BB9-8F92-5DB2F0BA10E5} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{1AC11972-C051-40E8-AF5D-17A8119827C1} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}
