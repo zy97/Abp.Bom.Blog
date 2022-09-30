@@ -6,7 +6,7 @@ import { useState } from "react";
 import { getEmailValidationRule, getPhoneValidationRule, getRequiredRule, getTwoPasswordValidationRule } from "../../../util/formValid";
 import ConcurrencyStamp from "../../../components/Form/ConcurrencyStamp";
 import { useStores } from "../../../hooks/useStore";
-
+import { baseUrl } from "../../../environments/environment";
 
 function Login() {
     const auth = useAuth();
@@ -26,7 +26,8 @@ function Login() {
     const logout = async () => {
         // await accountStore.logout();
         // await auth.signoutRedirect();
-        await auth.signoutRedirect({ post_logout_redirect_uri: "http://localhost:3000" });
+
+        await auth.signoutRedirect({ post_logout_redirect_uri: baseUrl });
         // await auth.removeUser();
     }
     const showProfileModal = async () => {
