@@ -1,14 +1,17 @@
 import axios from "axios";
 import { message } from "antd";
+import { User } from "oidc-client-ts";
 
 const interceptors = () => {
   // Add a request interceptor
   axios.interceptors.request.use(
     function (config) {
-      // Do something before request is sent
-      // config.headers['platform-type'] = 'SC';
       config.xsrfCookieName = "XSRF-TOKEN";
       config.xsrfHeaderName = "RequestVerificationToken";
+      const oidcStorage = localStorage.getItem("oidc.user:https://localhost:44400:Blog_React");
+      console.log("oidc", oidcStorage)
+      if (oidcStorage)
+        config.headers.Authorization = `Bearer ${User.fromStorageString(oidcStorage).access_token}`;
       return config;
     },
     function (error) {
