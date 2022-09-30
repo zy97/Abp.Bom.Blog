@@ -24,7 +24,9 @@ using Volo.Abp.Autofac;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
+using Volo.Abp.Emailing;
 using Volo.Abp.Localization;
+using Volo.Abp.MailKit;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
@@ -39,7 +41,9 @@ namespace Bom.Blog
     typeof(AbpAccountHttpApiModule),
     typeof(AbpAspNetCoreMvcUiBasicThemeModule),
     typeof(BlogEntityFrameworkCoreModule),
-    typeof(AbpAspNetCoreSerilogModule)
+    typeof(AbpAspNetCoreSerilogModule),
+    typeof(AbpEmailingModule),
+    typeof(AbpMailKitModule)
     )]
     public class BlogOpeniddictModule : AbpModule
     {
@@ -98,7 +102,7 @@ namespace Bom.Blog
 
             Configure<AbpBackgroundJobOptions>(options =>
             {
-                options.IsJobExecutionEnabled = false;
+                options.IsJobExecutionEnabled = true;
             });
 
             Configure<AbpDistributedCacheOptions>(options =>

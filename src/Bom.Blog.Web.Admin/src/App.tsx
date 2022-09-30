@@ -118,7 +118,7 @@ function App() {
         onCollapse={(value) => setCollapsed(value)}
       >
         <div className={styles.logo}>
-          <div>logo</div>
+          <div>Blog</div>
         </div>
         <Menu
           theme="dark"

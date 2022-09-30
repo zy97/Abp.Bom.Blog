@@ -1,10 +1,8 @@
 using Bom.Blog.MultiTenancy;
 using Volo.Abp.AuditLogging;
 using Volo.Abp.BackgroundJobs;
-using Volo.Abp.Emailing;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
-using Volo.Abp.MailKit;
 using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.OpenIddict;
@@ -25,10 +23,9 @@ namespace Bom.Blog;
     typeof(AbpOpenIddictDomainModule),
     typeof(AbpPermissionManagementDomainOpenIddictModule),
     typeof(AbpSettingManagementDomainModule),
-    typeof(AbpTenantManagementDomainModule),
-    typeof(AbpEmailingModule)
+    typeof(AbpTenantManagementDomainModule)
+
 )]
-[DependsOn(typeof(AbpMailKitModule))]
 public class BlogDomainModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
