@@ -9,7 +9,6 @@ const interceptors = () => {
       config.xsrfCookieName = "XSRF-TOKEN";
       config.xsrfHeaderName = "RequestVerificationToken";
       const oidcStorage = localStorage.getItem("oidc.user:https://localhost:44400:Blog_React");
-      console.log("oidc", oidcStorage)
       if (oidcStorage)
         config.headers.Authorization = `Bearer ${User.fromStorageString(oidcStorage).access_token}`;
       return config;
@@ -26,25 +25,16 @@ const interceptors = () => {
       if (axios.isCancel(error)) {
         return Promise.reject(error);
       }
-      console.log(error);
       if (error.response.status === 500) {
         message.error(error.response.data.error.message);
       }
       if (error.response.status === 403) {
-        message.error("未授权，请联系管理员：" + error.response.data.error.message);
+        let msg = "未授权，请联系管理员";
+        const data = error.response.data;
+        if (data && data.error && data.error.message)
+          msg += "：" + error.response.data.error.message;
+        message.error(msg);
       }
-      // const code = get(error, 'response.data.code');
-      // const err = get(error, 'response.data.message');
-      // if (code === '401101') {
-      //     // 如果没有权限，则跳到登录页
-      //     message.error('登录已失效，请重新登录');
-      //     window.location.href = `/login`;
-      // } else if (code !== '200') {
-      //     message.error({
-      //         content: err || 'error',
-      //         duration: 2,
-      //     });
-      // }
       return Promise.reject(error);
     }
   );
