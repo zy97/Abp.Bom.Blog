@@ -12,24 +12,23 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <LangVersion>preview</LangVersion>
+		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <LangVersion>preview</LangVersion>
+		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AspNet.Security.OAuth.GitHub" Version="6.0.11" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
 		<PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.22" />
 		<PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.5" />
 		<PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
 		<PackageReference Include="SkyAPM.Agent.AspNetCore" Version="2.0.1" />
 		<PackageReference Include="Volo.Abp.AspNetCore.MultiTenancy" Version="6.0.0-rc.5" />
 		<PackageReference Include="Volo.Abp.Autofac" Version="6.0.0-rc.5" />
-		<PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic" Version="6.0.0-rc.5" />
-		<PackageReference Include="Volo.Abp.Account.Web.OpenIddict" Version="6.0.0-rc.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
 		<PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="6.0.0-rc.5" />
 		<PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="6.0.0-rc.5" />
 		<PackageReference Include="Volo.Abp.Swashbuckle" Version="6.0.0-rc.5" />
@@ -44,23 +43,23 @@
 
 	<ItemGroup>
 		<Compile Remove="Logs\**" />
+		<Compile Remove="Pages\**" />
 		<Content Remove="Logs\**" />
+		<Content Remove="Pages\**" />
 		<EmbeddedResource Remove="Logs\**" />
+		<EmbeddedResource Remove="Pages\**" />
 		<None Remove="Logs\**" />
+		<None Remove="Pages\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Remove="skyapm.json" />
+		<Content Remove="skyapm.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Pages\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="skyapm.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+		<None Include="skyapm.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>

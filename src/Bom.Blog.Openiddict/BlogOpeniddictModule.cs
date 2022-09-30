@@ -43,6 +43,18 @@ namespace Bom.Blog
     )]
     public class BlogOpeniddictModule : AbpModule
     {
+        public override void PreConfigureServices(ServiceConfigurationContext context)
+        {
+            PreConfigure<OpenIddictBuilder>(builder =>
+            {
+                builder.AddValidation(options =>
+                {
+                    options.AddAudiences("Blog");
+                    options.UseLocalServer();
+                    options.UseAspNetCore();
+                });
+            });
+        }
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             var hostingEnviroment = context.Services.GetHostingEnvironment();
@@ -91,7 +103,7 @@ namespace Bom.Blog
 
             Configure<AbpDistributedCacheOptions>(options =>
             {
-                options.KeyPrefix = "Blog:";
+                options.KeyPrefix = "OpenId:";
             });
 
             var dataProtecgtionBuilder = context.Services.AddDataProtection().SetApplicationName("Blog");
@@ -119,6 +131,13 @@ namespace Bom.Blog
                         .AllowAnyMethod()
                         .AllowCredentials();
                 });
+            });
+
+            context.Services.AddAuthentication().AddGitHub(github =>
+            {
+                github.ClientId = configuration["Authentication:GitHub:ClientId"];
+                github.ClientSecret = configuration["Authentication:GitHub:ClientSecret"];
+                github.Scope.Add("user:email");
             });
 
             //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
@@ -153,18 +172,6 @@ namespace Bom.Blog
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
-        }
-        public override void PreConfigureServices(ServiceConfigurationContext context)
-        {
-            PreConfigure<OpenIddictBuilder>(builder =>
-            {
-                builder.AddValidation(options =>
-                {
-                    options.AddAudiences("Blog");
-                    options.UseLocalServer();
-                    options.UseAspNetCore();
-                });
-            });
         }
     }
 }

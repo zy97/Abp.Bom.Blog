@@ -2,36 +2,32 @@ using Bom.Blog.BackgroundJobs;
 using Bom.Blog.EntityFrameworkCore;
 using Bom.Blog.MultiTenancy;
 using Hangfire;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using OpenIddict.Validation.AspNetCore;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
-using Volo.Abp.Account;
-using Volo.Abp.Account.Web;
 using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc;
-using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic.Bundling;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
+using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.Hangfire;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
-using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
 
 namespace Bom.Blog;
@@ -42,8 +38,6 @@ namespace Bom.Blog;
     typeof(AbpAspNetCoreMultiTenancyModule),
     typeof(BlogApplicationModule),
     typeof(BlogEntityFrameworkCoreModule),
-    typeof(AbpAspNetCoreMvcUiBasicThemeModule),
-    typeof(AbpAccountWebOpenIddictModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
     typeof(BlogBackgroundJobsModule),
@@ -60,22 +54,15 @@ public class BlogHttpApiHostModule : AbpModule
         {
             options.RouteBasePath = "/profiler";
         });
-        ConfigureBundles();
-        ConfigureUrls(configuration);
         ConfigureConventionalControllers();
-        ConfigureAuthentication(context);
+        ConfigureAuthentication(context, configuration);
         ConfigureLocalization();
+        ConfigureCache(configuration);
         ConfigureVirtualFileSystem(context);
+        ConfigureDataProtection(context, configuration, hostingEnvironment);
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
-        ConfigureAntiForgery();
 
-        context.Services.AddAuthentication().AddGitHub(github =>
-        {
-            github.ClientId = configuration["Authentication:GitHub:ClientId"];
-            github.ClientSecret = configuration["Authentication:GitHub:ClientSecret"];
-            github.Scope.Add("user:email");
-        });
         context.Services.ConfigureApplicationCookie(options =>
         {
             options.Events.OnRedirectToLogin = context =>
@@ -101,41 +88,10 @@ public class BlogHttpApiHostModule : AbpModule
             };
         });
     }
-    private void ConfigureAntiForgery()
+    private void ConfigureCache(IConfiguration configuration)
     {
-        //RequestVerificationToken 是预防CSRF攻击的一个手段，abp默认是开启的。开启后，前端所有的post请求的header必须带有这个token
-        //或者禁用
-        //Configure<AbpAntiForgeryOptions>(options =>
-        //{
-        //    options.AutoValidateIgnoredHttpMethods.Add("PUT");
-        //    options.AutoValidateIgnoredHttpMethods.Add("POST");
-        //    options.AutoValidateIgnoredHttpMethods.Add("DELETE");
-        //});
+        Configure<AbpDistributedCacheOptions>(options => options.KeyPrefix = "Blog:");
     }
-
-    private void ConfigureBundles()
-    {
-        Configure<AbpBundlingOptions>(options =>
-        {
-            options.StyleBundles.Configure(
-                BasicThemeBundles.Styles.Global,
-                bundle => { bundle.AddFiles("/global-styles.css"); }
-            );
-        });
-    }
-
-    private void ConfigureUrls(IConfiguration configuration)
-    {
-        Configure<AppUrlOptions>(options =>
-        {
-            options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
-            options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"].Split(','));
-
-            options.Applications["Angular"].RootUrl = configuration["App:ClientUrl"];
-            options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
-        });
-    }
-
     private void ConfigureVirtualFileSystem(ServiceConfigurationContext context)
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
@@ -168,9 +124,15 @@ public class BlogHttpApiHostModule : AbpModule
         });
     }
 
-    private void ConfigureAuthentication(ServiceConfigurationContext context)
+    private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
-        context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+        context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Authority = configuration["AuthServer:Authority"];
+                options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+                options.Audience = "Blog";
+            });
     }
 
     private static void ConfigureSwaggerServices(ServiceConfigurationContext context, IConfiguration configuration)
@@ -197,7 +159,15 @@ public class BlogHttpApiHostModule : AbpModule
             options.Languages.Add(new LanguageInfo("zh-Hans", "zh-Hans", "简体中文"));
         });
     }
-
+    private void ConfigureDataProtection(ServiceConfigurationContext context, IConfiguration configuration, IWebHostEnvironment hostEnvironment)
+    {
+        var dataProtectedBuilder = context.Services.AddDataProtection().SetApplicationName("Blog");
+        if (!hostEnvironment.IsDevelopment())
+        {
+            var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]);
+            dataProtectedBuilder.PersistKeysToStackExchangeRedis(redis, "Blog-Protection-Keys");
+        }
+    }
     private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
     {
         context.Services.AddCors(options =>
@@ -232,30 +202,16 @@ public class BlogHttpApiHostModule : AbpModule
         }
 
         app.UseAbpRequestLocalization();
-
-        if (!env.IsDevelopment())
-        {
-            app.UseErrorPage();
-        }
-
         app.UseCorrelationId();
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors();
         app.UseAuthentication();
-        app.UseAbpOpenIddictValidation();
-
         if (MultiTenancyConsts.IsEnabled)
         {
             app.UseMultiTenancy();
         }
-
-        app.UseUnitOfWork();
         app.UseAuthorization();
-        app.UseHangfireDashboard(options: new DashboardOptions
-        {
-            AsyncAuthorization = new[] { new AbpHangfireAuthorizationFilter() }
-        });
         app.UseSwagger();
         app.UseAbpSwaggerUI(c =>
         {
@@ -265,21 +221,13 @@ public class BlogHttpApiHostModule : AbpModule
             c.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
             c.OAuthScopes("Blog");
         });
-
+        app.UseHangfireDashboard(options: new DashboardOptions
+        {
+            AsyncAuthorization = new[] { new AbpHangfireAuthorizationFilter() }
+        });
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
+        app.UseUnitOfWork();
         app.UseConfiguredEndpoints();
-    }
-    public override void PreConfigureServices(ServiceConfigurationContext context)
-    {
-        PreConfigure<OpenIddictBuilder>(builder =>
-        {
-            builder.AddValidation(options =>
-            {
-                options.AddAudiences("Blog");
-                options.UseLocalServer();
-                options.UseAspNetCore();
-            });
-        });
     }
 }
