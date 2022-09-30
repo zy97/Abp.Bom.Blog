@@ -24,8 +24,10 @@ function Login() {
         auth.signinRedirect();
     }
     const logout = async () => {
-        await accountStore.logout();
-        await auth.removeUser();
+        // await accountStore.logout();
+        // await auth.signoutRedirect();
+        await auth.signoutRedirect({ post_logout_redirect_uri: "http://localhost:3000" });
+        // await auth.removeUser();
     }
     const showProfileModal = async () => {
         const profile = await accountStore.getProfile();
