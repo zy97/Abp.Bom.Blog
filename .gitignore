@@ -260,6 +260,7 @@ src/Bom.Blog.HttpApi.Host/Logs/*
 src/Bom.Blog.DbMigrator/Logs/*
 src/Bom.Blog.Blazor.Server/Logs/*
 src/Bom.Blog.Blazor.Server.Tiered/Logs/*
+src/Bom.Blog.Openiddict/Logs/*
 src/Bom.Blog.HttpApi.Host/appsettings.secrets.json
 # Use abp install-libs to restore.
 **/wwwroot/libs/*

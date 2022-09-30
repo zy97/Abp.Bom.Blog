@@ -120,6 +120,8 @@ namespace Bom.Blog
                         .AllowCredentials();
                 });
             });
+
+            //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         }
         public override void OnApplicationInitialization(Volo.Abp.ApplicationInitializationContext context)
         {
@@ -140,6 +142,7 @@ namespace Bom.Blog
             app.UseStaticFiles();
             app.UseRouting();
             app.UseCors();
+            app.UseAuthentication();
             if (MultiTenancyConsts.IsEnabled)
             {
                 app.UseMultiTenancy();
@@ -150,6 +153,18 @@ namespace Bom.Blog
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
+        }
+        public override void PreConfigureServices(ServiceConfigurationContext context)
+        {
+            PreConfigure<OpenIddictBuilder>(builder =>
+            {
+                builder.AddValidation(options =>
+                {
+                    options.AddAudiences("Blog");
+                    options.UseLocalServer();
+                    options.UseAspNetCore();
+                });
+            });
         }
     }
 }
