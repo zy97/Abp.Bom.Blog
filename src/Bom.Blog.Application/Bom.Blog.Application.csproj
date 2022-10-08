@@ -15,12 +15,12 @@
 
 	<ItemGroup>
 		<PackageReference Include="Caching.CSRedis" Version="3.8.3" />
-		<PackageReference Include="Volo.Abp.Account.Application" Version="6.0.0-rc.5" />
-		<PackageReference Include="Volo.Abp.Identity.Application" Version="6.0.0-rc.5" />
-		<PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="6.0.0-rc.5" />
-		<PackageReference Include="Volo.Abp.TenantManagement.Application" Version="6.0.0-rc.5" />
-		<PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="6.0.0-rc.5" />
-		<PackageReference Include="Volo.Abp.SettingManagement.Application" Version="6.0.0-rc.5" />
+		<PackageReference Include="Volo.Abp.Account.Application" Version="6.0.0" />
+		<PackageReference Include="Volo.Abp.Identity.Application" Version="6.0.0" />
+		<PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="6.0.0" />
+		<PackageReference Include="Volo.Abp.TenantManagement.Application" Version="6.0.0" />
+		<PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="6.0.0" />
+		<PackageReference Include="Volo.Abp.SettingManagement.Application" Version="6.0.0" />
 	</ItemGroup>
 
 </Project>
