@@ -1,6 +1,7 @@
 using Bom.Blog.MultiTenancy;
 using Volo.Abp.AuditLogging;
 using Volo.Abp.BackgroundJobs;
+using Volo.Abp.Emailing;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
@@ -23,7 +24,8 @@ namespace Bom.Blog;
     typeof(AbpOpenIddictDomainModule),
     typeof(AbpPermissionManagementDomainOpenIddictModule),
     typeof(AbpSettingManagementDomainModule),
-    typeof(AbpTenantManagementDomainModule)
+    typeof(AbpTenantManagementDomainModule),
+    typeof(AbpEmailingModule)
 
 )]
 public class BlogDomainModule : AbpModule

@@ -24,8 +24,10 @@ using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
+using Volo.Abp.Emailing;
 using Volo.Abp.Hangfire;
 using Volo.Abp.Localization;
+using Volo.Abp.MailKit;
 using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.VirtualFileSystem;
@@ -41,7 +43,9 @@ namespace Bom.Blog;
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
     typeof(BlogBackgroundJobsModule),
-    typeof(AbpCachingStackExchangeRedisModule)
+    typeof(AbpCachingStackExchangeRedisModule),
+    typeof(AbpEmailingModule),
+    typeof(AbpMailKitModule)
 )]
 public class BlogHttpApiHostModule : AbpModule
 {
