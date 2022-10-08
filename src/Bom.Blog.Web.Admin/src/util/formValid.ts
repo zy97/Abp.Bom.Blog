@@ -1,3 +1,5 @@
+
+
 export function getPhoneValidationRule() {
     return {
         pattern: /^(\+?0?86-?)?1[345789]\d{9}$/,
@@ -19,8 +21,13 @@ export function getEmailValidationRule() {
         message: "请输入正确的邮箱",
     }
 }
+
 export function getTwoPasswordValidationRule(controlName: string, tip: string) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return ({ getFieldValue }) => ({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         validator(_, value) {
             if (!value || getFieldValue(controlName) === value) {
                 return Promise.resolve();

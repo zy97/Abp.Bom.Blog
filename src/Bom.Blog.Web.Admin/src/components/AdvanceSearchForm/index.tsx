@@ -36,20 +36,22 @@ const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
     }
     return children;
   };
-
   return (
     <Form form={form} name="advanced_search">
       <Row gutter={24}>{getFields()}</Row>
       <Row>
         <Col span={24} className={styles.search}>
           <Space>
-            {extraActions.filter(i => i !== null).map((i: extraActionProps, key: number) => {
-              return (
-                <Button type="primary" key={key} onClick={i.action}>
-                  {i.content}
-                </Button>
-              );
-            })}
+            {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              extraActions.filter(i => i !== null).map((i: extraActionProps, key: number) => {
+                return (
+                  <Button type="primary" key={key} onClick={i.action}>
+                    {i.content}
+                  </Button>
+                );
+              })}
             <Button type="primary" htmlType="submit" onClick={submit}>
               搜索
             </Button>

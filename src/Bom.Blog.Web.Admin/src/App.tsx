@@ -2,7 +2,7 @@ import { useDebounceEffect } from "ahooks";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu } from "antd";
 import { toJS } from "mobx";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppConfig } from "./hooks/useStore";
 import Login from "./pages/Components/Login";
@@ -99,8 +99,14 @@ function App() {
     const names = [];
     const url = location.pathname;
     for (const menu of menues) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       if (url.startsWith(menu.key)) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         names.push(menu.label);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         for (const submenu of menu.children) {
           if (url === submenu.key) {
             names.push(submenu.label);

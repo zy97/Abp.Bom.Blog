@@ -1,7 +1,6 @@
 import axios from "axios";
-import CategoryDto, { CategorySelectOptionDto } from "../data/models/Category";
-import AddCategoryDto from "../data/models/Category";
-import PagedList, { List } from "../data/models/PagedList";
+import { AddCategoryDto, CategoryDto, CategorySelectOptionDto } from "../data/models/Category";
+import { List, PagedList } from "../data/models/PagedList";
 import PageRequest from "../data/models/PageRequest";
 
 // 添加博客

@@ -1,7 +1,7 @@
 import axios from "axios";
-import PagedList from "../data/models/PagedList";
 import PageRequest from "../data/models/PageRequest";
 import { AuditLogDto } from "../data/models/AuditLog";
+import { PagedList } from "../data/models/PagedList";
 
 // 获取列表
 export const getAuditLogs = (params: PageRequest) =>

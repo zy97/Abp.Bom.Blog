@@ -1,7 +1,7 @@
 import { AntdTableResult } from 'ahooks/lib/useAntdTable/types';
 import { makeAutoObservable } from 'mobx';
 import { friendLinkApi } from '../apis';
-import { AddFriendLink } from '../data/models/FriendLink';
+import { AddFriendLinkDto } from '../data/models/FriendLink';
 class FriendLinkStore {
     constructor() {
         makeAutoObservable(this);
@@ -29,7 +29,7 @@ class FriendLinkStore {
             return false;
         }
     }
-    async addFriendLink(tag: AddFriendLink) {
+    async addFriendLink(tag: AddFriendLinkDto) {
         try {
             const data = await friendLinkApi.addFriendLink(tag);
             return data.data;
@@ -41,13 +41,13 @@ class FriendLinkStore {
         try {
             const tag = await friendLinkApi.getFriendLinkById(id);
             return tag.data;
-        } catch (error) {}
+        } catch (error) { }
     }
-    async updateFriendLink(id: string, tag: AddFriendLink) {
+    async updateFriendLink(id: string, tag: AddFriendLinkDto) {
         try {
             const result = await friendLinkApi.updateFriendLink(id, tag);
             return result.data;
-        } catch (error) {}
+        } catch (error) { }
     }
 }
 

@@ -10,7 +10,8 @@ const interceptors = () => {
       config.xsrfHeaderName = "RequestVerificationToken";
       const oidcStorage = localStorage.getItem("oidc.user:https://localhost:44400:Blog_React");
       if (oidcStorage)
-        config.headers.Authorization = `Bearer ${User.fromStorageString(oidcStorage).access_token}`;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        config.headers!.Authorization = `Bearer ${User.fromStorageString(oidcStorage).access_token}`;
       return config;
     },
     function (error) {
