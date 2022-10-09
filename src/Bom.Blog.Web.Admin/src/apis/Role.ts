@@ -1,19 +1,19 @@
+import { ListResultDto, PagedResultDto } from "@abp/ng.core";
+import { IdentityRoleCreateDto, IdentityRoleDto, IdentityRoleUpdateDto } from "@abp/ng.identity/proxy";
+import { GetIdentityRolesInput } from "@abp/ng.identity/proxy/lib";
 import axios from "axios";
-import { List, PagedList } from "../data/models/PagedList";
-import PageRequest from "../data/models/PageRequest";
-import { AddRoleDto, RoleDto } from "../data/models/system/Role";
 
 // 添加
-export const addRole = (role: AddRoleDto) =>
-  axios.post<RoleDto>(`/api/identity/roles`, { ...role });
+export const addRole = (role: IdentityRoleCreateDto) =>
+  axios.post<IdentityRoleDto>(`/api/identity/roles`, { ...role });
 
 // 获取列表
-export const getRoles = (params: PageRequest) =>
-  axios.get<PagedList<RoleDto>>(`/api/identity/roles`, { params });
+export const getRoles = (params: GetIdentityRolesInput) =>
+  axios.get<PagedResultDto<IdentityRoleDto>>(`/api/identity/roles`, { params });
 
 // 获取列表
 export const getAllRoles = () =>
-  axios.get<List<RoleDto>>(`/api/identity/roles/all`, {});
+  axios.get<ListResultDto<IdentityRoleDto>>(`/api/identity/roles/all`, {});
 
 // 删除
 export const deleteRole = (id: string) =>
@@ -21,8 +21,8 @@ export const deleteRole = (id: string) =>
 
 // 获取指定项
 export const getRoleById = (id: string) =>
-  axios.get<RoleDto>(`/api/identity/roles/${id}`, {});
+  axios.get<IdentityRoleDto>(`/api/identity/roles/${id}`, {});
 
 // 更新
-export const updateRole = (id: string, role: AddRoleDto) =>
-  axios.put<AddRoleDto>(`/api/identity/roles/${id}`, { ...role });
+export const updateRole = (id: string, role: IdentityRoleUpdateDto) =>
+  axios.put<IdentityRoleDto>(`/api/identity/roles/${id}`, { ...role });

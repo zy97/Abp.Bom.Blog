@@ -1,7 +1,6 @@
-import { message } from "antd";
+import { IdentityUserCreateDto, IdentityUserUpdateDto } from "@abp/ng.identity/proxy";
 import { makeAutoObservable } from "mobx";
 import { userApi } from "../apis";
-import { AddUserDto, UpdateUserDto } from "../data/models/system/User";
 class UserStore {
   constructor() {
     makeAutoObservable(this);
@@ -14,8 +13,8 @@ class UserStore {
         ...form,
       });
       return {
-        total: result.data.totalCount,
-        list: result.data.items,
+        total: result.data.totalCount ?? 0,
+        list: result.data.items ?? [],
       };
     } catch (error) {
       return { total: 0, list: [] };
@@ -29,7 +28,7 @@ class UserStore {
       return false;
     }
   }
-  async addUser(user: AddUserDto) {
+  async addUser(user: IdentityUserCreateDto) {
     try {
       const data = await userApi.addUser(user);
       return data.data;
@@ -45,7 +44,7 @@ class UserStore {
       console.log(error);
     }
   }
-  async updateUser(id: string, user: UpdateUserDto) {
+  async updateUser(id: string, user: IdentityUserUpdateDto) {
     try {
       const result = await userApi.updateUser(id, user);
       return result.data;

@@ -1,6 +1,6 @@
+import { IdentityRoleCreateDto, IdentityRoleUpdateDto } from "@abp/ng.identity/proxy";
 import { makeAutoObservable } from "mobx";
 import { roleApi } from "../apis";
-import { AddRoleDto } from "../data/models/system/Role";
 class RoleStore {
   constructor() {
     makeAutoObservable(this);
@@ -13,8 +13,8 @@ class RoleStore {
         ...form,
       });
       return {
-        total: result.data.totalCount,
-        list: result.data.items,
+        total: result.data.totalCount ?? 0,
+        list: result.data.items ?? [],
       };
     } catch (error) {
       return { total: 0, list: [] };
@@ -36,7 +36,7 @@ class RoleStore {
       return false;
     }
   }
-  async addRole(role: AddRoleDto) {
+  async addRole(role: IdentityRoleCreateDto) {
     try {
       const data = await roleApi.addRole(role);
       return data.data;
@@ -52,7 +52,7 @@ class RoleStore {
       console.log(error);
     }
   }
-  async updateRole(id: string, role: AddRoleDto) {
+  async updateRole(id: string, role: IdentityRoleUpdateDto) {
     try {
       const result = await roleApi.updateRole(id, role);
       return result.data;

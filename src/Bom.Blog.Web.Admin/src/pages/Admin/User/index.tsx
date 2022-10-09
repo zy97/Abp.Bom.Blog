@@ -1,12 +1,12 @@
+import { IdentityUserDto } from "@abp/ng.account.core/proxy";
+import { IdentityRoleDto } from "@abp/ng.identity/proxy";
 import { useAntdTable, useRequest } from "ahooks";
 import { Button, Checkbox, Form, Input, message, Modal, Row, Space, Switch, Table, Tabs } from "antd";
 import { useEffect, useState } from "react";
-import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
-import { PermissionGroup, UpdatePermissionListItemDto, } from "../../../../data/models/system/Permission";
-import { RoleDto } from "../../../../data/models/system/Role";
-import { AddUpdateUserBaseDto, UserDto } from "../../../../data/models/system/User";
-import { useAppConfig, useStores } from "../../../../hooks/useStore";
-import Permission from "../../../Components/Permission";
+import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
+import { PermissionGroup, UpdatePermissionListItemDto, } from "../../../data/models/system/Permission";
+import { useAppConfig, useStores } from "../../../hooks/useStore";
+import Permission from "../../Components/Permission";
 import styles from "./index.module.less";
 function User() {
   const { applicationConfigurationStore } = useAppConfig();
@@ -16,7 +16,7 @@ function User() {
   const [isAddUser, setIsAddUser] = useState(true);
   const [form] = Form.useForm();
   const [modalForm] = Form.useForm();
-  const [roles, setRoles] = useState<RoleDto[]>([]);
+  const [roles, setRoles] = useState<IdentityRoleDto[]>([]);
   const [userId, setUserId] = useState("");
   const [permissionGroup, setPermissionGroup] = useState<PermissionGroup>({} as PermissionGroup);
   let changedPermession: UpdatePermissionListItemDto[];
@@ -28,7 +28,7 @@ function User() {
       setpermissions(config.auth.grantedPolicies);
     });
   }, []);
-  const deleteUser = (record: UserDto) => {
+  const deleteUser = (record: IdentityUserDto) => {
     Modal.confirm({
       title: "删除标签", content: "确定删除吗？",
       onOk: async () => {
@@ -42,7 +42,7 @@ function User() {
     });
   };
   const showModal = () => {
-    userStore.getAssignableRoles().then((res) => { setRoles(res.items) });
+    userStore.getAssignableRoles().then((res) => { setRoles(res.items!) });
     setVisible(true);
   };
   const showPermissionModal = (id: string) => {
@@ -56,14 +56,14 @@ function User() {
     setIsAddUser(true);
     showModal();
   };
-  const updateUser = (id: string, user: UserDto) => {
+  const updateUser = (id: string, user: IdentityUserDto) => {
     setIsAddUser(false);
     showModal();
     userStore.getUserRoleById(id).then((res) => {
-      modalForm.setFieldsValue({ ...user, roleNames: res.items.map(i => i.name) });
+      modalForm.setFieldsValue({ ...user, roleNames: res.items!.map(i => i.name) });
     });
   };
-  const getUser = async (record: UserDto) => {
+  const getUser = async (record: IdentityUserDto) => {
     try {
       const user = await runAsync(record.id);
       if (user) {
@@ -74,7 +74,7 @@ function User() {
     }
 
   };
-  const addOrUpdateUser = async (id: string, data: AddUpdateUserBaseDto) => {
+  const addOrUpdateUser = async (id: string, data: any) => {
     try {
       if (id) {
         const user = await userStore.updateUser(id, data);
@@ -103,15 +103,12 @@ function User() {
   return (
     <div>
       <AdvancedSearchForm form={form} {...search} extraActions={[permissions["AbpIdentity.Users.Create"] ? { content: "添加", action: addUser } : null]}>
-        <Form.Item name="title" label="标题">
-          <Input placeholder="请输入标题" />
-        </Form.Item>
-        <Form.Item name="linkUrl" label="链接地址">
-          <Input placeholder="请输入链接地址" />
+        <Form.Item name="Filter" label="查找值">
+          <Input placeholder="请输入查找值" />
         </Form.Item>
       </AdvancedSearchForm>
       <div className={styles.table}>
-        <Table<UserDto> size="small"
+        <Table<IdentityUserDto> size="small"
           rowKey="id"
           {...{
             ...tableProps,
@@ -124,17 +121,17 @@ function User() {
             },
           }}
         >
-          <Table.Column<UserDto> title="用户名" dataIndex="userName" />
-          <Table.Column<UserDto> title="名" dataIndex="name" />
-          <Table.Column<UserDto> title="姓" dataIndex="surname" />
-          <Table.Column<UserDto> title="邮箱" dataIndex="email" />
-          <Table.Column<UserDto> title="电话" dataIndex="phoneNumber" />
-          <Table.Column<UserDto> title="启动锁定" dataIndex="lockoutEnabled" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
-          <Table.Column<UserDto> title="已删除" dataIndex="isDeleted" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
-          <Table.Column<UserDto> title="邮箱确认" dataIndex="emailConfirmed" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
-          <Table.Column<UserDto> title="电话确认" dataIndex="phoneNumberConfirmed" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
-          <Table.Column<UserDto> title="是否激活" dataIndex="isActive" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
-          <Table.Column<UserDto>
+          <Table.Column<IdentityUserDto> title="用户名" dataIndex="userName" />
+          <Table.Column<IdentityUserDto> title="名" dataIndex="name" />
+          <Table.Column<IdentityUserDto> title="姓" dataIndex="surname" />
+          <Table.Column<IdentityUserDto> title="邮箱" dataIndex="email" />
+          <Table.Column<IdentityUserDto> title="电话" dataIndex="phoneNumber" />
+          <Table.Column<IdentityUserDto> title="启动锁定" dataIndex="lockoutEnabled" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
+          <Table.Column<IdentityUserDto> title="已删除" dataIndex="isDeleted" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
+          <Table.Column<IdentityUserDto> title="邮箱确认" dataIndex="emailConfirmed" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
+          <Table.Column<IdentityUserDto> title="电话确认" dataIndex="phoneNumberConfirmed" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
+          <Table.Column<IdentityUserDto> title="是否激活" dataIndex="isActive" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
+          <Table.Column<IdentityUserDto>
             title="操作"
             render={(recode) => {
               return (

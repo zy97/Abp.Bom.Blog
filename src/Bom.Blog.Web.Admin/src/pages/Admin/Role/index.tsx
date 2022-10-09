@@ -1,11 +1,11 @@
+import { IdentityRoleDto } from "@abp/ng.identity/proxy";
 import { useAntdTable, useRequest } from "ahooks";
 import { Button, Checkbox, Form, Input, message, Modal, Space, Table } from "antd";
 import { useEffect, useState } from "react";
-import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
-import { PermissionGroup, UpdatePermissionListItemDto } from "../../../../data/models/system/Permission";
-import { RoleDto } from "../../../../data/models/system/Role";
-import { useAppConfig, useStores } from "../../../../hooks/useStore";
-import Permission from "../../../Components/Permission";
+import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
+import { PermissionGroup, UpdatePermissionListItemDto } from "../../../data/models/system/Permission";
+import { useAppConfig, useStores } from "../../../hooks/useStore";
+import Permission from "../../Components/Permission";
 import styles from "./index.module.less";
 function Role() {
   const { applicationConfigurationStore } = useAppConfig();
@@ -26,7 +26,7 @@ function Role() {
       setpermissions(config.auth.grantedPolicies);
     });
   }, []);
-  const deleteRole = (record: RoleDto) => {
+  const deleteRole = (record: IdentityRoleDto) => {
     Modal.confirm({
       title: "删除标签", content: "确定删除吗？",
       onOk: async () => {
@@ -45,7 +45,7 @@ function Role() {
     setModalTitle("添加Role");
     setVisible(true);
   };
-  const getRole = async (record: RoleDto) => {
+  const getRole = async (record: IdentityRoleDto) => {
     try {
       const role = await runAsync(record.id);
       if (role) {
@@ -57,7 +57,7 @@ function Role() {
       //
     }
   };
-  const addOrUpdateRole = async (data: RoleDto) => {
+  const addOrUpdateRole = async (data: any) => {
     try {
       if (data.id) {
         const role = await roleStore.updateRole(data.id, data);
@@ -95,11 +95,10 @@ function Role() {
   return (
     <div>
       <AdvancedSearchForm form={form} {...search} extraActions={[permissions["AbpIdentity.Roles.Create"] ? { content: "添加", action: showModal } : null]}>
-        <Form.Item name="title" label="标题"><Input placeholder="请输入标题" /></Form.Item>
-        <Form.Item name="linkUrl" label="链接地址"><Input placeholder="请输入链接地址" /></Form.Item>
+        <Form.Item name="Filter" label="查找值"><Input placeholder="请输入查找值" /></Form.Item>
       </AdvancedSearchForm>
       <div className={styles.table}>
-        <Table<RoleDto>
+        <Table<IdentityRoleDto>
           rowKey="id"
           {...{
             ...tableProps,
@@ -111,11 +110,11 @@ function Role() {
               showSizeChanger: true,
             },
           }}>
-          <Table.Column<RoleDto> title="角色字" dataIndex="name" />
-          <Table.Column<RoleDto> title="默认" dataIndex="isDefault" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
-          <Table.Column<RoleDto> title="公开" dataIndex="isPublic" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
+          <Table.Column<IdentityRoleDto> title="角色字" dataIndex="name" />
+          <Table.Column<IdentityRoleDto> title="默认" dataIndex="isDefault" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
+          <Table.Column<IdentityRoleDto> title="公开" dataIndex="isPublic" render={(value) => <div>{value === true ? "是" : "否"}</div>} />
 
-          <Table.Column<RoleDto>
+          <Table.Column<IdentityRoleDto>
             title="操作"
             render={(recode) => {
               return (
