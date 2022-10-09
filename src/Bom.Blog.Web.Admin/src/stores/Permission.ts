@@ -1,62 +1,57 @@
+import { GetPermissionListResultDto, UpdatePermissionsDto } from "@abp/ng.permission-management/proxy";
 import { makeAutoObservable } from "mobx";
 import { permissionApi } from "../apis";
-import {
-  PermissionGroup,
-  UpdatePermissionListDto,
-} from "../data/models/system/Permission";
 class PermissionStore {
   constructor() {
     makeAutoObservable(this);
   }
 
-  async getPermissionByUser(provierKey: string) {
+  async getPermissionByUser(providerKey: string) {
     try {
-      const result = await permissionApi.getPermissions("U", provierKey);
+      const result = await permissionApi.getPermissions({ providerName: "U", providerKey });
       return result.data;
     } catch (error) {
       console.log(error);
-      return {} as PermissionGroup;
+      return {} as GetPermissionListResultDto;
     }
   }
-  async getPermissionByRole(provierKey: string) {
+  async getPermissionByRole(providerKey: string) {
     try {
-      const result = await permissionApi.getPermissions("R", provierKey);
+      const result = await permissionApi.getPermissions({ providerName: "R", providerKey });
       return result.data;
     } catch (error) {
       console.log(error);
-      return {} as PermissionGroup;
+      return {} as GetPermissionListResultDto;
     }
   }
   async updatePermissionsByUser(
-    provierKey: string,
-    permissions: UpdatePermissionListDto
+    providerKey: string,
+    permissions: UpdatePermissionsDto
   ) {
     try {
       const result = await permissionApi.updatePermissions(
-        "U",
-        provierKey,
+        { providerName: "U", providerKey },
         permissions
       );
       return result.data;
     } catch (error) {
       console.log(error);
-      return {} as PermissionGroup;
+      return {} as GetPermissionListResultDto;
     }
   }
   async updatePermissionsByRole(
-    provierKey: string,
-    permissions: UpdatePermissionListDto
+    providerKey: string,
+    permissions: UpdatePermissionsDto
   ) {
     try {
       const result = await permissionApi.updatePermissions(
-        "R",
-        provierKey,
+        { providerName: "R", providerKey },
         permissions
       );
       return result.data;
     } catch (error) {
       console.log(error);
-      return {} as PermissionGroup;
+      return {} as GetPermissionListResultDto;
     }
   }
 }

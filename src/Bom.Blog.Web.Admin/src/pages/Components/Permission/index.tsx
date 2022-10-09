@@ -1,11 +1,11 @@
+import { GetPermissionListResultDto, UpdatePermissionDto } from "@abp/ng.permission-management/proxy";
 import { Checkbox, Divider, Form, Row, Tabs } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useEffect, useState } from "react";
-import { PermissionGroup, UpdatePermissionListItemDto } from "../../../data/models/system/Permission";
 
 type PermissionProp = {
-    permissionGroup: PermissionGroup,
-    onPermissionChanged: (checkedValues: UpdatePermissionListItemDto[]) => void,
+    permissionGroup: GetPermissionListResultDto,
+    onPermissionChanged: (checkedValues: UpdatePermissionDto[]) => void,
 }
 
 function Permission(props: PermissionProp) {
@@ -14,15 +14,15 @@ function Permission(props: PermissionProp) {
     const { permissionGroup, onPermissionChanged } = props;
     const [allCheckStatus, setAllCheckStatus] = useState<{ [key: string]: boolean }>({});
     const [initPermission, setInitPermission] = useState<{ [key: string]: boolean }>({});
-    const init = (permissionGroup: PermissionGroup) => {
+    const init = (permissionGroup: GetPermissionListResultDto) => {
         const staus: { [key: string]: boolean } = {};
         permissionGroup.groups.forEach(g => {
-            g.permissions.forEach(p => { staus[p.name] = p.isGranted; });
+            g.permissions.forEach(p => { staus[p.name!] = p.isGranted; });
             if (g.permissions.every(p => p.isGranted === true)) {
-                staus[g.name] = true;
+                staus[g.name!] = true;
             }
             else {
-                staus[g.name] = false;
+                staus[g.name!] = false;
             }
         });
         staus.allCheck = true;
@@ -36,7 +36,7 @@ function Permission(props: PermissionProp) {
         delete temp.allCheck;
 
         permissionGroup.groups.forEach(g => {
-            delete temp[g.name];
+            delete temp[g.name!];
         });
         setInitPermission(temp);
     };
@@ -145,9 +145,9 @@ function Permission(props: PermissionProp) {
         const temp = { ...allCheckStatus };
         delete temp.allCheck;
         permissionGroup.groups.forEach(g => {
-            delete temp[g.name];
+            delete temp[g.name!];
         });
-        const change: UpdatePermissionListItemDto[] = [];
+        const change: UpdatePermissionDto[] = [];
         for (const key in initPermission) {
             if (initPermission[key] !== temp[key]) {
                 change.push({ name: key, isGranted: temp[key] });
@@ -163,13 +163,13 @@ function Permission(props: PermissionProp) {
             <Form form={permissionModalForm} name="form_in_modal" labelCol={{ span: 7 }} wrapperCol={{ span: 17 }} >
                 <Tabs defaultActiveKey="1" tabPosition="left">
                     {permissionGroup.groups && permissionGroup.groups.map(g => {
-                        return <Tabs.TabPane tab={`${g.displayName}(${checkedCount(g.name)}/${g.permissions.length})`} key={g.name}>
+                        return <Tabs.TabPane tab={`${g.displayName}(${checkedCount(g.name!)}/${g.permissions.length})`} key={g.name}>
                             {g.displayName}
                             <Divider />
-                            <Checkbox name={g.name} checked={allCheckStatus[g.name]} onChange={onPermissionChange}>全选</Checkbox>
+                            <Checkbox name={g.name} checked={allCheckStatus[g.name!]} onChange={onPermissionChange}>全选</Checkbox>
                             <Divider />
                             {g.permissions.map(p => {
-                                return <Row key={p.name}>{p.parentName !== null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> : ""}<Checkbox name={p.name} onChange={onPermissionChange} checked={allCheckStatus[p.name]}>{p.displayName}</Checkbox></Row>
+                                return <Row key={p.name}>{p.parentName !== null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> : ""}<Checkbox name={p.name} onChange={onPermissionChange} checked={allCheckStatus[p.name!]}>{p.displayName}</Checkbox></Row>
                             })}
 
                         </Tabs.TabPane>

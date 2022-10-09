@@ -5,7 +5,7 @@ export * as friendLinkApi from "./friendLink";
 export * as postApi from "./post";
 export * as audit_logApi from "./AuditLog";
 export * as userApi from "./Abp/User";
-export * as permissionApi from "./Permission";
+export * as permissionApi from "./Abp/Permission";
 export * as roleApi from "./Abp/Role";
 export * as accountApi from "./Abp/Account";
 export * as tenantsApi from "./Abp/tenants";

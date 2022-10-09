@@ -1,10 +1,10 @@
 import { IdentityUserDto } from "@abp/ng.account.core/proxy";
 import { IdentityRoleDto } from "@abp/ng.identity/proxy";
+import { GetPermissionListResultDto, UpdatePermissionDto } from "@abp/ng.permission-management/proxy";
 import { useAntdTable, useRequest } from "ahooks";
 import { Button, Checkbox, Form, Input, message, Modal, Row, Space, Switch, Table, Tabs } from "antd";
 import { useEffect, useState } from "react";
 import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
-import { PermissionGroup, UpdatePermissionListItemDto, } from "../../../data/models/system/Permission";
 import { useAppConfig, useStores } from "../../../hooks/useStore";
 import Permission from "../../Components/Permission";
 import styles from "./index.module.less";
@@ -18,8 +18,8 @@ function User() {
   const [modalForm] = Form.useForm();
   const [roles, setRoles] = useState<IdentityRoleDto[]>([]);
   const [userId, setUserId] = useState("");
-  const [permissionGroup, setPermissionGroup] = useState<PermissionGroup>({} as PermissionGroup);
-  let changedPermession: UpdatePermissionListItemDto[];
+  const [permissionGroup, setPermissionGroup] = useState<GetPermissionListResultDto>({} as GetPermissionListResultDto);
+  let changedPermession: UpdatePermissionDto[];
   const { tableProps, search } = useAntdTable(userStore.getUsers, { defaultPageSize: 10, form, debounceWait: 500, });
   const { runAsync } = useRequest(userStore.getUserById, { manual: true, });
   const [permissions, setpermissions] = useState({} as Record<string, boolean>);
@@ -97,7 +97,7 @@ function User() {
       //
     }
   };
-  const onPermissionChange = (checkedValues: UpdatePermissionListItemDto[]) => {
+  const onPermissionChange = (checkedValues: UpdatePermissionDto[]) => {
     changedPermession = checkedValues;
   }
   return (
