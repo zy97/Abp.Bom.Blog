@@ -7,7 +7,7 @@ import { AddUserDto, UpdateUserDto, UserDto } from "../data/models/system/User";
 // 添加
 export const addUser = (user: AddUserDto) =>
   axios.post<UserDto>(`/api/identity/users`, { ...user });
-
+   
 // 获取列表
 export const getUsers = (params: PageRequest) =>
   axios.get<PagedList<UserDto>>(`/api/identity/users`, { params });

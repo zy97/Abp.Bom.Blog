@@ -8,3 +8,4 @@ export * as userApi from "./User";
 export * as permissionApi from "./Permission";
 export * as roleApi from "./Role";
 export * as accountApi from "./Account";
+export * as tenantsApi from "./Abp/tenants";

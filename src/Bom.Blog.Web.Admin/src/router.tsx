@@ -16,6 +16,7 @@ import { toJS } from "mobx";
 import { filterPermissionRoute } from "./util/permission";
 import { useState } from "react";
 import EmailSetting from "./pages/Admin/EmailSetting";
+import Tenant from "./pages/Admin/Tenant";
 //https://reactrouter.com/docs/en/v6/getting-started/overview#nested-routes
 //嵌套的的父级需要有一个letout容器才行
 export interface Route extends RouteObject {
@@ -39,6 +40,7 @@ export const routerConfig: Route[] = [
           { title: "角色管理", path: "role", element: <Role />, permission: "AbpIdentity.Roles" },
           { title: "审计日志", path: "auditlog", element: <AuditLog />, permission: "Blog.Admin" },
           { title: "邮件设置", path: "emailsetting", element: <EmailSetting />, permission: "SettingManagement.Emailing" },
+          { title: "租户设置", path: "tenants", element: <Tenant />, permission: "AbpTenantManagement.Tenants" },
         ],
       },
       {

@@ -9,6 +9,7 @@ import userStore from "./User";
 import permissionStore from "./Permission";
 import accountStore from "./Account";
 import roleStore from './Role';
+import tenantStore from './Abp/tenants'
 
 export const storesContext = React.createContext({
   blogStore,
@@ -20,5 +21,6 @@ export const storesContext = React.createContext({
   userStore,
   permissionStore,
   roleStore,
-  accountStore
+  accountStore,
+  tenantStore,
 });
