@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { audit_logApi } from "../apis";
-import {} from "../data/models/AuditLog";
+import { } from "../data/models/AuditLog";
 class AuditLogStore {
   constructor() {
     makeAutoObservable(this);
@@ -13,8 +13,8 @@ class AuditLogStore {
         ...form,
       });
       return {
-        total: result.data.totalCount,
-        list: result.data.items,
+        total: result.data.totalCount ?? 0,
+        list: result.data.items ?? [],
       };
     } catch (error) {
       return { total: 0, list: [] };

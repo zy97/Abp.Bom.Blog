@@ -1,13 +1,11 @@
-import BaseEntity from "./BaseEntity";
-import PageRequest from "./PageRequest";
-export type TemplateBaseDto = BaseEntity<string>;
+import { ExtensibleEntityDto, PagedResultRequestDto } from "@abp/ng.core";
 
 export interface AddTemplateDto {
     a: string;
     b: string;
 }
-export interface TemplateDto extends AddTemplateDto, TemplateBaseDto { }
-export interface SearchTemplateDto extends PageRequest {
+export interface TemplateDto extends AddTemplateDto, ExtensibleEntityDto<string> { }
+export interface SearchTemplateDto extends PagedResultRequestDto {
     a: string,
     b: string
 }

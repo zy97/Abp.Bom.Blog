@@ -1,13 +1,11 @@
-import BaseEntity from "./BaseEntity";
-import PageRequest from "./PageRequest";
-export type TestBaseDto = BaseEntity<string>;
+import { ExtensibleEntityDto, PagedResultRequestDto } from "@abp/ng.core";
 
 export interface AddTestDto {
   tagName: string;
   displayName: string;
 }
-export interface TestDto extends AddTestDto, TestBaseDto { }
-export interface SearchTestDto extends PageRequest {
+export interface TestDto extends AddTestDto, ExtensibleEntityDto<string> { }
+export interface SearchTestDto extends PagedResultRequestDto {
   city: string,
   name: string
 }

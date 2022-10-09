@@ -1,6 +1,5 @@
+import { ListResultDto, PagedResultDto, PagedResultRequestDto } from "@abp/ng.core";
 import axios from "axios";
-import { List, PagedList } from "../data/models/PagedList";
-import PageRequest from "../data/models/PageRequest";
 import { AddTagDto, TagDto, TagSelectOptionDto } from "../data/models/Tag";
 
 // 添加博客
@@ -8,8 +7,8 @@ export const addTag = (tag: AddTagDto) =>
   axios.post<TagDto>(`/api/app/admin-tag`, { ...tag });
 
 // 获取博客
-export const getTags = (params: PageRequest) =>
-  axios.get<PagedList<TagDto>>(`/api/app/admin-tag`, { params });
+export const getTags = (params: PagedResultRequestDto) =>
+  axios.get<PagedResultDto<TagDto>>(`/api/app/admin-tag`, { params });
 
 // 删除博客
 export const deleteTag = (id: string) =>
@@ -25,4 +24,4 @@ export const updateTag = (id: string, tag: AddTagDto) =>
 
 // 获取所有标签
 export const getAllTags = () =>
-  axios.get<List<TagSelectOptionDto>>(`/api/app/post-admin/tag-lookup`, {});
+  axios.get<ListResultDto<TagSelectOptionDto>>(`/api/app/post-admin/tag-lookup`, {});

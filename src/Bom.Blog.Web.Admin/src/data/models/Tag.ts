@@ -1,11 +1,10 @@
-import BaseEntity from "./BaseEntity";
-export type TagBaseDto = BaseEntity<string>;
+import { ExtensibleEntityDto } from "@abp/ng.core";
 
-export interface TagSelectOptionDto extends TagBaseDto {
+export interface TagSelectOptionDto extends ExtensibleEntityDto<string> {
   displayName: string;
 }
 export interface AddTagDto {
   tagName: string;
   displayName: string;
 }
-export interface TagDto extends AddTagDto, TagBaseDto {}
+export interface TagDto extends AddTagDto, ExtensibleEntityDto<string> { }

@@ -1,15 +1,14 @@
+import { ListResultDto, PagedResultDto, PagedResultRequestDto } from "@abp/ng.core";
 import axios from "axios";
 import { AddCategoryDto, CategoryDto, CategorySelectOptionDto } from "../data/models/Category";
-import { List, PagedList } from "../data/models/PagedList";
-import PageRequest from "../data/models/PageRequest";
 
 // 添加博客
 export const addCategory = (Category: AddCategoryDto) =>
   axios.post<CategoryDto>(`/api/app/admin-Category`, { ...Category });
 
 // 获取博客
-export const getCategories = (params: PageRequest) =>
-  axios.get<PagedList<CategoryDto>>(`/api/app/admin-Category`, { params });
+export const getCategories = (params: PagedResultRequestDto) =>
+  axios.get<PagedResultDto<CategoryDto>>(`/api/app/admin-Category`, { params });
 
 // 删除博客
 export const deleteCategory = (id: string) =>
@@ -25,7 +24,7 @@ export const updateCategory = (id: string, Category: AddCategoryDto) =>
 
 // 获取所有目录
 export const getAllCategories = () =>
-  axios.get<List<CategorySelectOptionDto>>(
+  axios.get<ListResultDto<CategorySelectOptionDto>>(
     `/api/app/post-admin/category-lookup`,
     {}
   );

@@ -1,6 +1,5 @@
+import { PagedResultDto, PagedResultRequestDto } from "@abp/ng.core";
 import axios from "axios";
-import { PagedList } from "../data/models/PagedList";
-import PageRequest from "../data/models/PageRequest";
 import { AddPostDto, PostDto } from "../data/models/post";
 
 // 添加博客
@@ -8,8 +7,8 @@ export const addPost = (post: AddPostDto) =>
   axios.post<PostDto>(`/api/app/post-admin`, { ...post });
 
 // 获取博客
-export const getPosts = (params: PageRequest) =>
-  axios.get<PagedList<PostDto>>(`/api/app/post-admin`, { params });
+export const getPosts = (params: PagedResultRequestDto) =>
+  axios.get<PagedResultDto<PostDto>>(`/api/app/post-admin`, { params });
 
 // 删除博客
 export const deletePost = (id: string) =>

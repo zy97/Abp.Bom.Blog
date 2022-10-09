@@ -13,8 +13,8 @@ class TagStore {
         ...form,
       });
       return {
-        total: result.data.totalCount,
-        list: result.data.items,
+        total: result.data.totalCount ?? 0,
+        list: result.data.items ?? [],
       };
     } catch (error) {
       return { total: 0, list: [] };
