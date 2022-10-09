@@ -1,7 +1,8 @@
+import { UpdateEmailSettingsDto } from "@abp/ng.setting-management/config";
+import { SendTestEmailInput } from "@abp/ng.setting-management/config/public-api";
 import { message } from "antd";
 import { makeAutoObservable } from "mobx";
 import { emailSettingApi } from "../../apis/Abp";
-import { TestEmailDto, UpdateEmailSetttingDto } from "../../data/models/Abp/Email";
 import { getErrorResponse } from "../../util/response";
 
 class EmailSettingStore {
@@ -12,7 +13,7 @@ class EmailSettingStore {
         const setting = await emailSettingApi.getEmailSetting();
         return setting.data;
     }
-    async updateEmailSetting(update: UpdateEmailSetttingDto) {
+    async updateEmailSetting(update: UpdateEmailSettingsDto) {
         try {
             await emailSettingApi.updateEmailSetting(update);
         } catch (error) {
@@ -20,7 +21,7 @@ class EmailSettingStore {
             throw error;
         }
     }
-    async sendTestEmail(email: TestEmailDto) {
+    async sendTestEmail(email: SendTestEmailInput) {
         try {
             await emailSettingApi.sendTestEmail(email);
 

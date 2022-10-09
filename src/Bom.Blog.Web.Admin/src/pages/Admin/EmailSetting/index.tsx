@@ -1,10 +1,10 @@
+import { SendTestEmailInput, UpdateEmailSettingsDto } from "@abp/ng.setting-management/config/public-api";
 import { Button, Form, Input, message, Space, Switch, Tabs } from "antd";
 import { toJS } from "mobx";
 import { useEffect, useState } from "react";
 import Editor from "../../../components/Editor";
-import { TestEmailDto, UpdateEmailSetttingDto } from "../../../data/models/Abp/Email";
-import { useAppConfig, useStores } from "../../../hooks/useStore";
-import { getEmailValidationRule, getPhoneValidationRule, getRequiredRule } from "../../../util/formValid";
+import { useAppConfig } from "../../../hooks/useStore";
+import { getEmailValidationRule, getRequiredRule } from "../../../util/formValid";
 
 function EmailSetting() {
     const [emailSettingform] = Form.useForm();
@@ -19,14 +19,14 @@ function EmailSetting() {
         });
         emailSettingStore.getEmailSetting().then(setting => {
             emailSettingform.setFieldsValue(setting);
-            setEmail(setting.defaultFromAddress);
+            setEmail(setting.defaultFromAddress!);
         });
     }, []);
-    const sendTestEmail = async (values: TestEmailDto) => {
+    const sendTestEmail = async (values: SendTestEmailInput) => {
         await emailSettingStore.sendTestEmail({ ...values, senderEmailAddress: email });
         message.success("发送成功");
     }
-    const updateEmailSetting = async (values: UpdateEmailSetttingDto) => {
+    const updateEmailSetting = async (values: UpdateEmailSettingsDto) => {
         await emailSettingStore.updateEmailSetting(values);
         setEmail(values.defaultFromAddress);
         message.success("更新成功");
