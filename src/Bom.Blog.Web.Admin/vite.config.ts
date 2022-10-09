@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { setDefaultResultOrder } from 'dns'
 // import WindiCSS from 'vite-plugin-windicss';
 import vitePluginImp from 'vite-plugin-imp';
 // https://vitejs.dev/config/
+setDefaultResultOrder('verbatim')
 export default defineConfig({
     plugins: [
         react(),
@@ -37,5 +39,7 @@ export default defineConfig({
                 // rewrite: (path) => path.replace(/^\/api/, ''),
             },
         },
+        port: 3000,
+
     },
 });
