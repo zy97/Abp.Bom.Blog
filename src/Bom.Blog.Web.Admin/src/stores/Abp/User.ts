@@ -1,6 +1,6 @@
 import { IdentityUserCreateDto, IdentityUserUpdateDto } from "@abp/ng.identity/proxy";
 import { makeAutoObservable } from "mobx";
-import { userApi } from "../apis";
+import { userApi } from "../../apis";
 class UserStore {
   constructor() {
     makeAutoObservable(this);

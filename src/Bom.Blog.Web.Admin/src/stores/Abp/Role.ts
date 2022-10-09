@@ -1,6 +1,6 @@
 import { IdentityRoleCreateDto, IdentityRoleUpdateDto } from "@abp/ng.identity/proxy";
 import { makeAutoObservable } from "mobx";
-import { roleApi } from "../apis";
+import { roleApi } from "../../apis";
 class RoleStore {
   constructor() {
     makeAutoObservable(this);

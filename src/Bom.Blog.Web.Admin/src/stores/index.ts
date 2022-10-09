@@ -5,10 +5,10 @@ import categoryStore from "./category";
 import friendLinkStore from "./friendLink";
 import postStore from "./post";
 import audit_logStore from "./AuditLog";
-import userStore from "./User";
+import userStore from "./Abp/User";
 import permissionStore from "./Permission";
-import accountStore from "./Account";
-import roleStore from './Role';
+import accountStore from "./Abp/Account";
+import roleStore from './Abp/Role';
 import tenantStore from './Abp/tenants'
 
 export const storesContext = React.createContext({
