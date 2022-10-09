@@ -8,18 +8,9 @@ setDefaultResultOrder('verbatim')
 export default defineConfig({
     plugins: [
         react(),
-        // WindiCSS(),
-        //用于antd按需加载，但很慢
-        // vitePluginImp({
-        //     libList: [
-        //         {
-        //             libName: 'antd',
-        //             style: (name) => `antd/es/${name}/style`,
-        //         },
-        //     ],
-        // }),
+        // 用于antd按需加载，但很慢,内置支持了多个库
+        vitePluginImp(),
     ],
-    // 用于antd按需加载，但很慢
     css: {
         preprocessorOptions: {
             less: {
