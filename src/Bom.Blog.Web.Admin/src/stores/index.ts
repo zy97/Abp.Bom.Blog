@@ -6,7 +6,7 @@ import friendLinkStore from "./friendLink";
 import postStore from "./post";
 import audit_logStore from "./AuditLog";
 import userStore from "./Abp/User";
-import permissionStore from "./Permission";
+import permissionStore from "./Abp/Permission";
 import accountStore from "./Abp/Account";
 import roleStore from './Abp/Role';
 import tenantStore from './Abp/tenants'

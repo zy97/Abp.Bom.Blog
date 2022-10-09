@@ -7,7 +7,7 @@ import AddOrEditPost from "./pages/BlogManage/Pages/Post/AddOrNewPost";
 import NotFound from "./pages/NotFound";
 import App from "./App";
 import ListView from "./pages/BlogManage/Pages/Post/ListView";
-import AuditLog from "./pages/BlogManage/Pages/AuditLog";
+import AuditLog from "./pages/Admin/AuditLog";
 import User from "./pages/Admin/User";
 import Role from "./pages/Admin/Role";
 import { useDebounceEffect } from "ahooks";

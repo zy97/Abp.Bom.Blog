@@ -1,6 +1,6 @@
+import { ApplicationConfigurationDto } from "@abp/ng.core";
 import { makeAutoObservable } from "mobx";
 import { applicationConfiguration } from "../../apis/Abp";
-import { ApplicationConfigurationDto } from "../../data/models/Abp/AbpApplicationConfiguration";
 
 class ApplicationConfigurationStore {
     private config: ApplicationConfigurationDto | null

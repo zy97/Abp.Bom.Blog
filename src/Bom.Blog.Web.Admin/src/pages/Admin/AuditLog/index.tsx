@@ -2,9 +2,9 @@ import { useAntdTable, useRequest } from "ahooks";
 import { Button, Form, Input, message, Modal, Space, Table } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
-import AdvancedSearchForm from "../../../../components/AdvanceSearchForm";
-import { AuditLogDto } from "../../../../data/models/AuditLog";
-import { useStores } from "../../../../hooks/useStore";
+import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
+import { AuditLogDto } from "../../../data/models/AuditLog";
+import { useStores } from "../../../hooks/useStore";
 import styles from "./index.module.less";
 function AuditLog() {
   const { audit_logStore } = useStores();

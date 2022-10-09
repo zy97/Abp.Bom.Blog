@@ -1,6 +1,6 @@
 import { GetPermissionListResultDto, UpdatePermissionsDto } from "@abp/ng.permission-management/proxy";
 import { makeAutoObservable } from "mobx";
-import { permissionApi } from "../apis";
+import { permissionApi } from "../../apis";
 class PermissionStore {
   constructor() {
     makeAutoObservable(this);
