@@ -1,4 +1,3 @@
-using Bom.Blog.Jobs;
 using Hangfire;
 using Hangfire.MySql;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +6,6 @@ using System.Transactions;
 using Volo.Abp;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.BackgroundJobs.Hangfire;
-using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.BackgroundWorkers.Hangfire;
 using Volo.Abp.Modularity;
 
@@ -28,7 +26,7 @@ namespace Bom.Blog.BackgroundJobs
             var backgroundJobManager = app.ApplicationServices.GetService<IBackgroundJobManager>();
             //backgroundJobManager.EnqueueAsync(new TestJobArgs() { Name = "Hello Test" });
             //backgroundJobManager.EnqueueAsync(new EmailJobArgs() { Email = "1654002016@qq.com", Subject = "123", Body = "1234546" });
-            await context.AddBackgroundWorkerAsync<Test2Job>();
+            //await context.AddBackgroundWorkerAsync<Test2Job>();
 
         }
         private void ConfigureHangfire(ServiceConfigurationContext context, IConfiguration configuration)
@@ -44,7 +42,7 @@ namespace Bom.Blog.BackgroundJobs
                     PrepareSchemaIfNecessary = true,
                     DashboardJobListLimit = 50000,
                     TransactionTimeout = TimeSpan.FromMinutes(1),
-                    TablesPrefix = "Hangfire"
+                    TablesPrefix = "Hangfire",
                 }));
             });
         }
