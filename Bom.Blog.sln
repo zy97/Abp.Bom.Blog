@@ -35,8 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.DbMigrator", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.HttpApi.Host", "src\Bom.Blog.HttpApi.Host\Bom.Blog.HttpApi.Host.csproj", "{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.BackgroundJobs", "src\Bom.Blog.BackgroundJobs\Bom.Blog.BackgroundJobs.csproj", "{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}"
-EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Bom.Blog.Web.Admin", "src\Bom.Blog.Web.Admin\", "{35607467-9549-4BB9-8F92-5DB2F0BA10E5}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
@@ -58,7 +56,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Bom.Blog.Web.Admin", "src\B
 		SlnRelativePath = "src\Bom.Blog.Web.Admin\"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bom.Blog.Openiddict", "src\Bom.Blog.Openiddict\Bom.Blog.Openiddict.csproj", "{1AC11972-C051-40E8-AF5D-17A8119827C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.Openiddict", "src\Bom.Blog.Openiddict\Bom.Blog.Openiddict.csproj", "{1AC11972-C051-40E8-AF5D-17A8119827C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -122,10 +120,6 @@ Global
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{35607467-9549-4BB9-8F92-5DB2F0BA10E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{35607467-9549-4BB9-8F92-5DB2F0BA10E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35607467-9549-4BB9-8F92-5DB2F0BA10E5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
@@ -153,7 +147,6 @@ Global
 		{EF480016-9127-4916-8735-D2466BDBC582} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
-		{0F6F951F-1511-4B26-AA31-0CBD584A1C1A} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{35607467-9549-4BB9-8F92-5DB2F0BA10E5} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{1AC11972-C051-40E8-AF5D-17A8119827C1} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 	EndGlobalSection

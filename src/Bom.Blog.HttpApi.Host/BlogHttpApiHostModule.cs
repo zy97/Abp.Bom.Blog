@@ -1,7 +1,5 @@
-using Bom.Blog.BackgroundJobs;
 using Bom.Blog.EntityFrameworkCore;
 using Bom.Blog.MultiTenancy;
-using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
@@ -26,7 +24,6 @@ using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.Emailing;
 using Volo.Abp.EventBus.RabbitMq;
-using Volo.Abp.Hangfire;
 using Volo.Abp.Localization;
 using Volo.Abp.MailKit;
 using Volo.Abp.Modularity;
@@ -43,7 +40,6 @@ namespace Bom.Blog;
     typeof(BlogEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
-    typeof(BlogBackgroundJobsModule),
     typeof(AbpCachingStackExchangeRedisModule),
     typeof(AbpEmailingModule),
     typeof(AbpMailKitModule)
@@ -228,10 +224,10 @@ public class BlogHttpApiHostModule : AbpModule
             c.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
             c.OAuthScopes("Blog");
         });
-        app.UseHangfireDashboard(options: new DashboardOptions
-        {
-            AsyncAuthorization = new[] { new AbpHangfireAuthorizationFilter() }
-        });
+        //app.UseHangfireDashboard(options: new DashboardOptions
+        //{
+        //    AsyncAuthorization = new[] { new AbpHangfireAuthorizationFilter() }
+        //});
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseUnitOfWork();
