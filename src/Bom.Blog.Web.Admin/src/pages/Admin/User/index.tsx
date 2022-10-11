@@ -145,7 +145,7 @@ function User() {
           />
         </Table>
       </div>
-      <Modal visible={visible} title="添加一个新标签" okText="确定" cancelText="取消"
+      <Modal open={visible} title="添加一个新标签" okText="确定" cancelText="取消"
         onCancel={() => {
           setVisible(false);
           modalForm.resetFields();
@@ -206,7 +206,7 @@ function User() {
           </Tabs>
         </Form>
       </Modal>
-      <Modal visible={permissionModalVisible} title="权限" okText="确定" cancelText="取消"
+      <Modal open={permissionModalVisible} title="权限" okText="确定" cancelText="取消"
         onCancel={() => {
           setPermissionModalVisible(false);
           // modalForm.resetFields();

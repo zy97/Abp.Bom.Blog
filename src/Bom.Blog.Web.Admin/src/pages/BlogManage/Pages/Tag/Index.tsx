@@ -125,7 +125,7 @@ function Tags() {
         </Table>
       </div>
       <Modal
-        visible={visible}
+        open={visible}
         title="添加一个新标签"
         okText="确定"
         cancelText="取消"

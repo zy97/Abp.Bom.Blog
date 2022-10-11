@@ -10,7 +10,7 @@ import ListView from "./pages/BlogManage/Pages/Post/ListView";
 import AuditLog from "./pages/Admin/AuditLog";
 import User from "./pages/Admin/User";
 import Role from "./pages/Admin/Role";
-import { useDebounceEffect } from "ahooks";
+import { useDebounceEffect, useMount } from "ahooks";
 import { useAppConfig } from "./hooks/useStore";
 import { toJS } from "mobx";
 import { filterPermissionRoute } from "./util/permission";
@@ -125,11 +125,17 @@ export function RenderRoutes() {
   const [routes, setRoutes] = useState([] as Route[])
 
   const { applicationConfigurationStore } = useAppConfig();
-  useDebounceEffect(() => {
+  // useDebounceEffect(() => {
+  //   applicationConfigurationStore.Get().then((config) => {
+  //     const routes = filterPermissionRoute(routerConfig, toJS(config.auth.grantedPolicies));
+  //     setRoutes(routes);
+  //   });
+  // }, [], {});
+  useMount(() => {
     applicationConfigurationStore.Get().then((config) => {
       const routes = filterPermissionRoute(routerConfig, toJS(config.auth.grantedPolicies));
       setRoutes(routes);
     });
-  }, [], {});
+  });
   return useRoutes(routes);
 }

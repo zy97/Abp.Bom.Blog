@@ -128,7 +128,7 @@ function Role() {
           />
         </Table>
       </div>
-      <Modal visible={visible} title={modalTitle} okText="确定" cancelText="取消" onCancel={() => {
+      <Modal open={visible} title={modalTitle} okText="确定" cancelText="取消" onCancel={() => {
         setVisible(false);
         modalForm.resetFields();
       }}
@@ -160,7 +160,7 @@ function Role() {
           </Form.Item>
         </Form>
       </Modal>
-      <Modal visible={permissionModalVisible} title="权限" okText="确定" cancelText="取消" onCancel={() => { setPermissionModalVisible(false); }}
+      <Modal open={permissionModalVisible} title="权限" okText="确定" cancelText="取消" onCancel={() => { setPermissionModalVisible(false); }}
         onOk={() => {
           permissionStore.updatePermissionsByRole(roleName, { permissions: changedPermession }).then(() => {
             setPermissionModalVisible(false);
