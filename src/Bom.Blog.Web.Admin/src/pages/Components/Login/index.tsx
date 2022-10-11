@@ -68,7 +68,7 @@ function Login() {
                     <Space>{auth.user?.profile.preferred_username}<DownOutlined /></Space>
                 </a>
             </Dropdown> : <Button type="link" onClick={login}>登录</Button>}
-            <Modal title="账户" visible={isProfileModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="账户" open={isProfileModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <Tabs defaultActiveKey="1" activeKey={activeTab} tabPosition="top" onChange={tabChange}>
                     <Tabs.TabPane tab="基本信息" key="1">
                         <Form name="form_in_modal" form={profileForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} >

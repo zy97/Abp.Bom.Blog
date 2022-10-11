@@ -47,7 +47,7 @@ const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
               // @ts-ignore
               extraActions.filter(i => i !== null).map((i: extraActionProps, key: number) => {
                 return (
-                  <Button type="primary" key={key} onClick={i.action}>
+                  <Button type="primary" key={key} onClick={() => i.action()}>
                     {i.content}
                   </Button>
                 );

@@ -128,7 +128,6 @@ export function RenderRoutes() {
   useDebounceEffect(() => {
     applicationConfigurationStore.Get().then((config) => {
       const routes = filterPermissionRoute(routerConfig, toJS(config.auth.grantedPolicies));
-      console.log(routes);
       setRoutes(routes);
     });
   }, [], {});

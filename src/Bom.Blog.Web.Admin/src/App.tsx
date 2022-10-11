@@ -31,7 +31,6 @@ function App() {
       const m = createMenu("", routes[0].children!, [])
       removeInvalidChildrenMenu(m);
       setMenues([...m])
-      console.log(routes);
       setRoutes(routes);
     });
   }, [], {});

@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
-import { tenantsApi } from "../../apis";
+import { featureApi, tenantsApi } from "../../apis";
 import { TenantCreateDto, TenantUpdateDto } from "@abp/ng.tenant-management/proxy";
+import { UpdateFeaturesDto } from "@abp/ng.feature-management/proxy";
 class TenantsStore {
   constructor() {
     makeAutoObservable(this);
@@ -40,6 +41,38 @@ class TenantsStore {
   async updateTenant(id: string, tenant: TenantUpdateDto) {
     try {
       const result = await tenantsApi.updateTenant(id, tenant);
+      return result.data;
+    } catch (error) {
+      return;
+    }
+  }
+  async getTenantFeatures(id: string) {
+    try {
+      const result = await featureApi.getFeatures({ providerName: "T", providerKey: id });
+      return result.data;
+    } catch (error) {
+      return;
+    }
+  }
+  async updateTenantFeatures(id: string, features: UpdateFeaturesDto) {
+    try {
+      const result = await featureApi.updateFeatures({ providerName: "T", providerKey: id }, features);
+      return result.data;
+    } catch (error) {
+      return;
+    }
+  }
+  async getHostFeatures() {
+    try {
+      const result = await featureApi.getFeatures({ providerName: "T" });
+      return result.data;
+    } catch (error) {
+      return;
+    }
+  }
+  async updateHostFeatures(features: UpdateFeaturesDto) {
+    try {
+      const result = await featureApi.updateFeatures({ providerName: "T" }, features);
       return result.data;
     } catch (error) {
       return;

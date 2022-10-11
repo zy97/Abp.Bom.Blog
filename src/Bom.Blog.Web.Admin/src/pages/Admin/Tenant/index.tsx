@@ -1,13 +1,13 @@
+import { FeatureDto } from "@abp/ng.feature-management/proxy";
 import {
-    TenantCreateDto,
     TenantDto,
-    TenantUpdateDto,
 } from "@abp/ng.tenant-management/proxy/lib";
-import { useAntdTable, useRequest } from "ahooks";
-import { Button, Form, Input, message, Modal, Space, Table } from "antd";
+import { useAntdTable, useBoolean, useDynamicList, useRequest } from "ahooks";
+import { Button, Checkbox, Form, Input, message, Modal, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
 import { useAppConfig, useStores } from "../../../hooks/useStore";
+import { transformToArray } from "../../../util/formTransform";
 import {
     getEmailValidationRule,
     getRequiredRule,
@@ -17,7 +17,11 @@ function Tenant() {
     const { applicationConfigurationStore } = useAppConfig();
     const { tenantStore } = useStores();
     const [visible, setVisible] = useState(false);
+    const [tenantId, setTenantId] = useState<string | null>();
+    const [featureModalState, { setTrue: openFeatureModal, setFalse: closeFeatureModal }] = useBoolean(false);
     const [form] = Form.useForm();
+    const [featuresForm] = Form.useForm();
+    const { list, resetList, merge, getKey } = useDynamicList<FeatureDto>([]);
     const [modalForm] = Form.useForm();
     const [permissions, setpermissions] = useState({} as Record<string, boolean>);
     useEffect(() => {
@@ -53,6 +57,22 @@ function Tenant() {
     const showModal = () => {
         setVisible(true);
     };
+    const showFeatureModal = async (id?: string) => {
+        openFeatureModal();
+        resetList([]);
+        let featureList;
+        if (id) {
+            featureList = await tenantStore.getTenantFeatures(id);
+            setTenantId(id);
+        }
+        else {
+            featureList = await tenantStore.getHostFeatures();
+        }
+        const features = featureList?.groups.flatMap(i => i.features)
+        if (features) {
+            merge(0, features);
+        }
+    };
     const getTenant = async (record: TenantDto) => {
         try {
             const tenant = await runAsync(record.id);
@@ -84,16 +104,30 @@ function Tenant() {
             }
         } catch (error) { }
     };
+    const updateFeatures = async (data: any) => {
+        if (tenantId) {
+            await tenantStore.updateTenantFeatures(tenantId, { features: transformToArray(data) });
+            setTenantId(null);
+        }
+        else {
+            await tenantStore.updateHostFeatures({ features: transformToArray(data) });
+        }
+        closeFeatureModal();
+    }
     return (
         <div>
             <AdvancedSearchForm
                 form={form}
                 {...search}
-                extraActions={[
-                    permissions["AbpTenantManagement.Tenants.Create"]
-                        ? { content: "添加", action: showModal }
-                        : null,
-                ]}
+                extraActions={
+                    [
+                        permissions["AbpTenantManagement.Tenants.Create"]
+                            ? { content: "添加", action: showModal }
+                            : null,
+                        permissions["FeatureManagement.ManageHostFeatures"]
+                            ? { content: "管理宿主功能", action: showFeatureModal }
+                            : null,
+                    ]}
             >
                 <Form.Item name="Filter" label="租户名">
                     <Input placeholder="请输入租户名" />
@@ -124,7 +158,12 @@ function Tenant() {
                                             编辑
                                         </Button>
                                     )}
-                                    {permissions["AbpTenantManagement.Tenants.Delete"] && (
+                                    {permissions["AbpTenantManagement.Tenants.Update"] && (
+                                        <Button type="primary" onClick={() => showFeatureModal(recode.id)}>
+                                            功能
+                                        </Button>
+                                    )}
+                                    {permissions["AbpTenantManagement.Tenants.ManageFeatures"] && (
                                         <Button
                                             type="primary"
                                             danger
@@ -140,7 +179,7 @@ function Tenant() {
                 </Table>
             </div>
             <Modal
-                visible={visible}
+                open={visible}
                 title="添加一个新标签"
                 okText="确定"
                 cancelText="取消"
@@ -192,6 +231,34 @@ function Tenant() {
                             </Form.Item>
                         </>
                     )}
+                </Form>
+            </Modal>
+            <Modal
+                open={featureModalState}
+                title="设置管理"
+                okText="确定"
+                cancelText="取消"
+                onCancel={() => {
+                    closeFeatureModal();
+                }}
+                onOk={() => {
+                    featuresForm
+                        .validateFields()
+                        .then((values) => {
+                            updateFeatures(values);
+                        })
+                        .catch(() => {
+                            message.error("添加失败");
+                        });
+                }}
+            >
+                <Form form={featuresForm}>
+                    {list.map((i, index) => {
+                        return <Form.Item name={[i.name!, getKey(index)]} key={i.name} label={i.displayName} valuePropName="checked" initialValue={i.value === "true" ? true : false
+                        }>
+                            <Checkbox />
+                        </Form.Item>
+                    })}
                 </Form>
             </Modal>
         </div>
