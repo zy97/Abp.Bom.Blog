@@ -13,5 +13,10 @@ public class BlogSettingDefinitionProvider : SettingDefinitionProvider
         {
             smtpPassword.IsEncrypted = false;
         }
+        //var register = context.GetOrNull("Abp.Account.IsSelfRegistrationEnabled");
+        //if (register != null)
+        //{
+        //    register.DefaultValue = "false";
+        //}
     }
 }

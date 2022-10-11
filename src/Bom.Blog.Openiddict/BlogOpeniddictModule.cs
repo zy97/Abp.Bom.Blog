@@ -1,10 +1,13 @@
-﻿using Bom.Blog.EntityFrameworkCore;
+using Bom.Blog.EntityFrameworkCore;
 using Bom.Blog.Localization;
 using Bom.Blog.MultiTenancy;
 using Localization.Resources.AbpUi;
+using Medallion.Threading;
+using Medallion.Threading.Redis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
@@ -24,7 +27,9 @@ using Volo.Abp.Autofac;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
+using Volo.Abp.DistributedLocking;
 using Volo.Abp.Emailing;
+using Volo.Abp.EventBus.RabbitMq;
 using Volo.Abp.Localization;
 using Volo.Abp.MailKit;
 using Volo.Abp.Modularity;
@@ -45,6 +50,8 @@ namespace Bom.Blog
     typeof(AbpEmailingModule),
     typeof(AbpMailKitModule)
     )]
+    [DependsOn(typeof(AbpEventBusRabbitMqModule))]
+    [DependsOn(typeof(AbpDistributedLockingModule))]
     public class BlogOpeniddictModule : AbpModule
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
@@ -145,6 +152,15 @@ namespace Bom.Blog
             });
 
             //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+            ConfigureDistributedLock(configuration, context);
+        }
+        private void ConfigureDistributedLock(IConfiguration configuration, ServiceConfigurationContext context)
+        {
+            context.Services.AddSingleton<IDistributedLockProvider>(sp =>
+            {
+                var connection = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]);
+                return new RedisDistributedSynchronizationProvider(connection.GetDatabase());
+            });
         }
         public override void OnApplicationInitialization(Volo.Abp.ApplicationInitializationContext context)
         {

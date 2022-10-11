@@ -25,6 +25,7 @@ using Volo.Abp.Autofac;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.Emailing;
+using Volo.Abp.EventBus.RabbitMq;
 using Volo.Abp.Hangfire;
 using Volo.Abp.Localization;
 using Volo.Abp.MailKit;
@@ -47,6 +48,7 @@ namespace Bom.Blog;
     typeof(AbpEmailingModule),
     typeof(AbpMailKitModule)
 )]
+[DependsOn(typeof(AbpEventBusRabbitMqModule))]
 public class BlogHttpApiHostModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -193,6 +195,7 @@ public class BlogHttpApiHostModule : AbpModule
                });
         });
     }
+
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {

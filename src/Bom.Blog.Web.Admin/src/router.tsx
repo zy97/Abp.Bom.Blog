@@ -103,39 +103,14 @@ export const routerConfig: Route[] = [
 ];
 
 export function RenderRoutes() {
-  const checkPermission = (routes: Route[], permissions: Record<string, boolean>) => {
-    const returnRoute: Route[] = [];
-    for (const route of routes) {
-      if (route.children && route.children.length > 0) {
-        const newRoute: Route = { ...route, children: [] };
-        const children = checkPermission(route.children, permissions);
-        if (children) {
-          newRoute.children = children;
-          returnRoute.push(newRoute);
-        }
-      }
-      else {
-        if (route.permission === undefined || (route.permission && permissions[route.permission])) {
-          returnRoute.push(route);
-        }
-      }
-    }
-    return returnRoute;
-  }
   const [routes, setRoutes] = useState([] as Route[])
-
   const { applicationConfigurationStore } = useAppConfig();
-  // useDebounceEffect(() => {
-  //   applicationConfigurationStore.Get().then((config) => {
-  //     const routes = filterPermissionRoute(routerConfig, toJS(config.auth.grantedPolicies));
-  //     setRoutes(routes);
-  //   });
-  // }, [], {});
   useMount(() => {
     applicationConfigurationStore.Get().then((config) => {
       const routes = filterPermissionRoute(routerConfig, toJS(config.auth.grantedPolicies));
       setRoutes(routes);
     });
   });
+
   return useRoutes(routes);
 }
