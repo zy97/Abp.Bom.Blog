@@ -3,8 +3,6 @@ using Bom.Blog.AuditLogs;
 using Bom.Blog.Categories;
 using Bom.Blog.Categories.AdminDtos;
 using Bom.Blog.Categories.Dtos;
-using Bom.Blog.FriendLinks;
-using Bom.Blog.FriendLinks.AdminDtos;
 using Bom.Blog.Posts;
 using Bom.Blog.Posts.AdminDtos;
 using Bom.Blog.Posts.Dtos;
@@ -46,10 +44,6 @@ public class BlogApplicationAutoMapperProfile : Profile
         CreateMap<Tag, TagWithCountDto>().ForMember(i => i.Count, config => config.MapFrom(i => i.Posts.Count));
         CreateMap<CreateOrUpdateTagDto, Tag>();
 
-
-        CreateMap<FriendLink, FriendLinkDto>();
-        CreateMap<FriendLink, FriendLinks.Dtos.FriendLinkDto>();
-        CreateMap<CreateOrUpdateFriendLinkDto, FriendLink>();
 
         CreateMap<AuditLog, AuditLogDto>();
     }

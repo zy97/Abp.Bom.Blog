@@ -1,5 +1,4 @@
 ﻿using Bom.Blog.Categories;
-using Bom.Blog.FriendLinks;
 using Bom.Blog.Posts;
 using Bom.Blog.Tags;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +35,6 @@ public class BlogDbContext :
     public DbSet<Post> Posts { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Tag> Tags { get; set; }
-    public DbSet<FriendLink> FriendLinks { get; set; }
 
     #region Entities from the modules
 
@@ -127,14 +125,6 @@ public class BlogDbContext :
             b.HasKey(i => i.Id);
             b.Property(i => i.Name).IsRequired().HasMaxLength(TagConst.MaxNameLength);
             b.Property(i => i.DisplayName).IsRequired().HasMaxLength(TagConst.MaxDisplayNameLength);
-        });
-        builder.Entity<FriendLink>(b =>
-        {
-            b.ToTable(BlogConsts.DbTablePrefix + "FriendLinks", BlogConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
-            b.HasKey(i => i.Id);
-            b.Property(i => i.Name).IsRequired().HasMaxLength(FriendLinkConst.MaxNameLength);
-            b.Property(i => i.Url).IsRequired().HasMaxLength(FriendLinkConst.MaxUrlLength);
         });
     }
 }
