@@ -25,10 +25,13 @@ using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Auditing;
 using Volo.Abp.Autofac;
 using Volo.Abp.BackgroundJobs;
+using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.DistributedLocking;
 using Volo.Abp.Emailing;
+using Volo.Abp.EntityFrameworkCore.DistributedEvents;
+using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.EventBus.RabbitMq;
 using Volo.Abp.Localization;
 using Volo.Abp.MailKit;
@@ -48,7 +51,8 @@ namespace Bom.Blog
     typeof(BlogEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpEmailingModule),
-    typeof(AbpMailKitModule)
+    typeof(AbpMailKitModule),
+        typeof(AbpBackgroundWorkersModule)
     )]
     [DependsOn(typeof(AbpEventBusRabbitMqModule))]
     [DependsOn(typeof(AbpDistributedLockingModule))]
@@ -160,6 +164,13 @@ namespace Bom.Blog
             {
                 var connection = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]);
                 return new RedisDistributedSynchronizationProvider(connection.GetDatabase());
+            });
+            Configure<AbpDistributedEventBusOptions>(options =>
+            {
+                options.Inboxes.Configure(config =>
+                {
+                    config.UseDbContext<BlogDbContext>();
+                });
             });
         }
         public override void OnApplicationInitialization(Volo.Abp.ApplicationInitializationContext context)

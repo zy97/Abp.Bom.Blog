@@ -4,7 +4,6 @@ using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.DistributedEvents;
 using Volo.Abp.EntityFrameworkCore.MySQL;
-using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.Modularity;
@@ -50,16 +49,16 @@ public class BlogEntityFrameworkCoreModule : AbpModule
             options.UseMySQL();
         });
 
-        Configure<AbpDistributedEventBusOptions>(options =>
-        {
-            options.Outboxes.Configure(config =>
-            {
-                config.UseDbContext<BlogDbContext>();
-            });
-            options.Inboxes.Configure(config =>
-            {
-                config.UseDbContext<BlogDbContext>();
-            });
-        });
+        //Configure<AbpDistributedEventBusOptions>(options =>
+        //{
+        //    options.Outboxes.Configure(config =>
+        //    {
+        //        config.UseDbContext<BlogDbContext>();
+        //    });
+        //    options.Inboxes.Configure(config =>
+        //    {
+        //        config.UseDbContext<BlogDbContext>();
+        //    });
+        //});
     }
 }

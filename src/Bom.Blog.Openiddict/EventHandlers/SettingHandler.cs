@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.SettingManagement;
+using Volo.Abp.Uow;
 
 namespace Bom.Blog.EventHandlers
 {
@@ -17,7 +18,8 @@ namespace Bom.Blog.EventHandlers
             this.settingManager = settingManager;
             this.logger = logger;
         }
-        public Task HandleEventAsync(SettingChangedEto eventData)
+        [UnitOfWork]
+        public virtual Task HandleEventAsync(SettingChangedEto eventData)
         {
             logger.LogInformation("SettingChangedEto");
             return Task.CompletedTask;

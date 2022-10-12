@@ -14,7 +14,7 @@ export const filterPermissionRoute = (routes: Route[], permissions: Record<strin
         else {
             if (route.permission === undefined || (route.permission && permissions[route.permission])) {
                 returnRoute.push(route);
-            }
+            }                                                                  
         }
     }
     return returnRoute;
