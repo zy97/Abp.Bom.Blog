@@ -7,7 +7,6 @@ using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
-using Volo.Abp.EntityFrameworkCore.DistributedEvents;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
@@ -26,9 +25,7 @@ namespace Bom.Blog.EntityFrameworkCore;
 public class BlogDbContext :
     AbpDbContext<BlogDbContext>,
     IIdentityDbContext,
-    ITenantManagementDbContext,
-    IHasEventOutbox,
-    IHasEventInbox
+    ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
@@ -63,8 +60,6 @@ public class BlogDbContext :
 
 
     #endregion
-    public DbSet<OutgoingEventRecord> OutgoingEvents { get; set; }
-    public DbSet<IncomingEventRecord> IncomingEvents { get; set; }
 
     public BlogDbContext(DbContextOptions<BlogDbContext> options)
         : base(options)
@@ -86,9 +81,6 @@ public class BlogDbContext :
         builder.ConfigureOpenIddict();
         builder.ConfigureFeatureManagement();
         builder.ConfigureTenantManagement();
-
-        builder.ConfigureEventOutbox();
-        builder.ConfigureEventInbox();
 
         /* Configure your own tables/entities inside here */
 

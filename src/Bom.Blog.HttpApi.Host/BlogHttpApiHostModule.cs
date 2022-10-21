@@ -1,8 +1,6 @@
 using Bom.Blog.EntityFrameworkCore;
 using Bom.Blog.MultiTenancy;
 using EasyAbp.Abp.EventBus.Cap;
-using Medallion.Threading;
-using Medallion.Threading.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
@@ -26,11 +24,7 @@ using Volo.Abp.Autofac;
 using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
-using Volo.Abp.DistributedLocking;
 using Volo.Abp.Emailing;
-using Volo.Abp.EntityFrameworkCore.DistributedEvents;
-using Volo.Abp.EventBus.Distributed;
-using Volo.Abp.EventBus.RabbitMq;
 using Volo.Abp.Localization;
 using Volo.Abp.MailKit;
 using Volo.Abp.Modularity;
@@ -53,8 +47,6 @@ namespace Bom.Blog;
     typeof(AbpBackgroundWorkersModule),
     typeof(AbpEventBusCapModule)
 )]
-[DependsOn(typeof(AbpEventBusRabbitMqModule))]
-[DependsOn(typeof(AbpDistributedLockingModule))]
 public class BlogHttpApiHostModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -70,7 +62,6 @@ public class BlogHttpApiHostModule : AbpModule
         ConfigureDataProtection(context, configuration, hostingEnvironment);
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
-        ConfigureDistributedLock(configuration, context);
 
         context.Services.ConfigureApplicationCookie(options =>
         {
@@ -106,7 +97,6 @@ public class BlogHttpApiHostModule : AbpModule
             options.UseRabbitMQ("localhost");
 
             // We provide permission named "CapDashboard.Manage" for authorization.
-            options.UseAbpDashboard();
         });
     }
     private void ConfigureCache(IConfiguration configuration)
@@ -210,28 +200,6 @@ public class BlogHttpApiHostModule : AbpModule
                });
         });
     }
-    private void ConfigureDistributedLock(IConfiguration configuration, ServiceConfigurationContext context)
-    {
-        context.Services.AddSingleton<IDistributedLockProvider>(sp =>
-        {
-            var connection = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]);
-            return new RedisDistributedSynchronizationProvider(connection.GetDatabase());
-        });
-        Configure<AbpDistributedEventBusOptions>(options =>
-        {
-            options.Outboxes.Configure(config =>
-            {
-                config.UseDbContext<BlogDbContext>();
-                config.IsSendingEnabled = true;
-            });
-            options.Inboxes.Configure(config =>
-            {
-                config.UseDbContext<BlogDbContext>();
-                config.IsProcessingEnabled = false;
-            });
-        });
-    }
-
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();

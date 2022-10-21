@@ -34,11 +34,8 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
 		<PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="6.0.0" />
 		<PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="6.0.0" />
-		<PackageReference Include="Volo.Abp.DistributedLocking" Version="6.0.0" />
-		<PackageReference Include="Volo.Abp.EventBus.RabbitMQ" Version="6.0.0" />
 		<PackageReference Include="Volo.Abp.Swashbuckle" Version="6.0.0" />
 		<PackageReference Include="Volo.Abp.MailKit" Version="6.0.0" />
-		<PackageReference Include="DistributedLock.Redis" Version="1.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
