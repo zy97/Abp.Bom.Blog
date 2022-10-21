@@ -1,6 +1,7 @@
 using Bom.Blog.EntityFrameworkCore;
 using Bom.Blog.Localization;
 using Bom.Blog.MultiTenancy;
+using EasyAbp.Abp.EventBus.Cap;
 using Localization.Resources.AbpUi;
 using Medallion.Threading;
 using Medallion.Threading.Redis;
@@ -52,7 +53,8 @@ namespace Bom.Blog
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpEmailingModule),
     typeof(AbpMailKitModule),
-        typeof(AbpBackgroundWorkersModule)
+    typeof(AbpBackgroundWorkersModule),
+    typeof(AbpEventBusCapModule)
     )]
     [DependsOn(typeof(AbpEventBusRabbitMqModule))]
     [DependsOn(typeof(AbpDistributedLockingModule))]
@@ -74,6 +76,19 @@ namespace Bom.Blog
         {
             var hostingEnviroment = context.Services.GetHostingEnvironment();
             var configuration = context.Services.GetConfiguration();
+
+            context.AddCapEventBus(options =>
+            {
+                // If you are using EF, you need to add:
+                options.SetCapDbConnectionString(configuration["ConnectionStrings:Default"]);
+                options.UseEntityFramework<BlogDbContext>();
+
+                // CAP has multiple MQ implementations, e.g. RabbitMQ:
+                options.UseRabbitMQ("localhost");
+
+                // We provide permission named "CapDashboard.Manage" for authorization.
+                options.UseAbpDashboard();
+            });
 
             Configure<AbpLocalizationOptions>(options =>
             {
