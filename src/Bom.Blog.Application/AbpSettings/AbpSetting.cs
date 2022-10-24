@@ -1,52 +1,41 @@
 ﻿using Bom.Blog.Abp.Setting;
-using System;
 using System.Threading.Tasks;
+using Volo.Abp.Account.Settings;
 using Volo.Abp.EventBus.Distributed;
-using Volo.Abp.SettingManagement;
-using Volo.Abp.Uow;
 
 namespace Bom.Blog.AbpSettings
 {
     public class AbpSetting : BlogAppService
     {
-        private readonly ISettingManager settingManager;
         private readonly IDistributedEventBus distributedEventBus;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
 
-        public AbpSetting(ISettingManager settingManager, IDistributedEventBus distributedEventBus, IUnitOfWorkManager unitOfWorkManager)
+        public AbpSetting(IDistributedEventBus distributedEventBus)
         {
-            this.settingManager = settingManager;
             this.distributedEventBus = distributedEventBus;
-            this.unitOfWorkManager = unitOfWorkManager;
         }
-        public virtual async Task TestAsync()
+        public virtual async Task EnableRegisterAsync()
         {
-            //await settingManager.SetGlobalAsync("Abp.Account.IsSelfRegistrationEnabled", "false");
-            using var uow = unitOfWorkManager.Begin(true, false);
-            await distributedEventBus.PublishAsync(new SettingChangedEto() { Time = DateTime.Now });
-            await uow.CompleteAsync();
+            //var key = SettingCacheItem.CalculateCacheKey(AccountSettingNames.IsSelfRegistrationEnabled, "G", "");
+
+            await distributedEventBus.PublishAsync(new SettingChangedEto()
+            {
+                Name = AccountSettingNames.IsSelfRegistrationEnabled,
+                ProviderKey = "",
+                ProviderName = "G",
+                Value = "true"
+            });
 
         }
-        public async Task Test1Async()
+        public virtual async Task DisableRegisterAsync()
         {
-            //await settingManager.SetGlobalAsync("Abp.Account.IsSelfRegistrationEnabled", "true");
+            await distributedEventBus.PublishAsync(new SettingChangedEto()
+            {
+                Name = AccountSettingNames.IsSelfRegistrationEnabled,
+                ProviderKey = "",
+                ProviderName = "G",
+                Value = "false"
+            });
+
         }
     }
-    //public class SettingHandler : IDistributedEventHandler<SettingChangedEto>, ITransientDependency
-    //{
-    //    private readonly ISettingManager settingManager;
-    //    private readonly ILogger<SettingHandler> logger;
-
-    //    public SettingHandler(ISettingManager settingManager, ILogger<SettingHandler> logger)
-    //    {
-    //        this.settingManager = settingManager;
-    //        this.logger = logger;
-    //    }
-    //    [UnitOfWork]
-    //    public virtual Task HandleEventAsync(SettingChangedEto eventData)
-    //    {
-    //        logger.LogInformation("SettingChangedEto");
-    //        return Task.CompletedTask;
-    //    }
-    //}
 }
