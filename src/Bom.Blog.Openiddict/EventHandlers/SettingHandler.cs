@@ -24,8 +24,7 @@ namespace Bom.Blog.EventHandlers
         [UnitOfWork]
         public virtual async Task HandleEventAsync(SettingChangedEto eventData)
         {
-            var key = SettingCacheItem.CalculateCacheKey(eventData.Name, eventData.ProviderName, eventData.ProviderKey);
-            await distributedCache.SetAsync(key, new SettingCacheItem(eventData.Value));
+            await settingManager.SetGlobalAsync(eventData.Name, eventData.Value);
         }
     }
 }
