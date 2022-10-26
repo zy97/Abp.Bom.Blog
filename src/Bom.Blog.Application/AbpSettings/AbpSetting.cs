@@ -16,21 +16,22 @@ namespace Bom.Blog.AbpSettings
             this.distributedEventBus = distributedEventBus;
             this.settingManager = settingManager;
         }
-        public virtual async Task EnableRegisterAsync()
+        public async Task ChangeRegisterStatusAsync(bool status)
         {
             await distributedEventBus.PublishAsync(new SettingChangedEto()
             {
                 Name = AccountSettingNames.IsSelfRegistrationEnabled,
-                Value = "true"
+                Value = status.ToString()
             });
         }
-        public virtual async Task DisableRegisterAsync()
-        {
-            await distributedEventBus.PublishAsync(new SettingChangedEto()
-            {
-                Name = AccountSettingNames.IsSelfRegistrationEnabled,
-                Value = "false"
-            });
-        }
+        //还不是知道locallogin的作用
+        //public async Task ChangeLocalLoginStatusAsync(bool status)
+        //{
+        //    await distributedEventBus.PublishAsync(new SettingChangedEto()
+        //    {
+        //        Name = AccountSettingNames.EnableLocalLogin,
+        //        Value = status.ToString()
+        //    });
+        //}
     }
 }
