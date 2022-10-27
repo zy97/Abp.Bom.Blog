@@ -10,3 +10,4 @@ export * as roleApi from "./Abp/Role";
 export * as accountApi from "./Abp/Account";
 export * as tenantsApi from "./Abp/tenants";
 export * as featureApi from "./Abp/feature";
+export * as settingApi from "./Abp/setting";

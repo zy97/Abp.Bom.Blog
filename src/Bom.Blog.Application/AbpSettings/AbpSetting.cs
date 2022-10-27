@@ -1,11 +1,13 @@
 ﻿using Bom.Blog.Abp.Setting;
+using Bom.Blog.Permissions;
+using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using Volo.Abp.Account.Settings;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.SettingManagement;
 
 namespace Bom.Blog.AbpSettings
 {
+    [Authorize(BlogPermissions.SystemSetting.Default)]
     public class AbpSetting : BlogAppService
     {
         private readonly IDistributedEventBus distributedEventBus;
@@ -16,22 +18,14 @@ namespace Bom.Blog.AbpSettings
             this.distributedEventBus = distributedEventBus;
             this.settingManager = settingManager;
         }
-        public async Task ChangeRegisterStatusAsync(bool status)
+        public async Task ChangeSettingAsync(AbpSettingDto setting)
         {
+            //AccountSettingNames.
             await distributedEventBus.PublishAsync(new SettingChangedEto()
             {
-                Name = AccountSettingNames.IsSelfRegistrationEnabled,
-                Value = status.ToString()
+                Name = setting.Key,
+                Value = setting.Value
             });
         }
-        //还不是知道locallogin的作用
-        //public async Task ChangeLocalLoginStatusAsync(bool status)
-        //{
-        //    await distributedEventBus.PublishAsync(new SettingChangedEto()
-        //    {
-        //        Name = AccountSettingNames.EnableLocalLogin,
-        //        Value = status.ToString()
-        //    });
-        //}
     }
 }

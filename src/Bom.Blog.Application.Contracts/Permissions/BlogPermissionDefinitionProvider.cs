@@ -16,14 +16,21 @@ public class BlogPermissionDefinitionProvider : PermissionDefinitionProvider
         if (adminGroup == null)
         {
             adminGroup = context.AddGroup(BlogPermissions.GroupName);
-            var defaultPermission = adminGroup.GetPermissionOrNull(BlogPermissions.Admin.Default);
-            if (defaultPermission == null)
-            {
-                defaultPermission = adminGroup.AddPermission(BlogPermissions.Admin.Default);
-                defaultPermission.AddChild(BlogPermissions.Admin.Create);
-                defaultPermission.AddChild(BlogPermissions.Admin.Delete);
-                defaultPermission.AddChild(BlogPermissions.Admin.Update);
-            }
+        }
+
+        var defaultPermission = adminGroup.GetPermissionOrNull(BlogPermissions.Admin.Default);
+        if (defaultPermission == null)
+        {
+            defaultPermission = adminGroup.AddPermission(BlogPermissions.Admin.Default);
+            defaultPermission.AddChild(BlogPermissions.Admin.Create);
+            defaultPermission.AddChild(BlogPermissions.Admin.Delete);
+            defaultPermission.AddChild(BlogPermissions.Admin.Update);
+        }
+
+        var systemSettingPermission = adminGroup.GetPermissionOrNull(BlogPermissions.SystemSetting.Default);
+        if (systemSettingPermission == null)
+        {
+            systemSettingPermission = adminGroup.AddPermission(BlogPermissions.SystemSetting.Default);
         }
     }
 

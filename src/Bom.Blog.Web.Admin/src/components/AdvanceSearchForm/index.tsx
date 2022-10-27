@@ -37,7 +37,7 @@ const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
     return children;
   };
   return (
-    <Form form={form} name="advanced_search">
+    <Form form={form} name="advanced_search" >
       <Row gutter={24}>{getFields()}</Row>
       <Row>
         <Col span={24} className={styles.search}>

@@ -13,4 +13,9 @@ public static class BlogPermissions
         public const string Delete = Default + ".Delete";
         public const string Update = Default + ".Update";
     }
+
+    public static class SystemSetting
+    {
+        public const string Default = GroupName + ".SystemSetting";
+    }
 }
