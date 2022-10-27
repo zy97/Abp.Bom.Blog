@@ -675,6 +675,112 @@
   resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.11.6.tgz"
   integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
+"@swc/core-android-arm-eabi@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-android-arm-eabi/-/core-android-arm-eabi-1.3.11.tgz#a0a3f0231922f5e6c1cc7248dd38b379e8074d7d"
+  integrity sha512-LC9JlMcdFmTU94KKmQkJKaPSeVmYTfVm2rKGESMiFrgIjopXL/Zeg+XHA97ucnh5iUMkWIpXAMzSOaVRs33K5g==
+  dependencies:
+    "@swc/wasm" "1.2.122"
+
+"@swc/core-android-arm64@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-android-arm64/-/core-android-arm64-1.3.11.tgz#d6301ff9875f96586685f0daa14b9cedebfbd486"
+  integrity sha512-M7FamR3kFpVTyTw73FzKcOZmS7/TWHX75eqtwBTaU9fW4shf0KTLr/h9DnMxNKAnwUMeub/lqlINUe5EKFIKwQ==
+  dependencies:
+    "@swc/wasm" "1.2.130"
+
+"@swc/core-darwin-arm64@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-darwin-arm64/-/core-darwin-arm64-1.3.11.tgz#fcedec7ba90be97059aa0ebd6e587fe33a4092f4"
+  integrity sha512-LOoiw3uQDuoKBLW3Mn8p6wIccpYjAoDI3ROdto4MksLQSraHMufXY8bqqncfVuy1750XZmC1qnU39RC3yihPfA==
+
+"@swc/core-darwin-x64@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-darwin-x64/-/core-darwin-x64-1.3.11.tgz#bc8421f256e05a40d0a859fbc67c07b35443e118"
+  integrity sha512-ycjrEbWmpU8MTDdVLdf76ClxQCSTfNqSoP59hieLzhmXpXUa7Oy4sN/v6WSQgp4I1euGs1Wp5kPU5hH5f7XBJQ==
+
+"@swc/core-freebsd-x64@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-freebsd-x64/-/core-freebsd-x64-1.3.11.tgz#6b8badd7a927542f8b5094db51384aa074f4a1ac"
+  integrity sha512-02uqYktPp6WmZfZ2Crc/yIVOcgANtjo8ciHcT7yLHvz7v+S7gx1I2tyNGUFtTX5hcR2IFNGrL8Yj4DvpTABFHg==
+  dependencies:
+    "@swc/wasm" "1.2.130"
+
+"@swc/core-linux-arm-gnueabihf@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-arm-gnueabihf/-/core-linux-arm-gnueabihf-1.3.11.tgz#da8d017ba1f1872a4bcfa6d95df581b56da5e05c"
+  integrity sha512-nZ2T/gPFncsIiFGhVeVY9vRCTX0hTdqso8OEvFhSwRfRvcEYOpb/rhMG09are7YoB44GMiku5tSzEiNmvT3GuQ==
+  dependencies:
+    "@swc/wasm" "1.2.130"
+
+"@swc/core-linux-arm64-gnu@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-arm64-gnu/-/core-linux-arm64-gnu-1.3.11.tgz#8c190f9f04f2e1a87911b364aef77092a7f13221"
+  integrity sha512-EWEd8NnGwhykEDFIet/r4Fcfr6805ecnBniHZWmG8UVYUp5tz7LYEMZesxCxa0+aGVpCmxHL5/Cdk1uEIrVIzg==
+
+"@swc/core-linux-arm64-musl@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-arm64-musl/-/core-linux-arm64-musl-1.3.11.tgz#1391125a8bccb30d6b7088830b562fb7ebf5057b"
+  integrity sha512-ms7CLj2+8sfTM2QnnwqDheYRky9rgPpX2hXmc0KltX+AiSAs7WURjn2JwXWkaICDzXL+djennfswxSspJ53knw==
+
+"@swc/core-linux-x64-gnu@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-x64-gnu/-/core-linux-x64-gnu-1.3.11.tgz#37583244495d1e01d43d58cbd5282f3424e51bce"
+  integrity sha512-Fq5/QEY0IbzpIrqlvQT59aMf+nLk//esL3Aj4nvZdsvF4iZaD2oHtXW+/MBi0i1HV9OBWApGZMygYNVS0uVZkQ==
+
+"@swc/core-linux-x64-musl@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-x64-musl/-/core-linux-x64-musl-1.3.11.tgz#2ff2f34abd1717ce9ad5c718f106f71dca0aa3a8"
+  integrity sha512-S/KoEgRHwGhs7VunHiz4jLrnFOJvqZe391j2MiYN1p2EThoGI3rvwcUoHkoxLCXVuDbi4E91qodOheaMGetWNA==
+
+"@swc/core-win32-arm64-msvc@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-win32-arm64-msvc/-/core-win32-arm64-msvc-1.3.11.tgz#496c881be09eda3cf87b1cc375449432e06531f0"
+  integrity sha512-fFby7KOQIxolR6w4Gie8MSkgQ3ee6j3r7A6PX4ekzu+509QsZogLPZnWFTJ8WFo7ui0tx/ocA5X8BV4ZNBVlKQ==
+  dependencies:
+    "@swc/wasm" "1.2.130"
+
+"@swc/core-win32-ia32-msvc@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-win32-ia32-msvc/-/core-win32-ia32-msvc-1.3.11.tgz#99e3a8d3d73f6df7f781e87a0b9589ea343be383"
+  integrity sha512-fii7Y33S9Z5oZ/BTsXa8Ou/RZ4T/ZsAOFpG7mMvifpdAP6LVWdhLoNy7SeeEHTEAWGcWNA/FslA6p2WETvEEfA==
+  dependencies:
+    "@swc/wasm" "1.2.130"
+
+"@swc/core-win32-x64-msvc@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.3.11.tgz#c2764abec1ddeebda52bc86a951596fb12518db9"
+  integrity sha512-cDF4qBQLf3U0KypnLn3T1HtE12QmEplPGjWs2Xd/hzVkjsPixVR8XIgLlczsj7Pk7Of7VDnUDLIl52aIdgTm8w==
+
+"@swc/core@^1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@swc/core/-/core-1.3.11.tgz#6525610caa101cc966f6cc047250d704243e37b0"
+  integrity sha512-lnCnnnNCsnbrhW/gwkoN0sAeIqOyoHLS4ZB20xmPJjKVfvTnJrAcNnLSiwlYdcoUSFqT2GYZjUAG6usEzRQASA==
+  optionalDependencies:
+    "@swc/core-android-arm-eabi" "1.3.11"
+    "@swc/core-android-arm64" "1.3.11"
+    "@swc/core-darwin-arm64" "1.3.11"
+    "@swc/core-darwin-x64" "1.3.11"
+    "@swc/core-freebsd-x64" "1.3.11"
+    "@swc/core-linux-arm-gnueabihf" "1.3.11"
+    "@swc/core-linux-arm64-gnu" "1.3.11"
+    "@swc/core-linux-arm64-musl" "1.3.11"
+    "@swc/core-linux-x64-gnu" "1.3.11"
+    "@swc/core-linux-x64-musl" "1.3.11"
+    "@swc/core-win32-arm64-msvc" "1.3.11"
+    "@swc/core-win32-ia32-msvc" "1.3.11"
+    "@swc/core-win32-x64-msvc" "1.3.11"
+
+"@swc/wasm@1.2.122":
+  version "1.2.122"
+  resolved "https://registry.yarnpkg.com/@swc/wasm/-/wasm-1.2.122.tgz#87a5e654b26a71b2e84b801f41e45f823b856639"
+  integrity sha512-sM1VCWQxmNhFtdxME+8UXNyPNhxNu7zdb6ikWpz0YKAQQFRGT5ThZgJrubEpah335SUToNg8pkdDF7ibVCjxbQ==
+
+"@swc/wasm@1.2.130":
+  version "1.2.130"
+  resolved "https://registry.yarnpkg.com/@swc/wasm/-/wasm-1.2.130.tgz#88ac26433335d1f957162a9a92f1450b73c176a0"
+  integrity sha512-rNcJsBxS70+pv8YUWwf5fRlWX6JoY/HJc25HD/F8m6Kv7XhJdqPPMhyX6TKkUBPAG7TWlZYoxa+rHAjPy4Cj3Q==
+
 "@swimlane/ngx-datatable@^20.0.0":
   version "20.0.0"
   resolved "https://registry.npmjs.org/@swimlane/ngx-datatable/-/ngx-datatable-20.0.0.tgz"
@@ -939,6 +1045,14 @@ antd@^4.23.4:
     rc-util "^5.22.5"
     scroll-into-view-if-needed "^2.2.25"
 
+anymatch@~3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.2.tgz#c0557c096af32f106198f4f4e2a383537e378716"
+  integrity sha512-P43ePfOAIupkguHUycrc4qJ9kz8ZiuOUijaETwX7THt0Y/GNK7v0aa8rY816xWjZ7rJdA5XdMcpVFTKMq+RvWg==
+  dependencies:
+    normalize-path "^3.0.0"
+    picomatch "^2.0.4"
+
 argparse@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npmjs.org/argparse/-/argparse-2.0.1.tgz"
@@ -999,6 +1113,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+binary-extensions@^2.0.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
+  integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
+
 bootstrap@^5.2.0:
   version "5.2.2"
   resolved "https://registry.npmjs.org/bootstrap/-/bootstrap-5.2.2.tgz"
@@ -1012,7 +1131,7 @@ brace-expansion@^1.1.7:
     balanced-match "^1.0.0"
     concat-map "0.0.1"
 
-braces@^3.0.2:
+braces@^3.0.2, braces@~3.0.2:
   version "3.0.2"
   resolved "https://registry.npmjs.org/braces/-/braces-3.0.2.tgz"
   integrity sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==
@@ -1083,6 +1202,21 @@ chart.js@^3.5.1:
   version "3.9.1"
   resolved "https://registry.npmjs.org/chart.js/-/chart.js-3.9.1.tgz"
   integrity sha512-Ro2JbLmvg83gXF5F4sniaQ+lTbSv18E+TIf2cOeiH1Iqd2PGFOtem+DUufMZsCJwFE7ywPOpfXFBwRTGq7dh6w==
+
+chokidar@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
+  integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
+  dependencies:
+    anymatch "~3.1.2"
+    braces "~3.0.2"
+    glob-parent "~5.1.2"
+    is-binary-path "~2.1.0"
+    is-glob "~4.0.1"
+    normalize-path "~3.0.0"
+    readdirp "~3.6.0"
+  optionalDependencies:
+    fsevents "~2.3.2"
 
 classnames@2.x, classnames@^2.2.1, classnames@^2.2.3, classnames@^2.2.5, classnames@^2.2.6, classnames@^2.3.1:
   version "2.3.1"
@@ -1735,7 +1869,7 @@ get-symbol-description@^1.0.0:
     call-bind "^1.0.2"
     get-intrinsic "^1.1.1"
 
-glob-parent@^5.1.2:
+glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
   resolved "https://registry.npmjs.org/glob-parent/-/glob-parent-5.1.2.tgz"
   integrity sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==
@@ -1893,6 +2027,13 @@ is-bigint@^1.0.1:
   dependencies:
     has-bigints "^1.0.1"
 
+is-binary-path@~2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/is-binary-path/-/is-binary-path-2.1.0.tgz#ea1f7f3b80f064236e83470f86c09c254fb45b09"
+  integrity sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==
+  dependencies:
+    binary-extensions "^2.0.0"
+
 is-boolean-object@^1.1.0:
   version "1.1.2"
   resolved "https://registry.npmjs.org/is-boolean-object/-/is-boolean-object-1.1.2.tgz"
@@ -1925,7 +2066,7 @@ is-extglob@^2.1.1:
   resolved "https://registry.npmjs.org/is-extglob/-/is-extglob-2.1.1.tgz"
   integrity sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==
 
-is-glob@^4.0.0, is-glob@^4.0.1, is-glob@^4.0.3:
+is-glob@^4.0.0, is-glob@^4.0.1, is-glob@^4.0.3, is-glob@~4.0.1:
   version "4.0.3"
   resolved "https://registry.npmjs.org/is-glob/-/is-glob-4.0.3.tgz"
   integrity sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==
@@ -2205,6 +2346,11 @@ node-releases@^2.0.6:
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.6.tgz#8a7088c63a55e493845683ebf3c828d8c51c5503"
   integrity sha512-PiVXnNuFm5+iYkLBNeq5211hvO38y63T0i2KKh2KnUs3RpzJ+JtODFjkD8yjLwnDkTYF1eKXheUwdssR+NRZdg==
 
+normalize-path@^3.0.0, normalize-path@~3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
+  integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
+
 object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz"
@@ -2358,7 +2504,7 @@ picocolors@^1.0.0:
   resolved "https://registry.npmjs.org/picocolors/-/picocolors-1.0.0.tgz"
   integrity sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==
 
-picomatch@^2.3.1:
+picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.3.1:
   version "2.3.1"
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.3.1.tgz"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
@@ -2903,6 +3049,13 @@ react@^18.0.0:
   dependencies:
     loose-envify "^1.1.0"
 
+readdirp@~3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/readdirp/-/readdirp-3.6.0.tgz#74a370bd857116e245b29cc97340cd431a02a6c7"
+  integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
+  dependencies:
+    picomatch "^2.2.1"
+
 regenerator-runtime@^0.13.4:
   version "0.13.9"
   resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz"
@@ -3192,6 +3345,22 @@ unbox-primitive@^1.0.2:
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
 
+unplugin-swc@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/unplugin-swc/-/unplugin-swc-1.3.2.tgz#4c859896ce33a46f66033ba66290b33fb886a248"
+  integrity sha512-x0+NTM4NR1jWpailVhK5sXO9svyL4iWZ+yah0WZ1G+SaI1hPysa95nVSzXqLP7y4+MKTO17wP+EVqjrREqgBsw==
+  dependencies:
+    unplugin "^0.6.0"
+
+unplugin@^0.6.0:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/unplugin/-/unplugin-0.6.3.tgz#b8721e2b163a410a7efed726e6a0fc6fbadf975a"
+  integrity sha512-CoW88FQfCW/yabVc4bLrjikN9HC8dEvMU4O7B6K2jsYMPK0l6iAnd9dpJwqGcmXJKRCU9vwSsy653qg+RK0G6A==
+  dependencies:
+    chokidar "^3.5.3"
+    webpack-sources "^3.2.3"
+    webpack-virtual-modules "^0.4.3"
+
 update-browserslist-db@^1.0.0:
   version "1.0.4"
   resolved "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.0.4.tgz"
@@ -3244,6 +3413,16 @@ vite@^3.1.6:
     rollup "~2.78.0"
   optionalDependencies:
     fsevents "~2.3.2"
+
+webpack-sources@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.2.3.tgz#2d4daab8451fd4b240cc27055ff6a0c2ccea0cde"
+  integrity sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==
+
+webpack-virtual-modules@^0.4.3:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/webpack-virtual-modules/-/webpack-virtual-modules-0.4.5.tgz#e476842dab5eafb7beb844aa2f747fc12ebbf6ec"
+  integrity sha512-8bWq0Iluiv9lVf9YaqWQ9+liNgXSHICm+rg544yRgGYaR8yXZTVBaHZkINZSB2yZSWo4b0F6MIxqJezVfOEAlg==
 
 which-boxed-primitive@^1.0.2:
   version "1.0.2"
