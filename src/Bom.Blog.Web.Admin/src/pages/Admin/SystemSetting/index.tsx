@@ -1,9 +1,7 @@
 import { Button, Checkbox, Col, Form, InputNumber, message, Row, Space } from "antd";
 import { diff } from "just-diff";
-import { keys, set } from "mobx";
 import { useEffect, useState } from "react";
 import { upperCaseFirst } from "upper-case-first";
-import { SettingDto } from "../../../data/models/abp/settingDto";
 import { useAppConfig, useStores } from "../../../hooks/useStore";
 import { transformToZH } from "../../../util/formTransform";
 
@@ -11,13 +9,26 @@ function SystemSetting() {
     const [settingform] = Form.useForm();
     const { applicationConfigurationStore } = useAppConfig();
     const { settingStore } = useStores();
-    const [setting, setSetting] = useState<Record<string, string>>({})
+    const [setting, setSetting] = useState<Record<string, string | boolean>>({})
     useEffect(() => {
         settingform.setFieldsValue(setting);
     }, [setting]);
     useEffect(() => {
         applicationConfigurationStore.Get().then((config) => {
-            setSetting(config.setting.values);
+            const temp = config.setting.values;
+            console.log(temp);
+            const kv = temp as Record<string, string | boolean>;
+            Object.keys(temp).forEach((key) => {
+                console.log(temp[key] + " " + typeof temp[key]);
+                const value = upperCaseFirst(temp[key]);
+                if (value === "True") {
+                    kv[key] = true;
+                }
+                if (value === "False") {
+                    kv[key] = false;
+                }
+            });
+            setSetting(kv);
         });
     }, []);
     const createFormItems = () => {
@@ -25,7 +36,8 @@ function SystemSetting() {
         delete kv["Abp.Timing.TimeZone"];
         delete kv["Abp.Localization.DefaultLanguage"];
         const items = Object.keys(kv).map((key) => {
-            if (kv[key] === "True" || kv[key] === "False") {
+            console.log(typeof kv[key]);
+            if (typeof kv[key] === "boolean") {
                 return (
                     <Col span={12}>
                         <Form.Item name={key} label={transformToZH(key)} valuePropName='checked' key={key}>
@@ -48,17 +60,20 @@ function SystemSetting() {
         return items;
     }
     const updateEmailSetting = async (values: any) => {
-        for (const key of Object.keys(values)) {
-            values[key] = upperCaseFirst(values[key].toString());
+        const changes = diff(setting, values);
+        if (changes.length === 0) {
+            return;
         }
-        const sd = diff(setting, values);
-        console.log(sd);
-        sd.forEach(async item => {
-            const key = item.path[0] as string;
-            const value = item.value;
-            await settingStore.changeSetting({ key, value });
-        });
-        message.success("更新成功");
+        try {
+            changes.forEach(async item => {
+                const key = item.path[0] as string;
+                const value = upperCaseFirst(item.value.toString());
+                await settingStore.changeSetting({ key, value });
+                message.success(`${transformToZH(key)}更新成功`);
+            });
+            setSetting(values);
+        }
+        catch (e) { }
     }
 
     return (<div>
