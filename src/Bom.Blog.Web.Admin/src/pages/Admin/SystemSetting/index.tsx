@@ -1,13 +1,16 @@
 import { Button, Checkbox, Col, Form, InputNumber, message, Row, Space } from "antd";
-import { set } from "mobx";
+import { diff } from "just-diff";
+import { keys, set } from "mobx";
 import { useEffect, useState } from "react";
+import { upperCaseFirst } from "upper-case-first";
 import { SettingDto } from "../../../data/models/abp/settingDto";
-import { useAppConfig } from "../../../hooks/useStore";
+import { useAppConfig, useStores } from "../../../hooks/useStore";
 import { transformToZH } from "../../../util/formTransform";
 
 function SystemSetting() {
     const [settingform] = Form.useForm();
     const { applicationConfigurationStore } = useAppConfig();
+    const { settingStore } = useStores();
     const [setting, setSetting] = useState<Record<string, string>>({})
     useEffect(() => {
         settingform.setFieldsValue(setting);
@@ -44,8 +47,17 @@ function SystemSetting() {
         });
         return items;
     }
-    const updateEmailSetting = async (values: SettingDto) => {
-        console.log(values);
+    const updateEmailSetting = async (values: any) => {
+        for (const key of Object.keys(values)) {
+            values[key] = upperCaseFirst(values[key].toString());
+        }
+        const sd = diff(setting, values);
+        console.log(sd);
+        sd.forEach(async item => {
+            const key = item.path[0] as string;
+            const value = item.value;
+            await settingStore.changeSetting({ key, value });
+        });
         message.success("更新成功");
     }
 

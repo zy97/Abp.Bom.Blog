@@ -46,6 +46,7 @@ namespace Bom.Blog
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpEmailingModule),
     typeof(AbpMailKitModule),
+    typeof(AbpSwashbuckleModule),
     typeof(AbpBackgroundWorkersModule),
     typeof(AbpEventBusCapModule)
     )]
@@ -189,6 +190,16 @@ namespace Bom.Blog
             app.UseUnitOfWork();
             app.UseAbpOpenIddictValidation();
             app.UseAuthorization();
+            app.UseSwagger();
+            app.UseAbpSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Blog API");
+                //添加miniprofile的js到swagger中，这样swagger就能查看每个接口的调用时间
+                //c.HeadContent += """<script async id="mini-profiler" src="/profiler/includes.min.js?v=4.2.22+4563a9e1ab" data-version="4.2.22+4563a9e1ab" data-path="/profiler/" data-position="Left" data-scheme="Light" data-authorized="true" data-max-traces="15" data-toggle-shortcut="Alt+P" data-trivial-milliseconds="2.0" data-ignored-duplicate-execute-types="Open,OpenAsync,Close,CloseAsync"></script>""";
+                var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
+                c.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
+                c.OAuthScopes("Blog");
+            });
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
