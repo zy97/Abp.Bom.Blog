@@ -84,7 +84,6 @@ namespace Bom.Blog
             {
                 options.Resources.Get<BlogResource>().AddBaseTypes(typeof(AbpUiResource));
 
-                options.Languages.Add(new LanguageInfo("en", "en", "English"));
                 options.Languages.Add(new LanguageInfo("zh-Hans", "zh-Hans", "简体中文"));
             });
 
