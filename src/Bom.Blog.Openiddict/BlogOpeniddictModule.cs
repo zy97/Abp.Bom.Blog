@@ -2,6 +2,8 @@ using Bom.Blog.EntityFrameworkCore;
 using Bom.Blog.Localization;
 using Bom.Blog.MultiTenancy;
 using Localization.Resources.AbpUi;
+using Medallion.Threading;
+using Medallion.Threading.Redis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.DataProtection;
@@ -104,7 +106,7 @@ namespace Bom.Blog
 
             Configure<AbpBackgroundJobOptions>(options =>
             {
-                options.IsJobExecutionEnabled = true;
+                options.IsJobExecutionEnabled = false;
             });
 
             Configure<AbpDistributedCacheOptions>(options =>
@@ -119,6 +121,13 @@ namespace Bom.Blog
                 var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]);
                 dataProtecgtionBuilder.PersistKeysToStackExchangeRedis(redis, "Blog-Protection-Keys");
             }
+
+            context.Services.AddSingleton<IDistributedLockProvider>(sp =>
+            {
+                var connection = ConnectionMultiplexer
+                    .Connect(configuration["Redis:Configuration"]);
+                return new RedisDistributedSynchronizationProvider(connection.GetDatabase());
+            });
 
             context.Services.AddCors(options =>
             {
@@ -168,12 +177,13 @@ namespace Bom.Blog
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();
+            app.UseAbpOpenIddictValidation();
+
             if (MultiTenancyConsts.IsEnabled)
             {
                 app.UseMultiTenancy();
             }
             app.UseUnitOfWork();
-            app.UseAbpOpenIddictValidation();
             app.UseAuthorization();
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
