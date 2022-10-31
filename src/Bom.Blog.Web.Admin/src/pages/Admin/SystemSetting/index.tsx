@@ -73,7 +73,8 @@ function SystemSetting() {
             });
             setSetting(values);
         }
-        catch (e) { }
+        catch (e) {
+        }
     }
 
     return (<div>
