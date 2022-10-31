@@ -1,7 +1,6 @@
 using Bom.Blog.EntityFrameworkCore;
 using Bom.Blog.Localization;
 using Bom.Blog.MultiTenancy;
-using EasyAbp.Abp.EventBus.Cap;
 using Localization.Resources.AbpUi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
@@ -46,8 +45,7 @@ namespace Bom.Blog
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpEmailingModule),
     typeof(AbpMailKitModule),
-    typeof(AbpBackgroundWorkersModule),
-    typeof(AbpEventBusCapModule)
+    typeof(AbpBackgroundWorkersModule)
     )]
     public class BlogOpeniddictModule : AbpModule
     {
@@ -68,17 +66,6 @@ namespace Bom.Blog
             var hostingEnviroment = context.Services.GetHostingEnvironment();
             var configuration = context.Services.GetConfiguration();
 
-            context.AddCapEventBus(options =>
-            {
-                // If you are using EF, you need to add:
-                options.SetCapDbConnectionString(configuration["ConnectionStrings:Default"]);
-                options.UseEntityFramework<BlogDbContext>();
-
-                // CAP has multiple MQ implementations, e.g. RabbitMQ:
-                options.UseRabbitMQ("localhost");
-
-                // We provide permission named "CapDashboard.Manage" for authorization.
-            });
 
             Configure<AbpLocalizationOptions>(options =>
             {
