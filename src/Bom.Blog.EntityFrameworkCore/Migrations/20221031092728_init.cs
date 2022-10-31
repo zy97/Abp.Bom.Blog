@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bom.Blog.Migrations
 {
-    public partial class initial : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -362,87 +362,6 @@ namespace Bom.Blog.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AppCategories",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DisplayName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ExtraProperties = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppCategories", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "AppFriendLinks",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Url = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ExtraProperties = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppFriendLinks", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "AppTags",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DisplayName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ExtraProperties = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppTags", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "OpenIddictApplications",
                 columns: table => new
                 {
@@ -790,44 +709,6 @@ namespace Bom.Blog.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AppPosts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Title = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Author = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Url = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Markdown = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CategoryId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    ExtraProperties = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppPosts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AppPosts_AppCategories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "AppCategories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "OpenIddictAuthorizations",
                 columns: table => new
                 {
@@ -890,31 +771,6 @@ namespace Bom.Blog.Migrations
                         name: "FK_AbpEntityPropertyChanges_AbpEntityChanges_EntityChangeId",
                         column: x => x.EntityChangeId,
                         principalTable: "AbpEntityChanges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "AppPostTag",
-                columns: table => new
-                {
-                    PostsId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    TagsId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppPostTag", x => new { x.PostsId, x.TagsId });
-                    table.ForeignKey(
-                        name: "FK_AppPostTag_AppPosts_PostsId",
-                        column: x => x.PostsId,
-                        principalTable: "AppPosts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AppPostTag_AppTags_TagsId",
-                        column: x => x.TagsId,
-                        principalTable: "AppTags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -1125,16 +981,6 @@ namespace Bom.Blog.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppPosts_CategoryId",
-                table: "AppPosts",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppPostTag_TagsId",
-                table: "AppPostTag",
-                column: "TagsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 table: "OpenIddictApplications",
                 column: "ClientId");
@@ -1219,12 +1065,6 @@ namespace Bom.Blog.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AppFriendLinks");
-
-            migrationBuilder.DropTable(
-                name: "AppPostTag");
-
-            migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
 
             migrationBuilder.DropTable(
@@ -1246,19 +1086,10 @@ namespace Bom.Blog.Migrations
                 name: "AbpUsers");
 
             migrationBuilder.DropTable(
-                name: "AppPosts");
-
-            migrationBuilder.DropTable(
-                name: "AppTags");
-
-            migrationBuilder.DropTable(
                 name: "OpenIddictAuthorizations");
 
             migrationBuilder.DropTable(
                 name: "AbpAuditLogs");
-
-            migrationBuilder.DropTable(
-                name: "AppCategories");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictApplications");

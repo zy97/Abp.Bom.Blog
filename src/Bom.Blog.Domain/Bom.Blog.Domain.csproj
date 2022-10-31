@@ -26,6 +26,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Abp\Setting\" />
+	  <Folder Include="Categories\" />
 	</ItemGroup>
 
 </Project>

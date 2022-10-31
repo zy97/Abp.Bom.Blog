@@ -1,13 +1,9 @@
-﻿using Bom.Blog.Categories;
-using Bom.Blog.Posts;
-using Bom.Blog.Tags;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
-using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -29,9 +25,6 @@ public class BlogDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
-    public DbSet<Post> Posts { get; set; }
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<Tag> Tags { get; set; }
 
     #region Entities from the modules
 
@@ -91,32 +84,5 @@ public class BlogDbContext :
         //    //...
         //});
 
-        builder.Entity<Post>(b =>
-        {
-            b.ToTable(BlogConsts.DbTablePrefix + "Posts", BlogConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
-            b.HasKey(i => i.Id);
-            b.Property(i => i.Title).IsRequired().HasMaxLength(PostConst.MaxTitleLength);
-            b.Property(i => i.Author).HasMaxLength(PostConst.MaxAuthorLength);
-            b.Property(i => i.Markdown).IsRequired();
-            b.HasMany(i => i.Tags).WithMany(i => i.Posts).UsingEntity(i => i.ToTable(BlogConsts.DbTablePrefix + nameof(Post) + nameof(Tag)));
-        });
-        builder.Entity<Category>(b =>
-        {
-            b.ToTable(BlogConsts.DbTablePrefix + "Categories", BlogConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
-            b.HasKey(i => i.Id);
-            b.Property(i => i.Name).IsRequired().HasMaxLength(CategoryConst.MaxNameLength);
-            b.Property(i => i.DisplayName).IsRequired().HasMaxLength(CategoryConst.MaxDisplayNameLength);
-            b.HasIndex(i => i.Name);
-        });
-        builder.Entity<Tag>(b =>
-        {
-            b.ToTable(BlogConsts.DbTablePrefix + "Tags", BlogConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
-            b.HasKey(i => i.Id);
-            b.Property(i => i.Name).IsRequired().HasMaxLength(TagConst.MaxNameLength);
-            b.Property(i => i.DisplayName).IsRequired().HasMaxLength(TagConst.MaxDisplayNameLength);
-        });
     }
 }
