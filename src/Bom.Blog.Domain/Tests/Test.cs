@@ -7,25 +7,32 @@ namespace Bom.Blog.Tests
 {
     public class Test : FullAuditedAggregateRoot<Guid>
     {
-        public string Name { get; private set; }
-        public string Url { get; private set; }
+        public string Aaa { get; private set; }
+        public string Bbb { get; private set; }
         private Test()
         {
 
         }
-        internal Test(Guid id, [NotNull] string name, [NotNull] string url) : base(id)
+        internal Test(Guid id, [NotNull] string aaa, [NotNull] string bbb) : base(id)
         {
-            Set(name, url);
+            Set(aaa, bbb);
         }
-        private void Set([NotNull] string name, [NotNull] string url)
+        private void Set([NotNull] string aaa, [NotNull] string bbb)
         {
-            Name = Check.NotNullOrWhiteSpace(name, nameof(name), FriendLinkConst.MaxNameLength);
-            Url = Check.NotNullOrWhiteSpace(url, nameof(url), FriendLinkConst.MaxUrlLength);
+            Aaa = Check.NotNullOrWhiteSpace(aaa, nameof(aaa), TestConst.TestConstA);
+            Bbb = Check.NotNullOrWhiteSpace(bbb, nameof(bbb), TestConst.TestConstB);
         }
-        internal Test Change([NotNull] string name, [NotNull] string url)
+        internal Test Change([NotNull] string aaa, [NotNull] string bbb)
         {
-            Set(name, url);
+            Set(aaa, bbb);
             return this;
         }
+    }
+
+    //一般常量定义在domain.shared项目中
+    public static class TestConst
+    {
+        public const int TestConstA = 24;
+        public const int TestConstB = 100;
     }
 }
