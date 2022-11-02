@@ -1,16 +1,10 @@
 import { RouteObject, useRoutes } from "react-router-dom";
-import Post from "./pages/BlogManage/Pages/Post";
-import Category from "./pages/BlogManage/Pages/Category";
-import FriendLink from "./pages/BlogManage/Pages/FriendLink";
-import Tags from "./pages/BlogManage/Pages/Tag/Index";
-import AddOrEditPost from "./pages/BlogManage/Pages/Post/AddOrNewPost";
 import NotFound from "./pages/NotFound";
 import App from "./App";
-import ListView from "./pages/BlogManage/Pages/Post/ListView";
 import AuditLog from "./pages/Admin/AuditLog";
 import User from "./pages/Admin/User";
 import Role from "./pages/Admin/Role";
-import { useDebounceEffect, useMount } from "ahooks";
+import { useMount } from "ahooks";
 import { useAppConfig } from "./hooks/useStore";
 import { toJS } from "mobx";
 import { filterPermissionRoute } from "./util/permission";
@@ -32,7 +26,7 @@ export const routerConfig: Route[] = [
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <Post /> },
+      { index: true, element: <User /> },
       {
         title: "系统管理",
         path: "/sysmanage",
@@ -43,57 +37,6 @@ export const routerConfig: Route[] = [
           { title: "邮件设置", path: "emailsetting", element: <EmailSetting />, permission: "SettingManagement.Emailing" },
           { title: "租户设置", path: "tenants", element: <Tenant />, permission: "AbpTenantManagement.Tenants" },
           { title: "系统设置", path: "systemSetting", element: <SystemSetting />, permission: "Blog.SystemSetting" },
-        ],
-      },
-      {
-        title: "博客管理",
-        path: "/blogmanage",
-        children: [
-          {
-            index: true,
-            element: <Post />,
-          },
-          {
-            title: "博客",
-            path: "post",
-            permission: "Blog.Admin",
-            element: <Post />,
-            children: [
-              {
-                index: true,
-                showInMenu: false,
-                element: <ListView />,
-              },
-              {
-                path: "add",
-                showInMenu: false,
-                element: <AddOrEditPost />,
-              },
-              {
-                path: ":postid",
-                showInMenu: false,
-                element: <AddOrEditPost />,
-              },
-            ],
-          },
-          {
-            title: "标签",
-            path: "tag",
-            permission: "Blog.Admin",
-            element: <Tags />,
-          },
-          {
-            title: "目录",
-            path: "category",
-            permission: "Blog.Admin",
-            element: <Category />,
-          },
-          {
-            title: "友情链接",
-            path: "friendlink",
-            element: <FriendLink />,
-            permission: "Blog.Admin"
-          },
         ],
       },
       {
