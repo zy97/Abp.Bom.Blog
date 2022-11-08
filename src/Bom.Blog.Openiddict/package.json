@@ -3,6 +3,6 @@
   "name": "my-app-openiddict",
   "private": true,
   "devDependencies": {
-    "@abp/aspnetcore.mvc.ui.theme.basic": "~6.0.0"
+    "@abp/aspnetcore.mvc.ui.theme.basic": "~6.0.1"
   }
 }
