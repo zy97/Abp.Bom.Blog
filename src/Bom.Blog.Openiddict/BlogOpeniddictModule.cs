@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Linq;
 using Bom.Blog.EntityFrameworkCore;
 using Bom.Blog.Localization;
 using Bom.Blog.MultiTenancy;
@@ -10,9 +13,6 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
-using System;
-using System.IO;
-using System.Linq;
 using Volo.Abp;
 using Volo.Abp.Account;
 using Volo.Abp.Account.Web;
@@ -148,12 +148,12 @@ namespace Bom.Blog
                 });
             });
 
-            context.Services.AddAuthentication().AddGitHub(github =>
-            {
-                github.ClientId = configuration["Authentication:GitHub:ClientId"];
-                github.ClientSecret = configuration["Authentication:GitHub:ClientSecret"];
-                github.Scope.Add("user:email");
-            });
+            //context.Services.AddAuthentication().AddGitHub(github =>
+            //{
+            //    github.ClientId = configuration["Authentication:GitHub:ClientId"];
+            //    github.ClientSecret = configuration["Authentication:GitHub:ClientSecret"];
+            //    github.Scope.Add("user:email");
+            //});
 
             //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         }
