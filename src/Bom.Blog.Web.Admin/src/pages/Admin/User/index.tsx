@@ -162,8 +162,8 @@ function User() {
         }}
       >
         <Form form={modalForm} name="form_in_modal" labelCol={{ span: 7 }} wrapperCol={{ span: 17 }} >
-          <Tabs defaultActiveKey="1">
-            <Tabs.TabPane tab="用户信息" key="1">
+          <Tabs defaultActiveKey="1" items={[{
+            label: "用户信息", key: "1", children: (<>
               <Form.Item name="id" label="id" hidden>
                 <Input />
               </Form.Item>
@@ -193,16 +193,16 @@ function User() {
               </Form.Item>
               <Form.Item name="concurrencyStamp" label="concurrencyStamp" hidden>
                 <Input />
-              </Form.Item>
-
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="角色" key="2">
+              </Form.Item></>)
+          }, {
+            label: "角色", key: "2", children: (
               <Form.Item name="roleNames" label="">
                 <Checkbox.Group style={{ width: '100%' }}>
                   {roles.map((item) => { return <Row key={item.name}><Checkbox value={item.name}>{item.name}</Checkbox></Row> })}
                 </Checkbox.Group>
               </Form.Item>
-            </Tabs.TabPane>
+            )
+          }]}>
           </Tabs>
         </Form>
       </Modal>

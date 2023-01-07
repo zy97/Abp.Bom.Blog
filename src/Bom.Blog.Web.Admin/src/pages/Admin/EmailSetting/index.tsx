@@ -31,71 +31,80 @@ function EmailSetting() {
         setEmail(values.defaultFromAddress);
         message.success("更新成功");
     }
+    const tabs = () => {
+        const tabs = [];
+        tabs.push({
+            label: "邮件设置",
+            key: '1',
+            children: (
+                <Form name="form_in_modal" form={emailSettingform} labelCol={{ span: 2 }} wrapperCol={{ span: 10 }} onFinish={updateEmailSetting} >
+                    <Form.Item name="smtpHost" label="smtp主机" >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="smtpPort" label="smtp端口" >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="smtpUserName" label="smtp用户名" >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="smtpPassword" label="smtp密码" >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="smtpDomain" label="smtp域">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="defaultFromAddress" label="默认发送地址" rules={[getEmailValidationRule()]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="defaultFromDisplayName" label="默认发送地址展示名">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="smtpEnableSsl" label="启用Ssl" >
+                        <Switch />
+                    </Form.Item>
+                    <Form.Item name="smtpUseDefaultCredentials" label="使用默认凭证" >
+                        <Switch />
+                    </Form.Item>
+                    <Form.Item wrapperCol={{ offset: 10, span: 16 }} style={{ marginBottom: "0px" }}>
+                        <Space>
+                            <Button type="primary" htmlType="submit">提交</Button>
+                            <Button type="primary" >取消</Button>
+                        </Space>
+                    </Form.Item>
 
-    return (
-        <div>
-            <Tabs defaultActiveKey="1" tabPosition="top" >
-                <Tabs.TabPane tab="邮件设置" key="1">
-                    <Form name="form_in_modal" form={emailSettingform} labelCol={{ span: 2 }} wrapperCol={{ span: 10 }} onFinish={updateEmailSetting} >
-                        <Form.Item name="smtpHost" label="smtp主机" >
+                </Form>
+            ),
+        })
+        if (permissions["SettingManagement.Emailing.Test"]) {
+            tabs.push({
+                label: "发送测试邮件",
+                key: '2',
+                children: (
+                    <Form name="form_in_modal" form={sendEmailform} labelCol={{ span: 2 }} wrapperCol={{ span: 20 }} onFinish={sendTestEmail}>
+                        <Form.Item name="targetEmailAddress" label="接收者邮箱" rules={[getRequiredRule("接收者邮箱"), getEmailValidationRule()]}>
                             <Input />
                         </Form.Item>
-                        <Form.Item name="smtpPort" label="smtp端口" >
+                        <Form.Item name="subject" label="主题" rules={[getRequiredRule("主题")]}>
                             <Input />
                         </Form.Item>
-                        <Form.Item name="smtpUserName" label="smtp用户名" >
-                            <Input />
+                        <Form.Item name="body" label="内容" rules={[getRequiredRule("内容")]} >
+                            <Editor placeholder="请输入一些内容" />
                         </Form.Item>
-                        <Form.Item name="smtpPassword" label="smtp密码" >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item name="smtpDomain" label="smtp域">
-                            <Input />
-                        </Form.Item>
-                        <Form.Item name="defaultFromAddress" label="默认发送地址" rules={[getEmailValidationRule()]}>
-                            <Input />
-                        </Form.Item>
-                        <Form.Item name="defaultFromDisplayName" label="默认发送地址展示名">
-                            <Input />
-                        </Form.Item>
-                        <Form.Item name="smtpEnableSsl" label="启用Ssl" >
-                            <Switch />
-                        </Form.Item>
-                        <Form.Item name="smtpUseDefaultCredentials" label="使用默认凭证" >
-                            <Switch />
-                        </Form.Item>
-                        <Form.Item wrapperCol={{ offset: 10, span: 16 }} style={{ marginBottom: "0px" }}>
+                        <Form.Item wrapperCol={{ offset: 10, span: 16 }} style={{ marginBottom: "100px" }}>
                             <Space>
                                 <Button type="primary" htmlType="submit">提交</Button>
                                 <Button type="primary" >取消</Button>
                             </Space>
                         </Form.Item>
-
                     </Form>
-                </Tabs.TabPane>
-                {permissions["SettingManagement.Emailing.Test"] &&
-                    <Tabs.TabPane tab="发送测试邮件" key="2">
-                        <Form name="form_in_modal" form={sendEmailform} labelCol={{ span: 2 }} wrapperCol={{ span: 20 }} onFinish={sendTestEmail}>
-                            <Form.Item name="targetEmailAddress" label="接收者邮箱" rules={[getRequiredRule("接收者邮箱"), getEmailValidationRule()]}>
-                                <Input />
-                            </Form.Item>
-                            <Form.Item name="subject" label="主题" rules={[getRequiredRule("主题")]}>
-                                <Input />
-                            </Form.Item>
-                            <Form.Item name="body" label="内容" rules={[getRequiredRule("内容")]} >
-                                <Editor placeholder="请输入一些内容" />
-                            </Form.Item>
-                            <Form.Item wrapperCol={{ offset: 10, span: 16 }} style={{ marginBottom: "100px" }}>
-                                <Space>
-                                    <Button type="primary" htmlType="submit">提交</Button>
-                                    <Button type="primary" >取消</Button>
-                                </Space>
-                            </Form.Item>
-                        </Form>
-                    </Tabs.TabPane>
-                }
-
-            </Tabs>
+                ),
+            })
+        }
+        return tabs;
+    }
+    return (
+        <div>
+            <Tabs defaultActiveKey="1" tabPosition="top" items={tabs()}></Tabs>
         </div >
     );
 }

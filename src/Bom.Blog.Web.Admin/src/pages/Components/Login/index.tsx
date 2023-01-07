@@ -1,5 +1,5 @@
 import { Button, Dropdown, Form, Input, Menu, message, Modal, Space, Tabs } from "antd";
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { useAuth } from "react-oidc-context";
 import { useDebounceEffect } from "ahooks";
 import { useState } from "react";
@@ -7,7 +7,7 @@ import { getEmailValidationRule, getPhoneValidationRule, getRequiredRule, getTwo
 import ConcurrencyStamp from "../../../components/Form/ConcurrencyStamp";
 import { useStores } from "../../../hooks/useStore";
 import { baseUrl } from "../../../environments/environment";
-
+import type { MenuProps } from 'antd';
 function Login() {
     const auth = useAuth();
     const [isProfileModalOpen, setProfileModalOpen] = useState(false);
@@ -54,23 +54,33 @@ function Login() {
         console.log(key);
         setActiveTab(key);
     }
-    const menu = (
-        <Menu
-            items={[
-                { key: '1', label: <a onClick={() => { showProfileModal(); }}>我的信息</a> },
-                { key: '2', label: <a onClick={logout} >退出登录</a> },
-            ]} />
-    );
+    // const menu = (
+    //     <Menu
+    //         items={[
+    //             { key: '1', label: <a onClick={() => { showProfileModal(); }}>我的信息</a> },
+    //             { key: '2', label: <a onClick={logout} >退出登录</a> },
+    //         ]} />
+    // );
+    const items: MenuProps['items'] = [
+        {
+            key: '1',
+            label: <a onClick={() => { showProfileModal(); }}>我的信息</a>,
+        },
+        {
+            key: '2',
+            label: <a onClick={logout} >退出登录</a>,
+        },
+    ];
     return (
         <div>
-            {auth.isAuthenticated ? <Dropdown overlay={menu}>
+            {auth.isAuthenticated ? <Dropdown menu={{ items }}>
                 <a onClick={e => e.preventDefault()}>
                     <Space>{auth.user?.profile.preferred_username}<DownOutlined /></Space>
                 </a>
             </Dropdown> : <Button type="link" onClick={login}>登录</Button>}
             <Modal title="账户" open={isProfileModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <Tabs defaultActiveKey="1" activeKey={activeTab} tabPosition="top" onChange={tabChange}>
-                    <Tabs.TabPane tab="基本信息" key="1">
+                <Tabs defaultActiveKey="1" activeKey={activeTab} tabPosition="top" onChange={tabChange} items={[{
+                    label: "基本信息", key: "1", children: (
                         <Form name="form_in_modal" form={profileForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} >
                             <Form.Item name="userName" label="用户名" rules={[getRequiredRule("用户名")]}>
                                 <Input />
@@ -89,20 +99,20 @@ function Login() {
                             </Form.Item>
                             <ConcurrencyStamp />
                         </Form>
-                    </Tabs.TabPane>
-                    <Tabs.TabPane tab="密码更新" key="2">
-                        <Form name="form_in_modal" form={pwdForm} labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} >
-                            <Form.Item name="currentPassword" label="当前密码" rules={[getRequiredRule("当前密码")]}>
-                                <Input.Password />
-                            </Form.Item>
-                            <Form.Item name="newPassword" label="新密码" rules={[getRequiredRule("新密码")]}>
-                                <Input.Password />
-                            </Form.Item>
-                            <Form.Item name="confirmNewPassword" label="确认新密码" rules={[getRequiredRule("当前密码"), getTwoPasswordValidationRule("newPassword", "输入的两次密码不一致")]} dependencies={["newPassword"]}>
-                                <Input.Password />
-                            </Form.Item>
-                        </Form>
-                    </Tabs.TabPane>
+                    )
+                }, {
+                    label: "密码更新", key: "2", children: (<Form name="form_in_modal" form={pwdForm} labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} >
+                        <Form.Item name="currentPassword" label="当前密码" rules={[getRequiredRule("当前密码")]}>
+                            <Input.Password />
+                        </Form.Item>
+                        <Form.Item name="newPassword" label="新密码" rules={[getRequiredRule("新密码")]}>
+                            <Input.Password />
+                        </Form.Item>
+                        <Form.Item name="confirmNewPassword" label="确认新密码" rules={[getRequiredRule("当前密码"), getTwoPasswordValidationRule("newPassword", "输入的两次密码不一致")]} dependencies={["newPassword"]}>
+                            <Input.Password />
+                        </Form.Item>
+                    </Form>)
+                }]}>
                 </Tabs>
             </Modal>
         </div >

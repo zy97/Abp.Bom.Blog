@@ -155,25 +155,27 @@ function Permission(props: PermissionProp) {
         }
         onPermissionChanged(change);
     };
+    const tabs = () => {
+        return permissionGroup.groups && permissionGroup.groups.map(g => {
+            return <Tabs.TabPane tab={`${g.displayName}(${checkedCount(g.name!)}/${g.permissions.length})`} key={g.name}>
+                {g.displayName}
+                <Divider />
+                <Checkbox name={g.name} checked={allCheckStatus[g.name!]} onChange={onPermissionChange}>全选</Checkbox>
+                <Divider />
+                {g.permissions.map(p => {
+                    return <Row key={p.name}>{p.parentName !== null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> : ""}<Checkbox name={p.name} onChange={onPermissionChange} checked={allCheckStatus[p.name!]}>{p.displayName}</Checkbox></Row>
+                })}
 
+            </Tabs.TabPane>
+        })
+    }
     return (
         <>
             <Checkbox onChange={onPermissionChange} name="allCheck" checked={allCheckStatus.allCheck}>授予所有权限</Checkbox>
             <Divider />
             <Form form={permissionModalForm} name="form_in_modal" labelCol={{ span: 7 }} wrapperCol={{ span: 17 }} >
-                <Tabs defaultActiveKey="1" tabPosition="left">
-                    {permissionGroup.groups && permissionGroup.groups.map(g => {
-                        return <Tabs.TabPane tab={`${g.displayName}(${checkedCount(g.name!)}/${g.permissions.length})`} key={g.name}>
-                            {g.displayName}
-                            <Divider />
-                            <Checkbox name={g.name} checked={allCheckStatus[g.name!]} onChange={onPermissionChange}>全选</Checkbox>
-                            <Divider />
-                            {g.permissions.map(p => {
-                                return <Row key={p.name}>{p.parentName !== null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> : ""}<Checkbox name={p.name} onChange={onPermissionChange} checked={allCheckStatus[p.name!]}>{p.displayName}</Checkbox></Row>
-                            })}
+                <Tabs defaultActiveKey="1" tabPosition="left" items={tabs()}>
 
-                        </Tabs.TabPane>
-                    })}
                 </Tabs>
             </Form>
         </>
