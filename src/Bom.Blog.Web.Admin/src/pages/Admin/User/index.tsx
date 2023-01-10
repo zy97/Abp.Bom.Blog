@@ -1,7 +1,7 @@
 import { IdentityUserDto } from "@abp/ng.account.core/proxy";
 import { IdentityRoleDto } from "@abp/ng.identity/proxy";
 import { GetPermissionListResultDto, UpdatePermissionDto } from "@abp/ng.permission-management/proxy";
-import { useAntdTable, useRequest } from "ahooks";
+import { useAntdTable, useRequest, useThrottleEffect } from "ahooks";
 import { Button, Checkbox, Form, Input, message, Modal, Row, Space, Switch, Table, Tabs } from "antd";
 import { useEffect, useState } from "react";
 import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
@@ -23,11 +23,11 @@ function User() {
   const { tableProps, search } = useAntdTable(userStore.getUsers, { defaultPageSize: 10, form, debounceWait: 500, });
   const { runAsync } = useRequest(userStore.getUserById, { manual: true, });
   const [permissions, setpermissions] = useState({} as Record<string, boolean>);
-  useEffect(() => {
+  useThrottleEffect(() => {
     applicationConfigurationStore.Get().then(config => {
       setpermissions(config.auth.grantedPolicies);
     });
-  }, []);
+  }, [], { "wait": 300 });
   const deleteUser = (record: IdentityUserDto) => {
     Modal.confirm({
       title: "删除标签", content: "确定删除吗？",

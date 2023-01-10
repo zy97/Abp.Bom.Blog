@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppConfig } from "./hooks/useStore";
 import Login from "./pages/Components/Login";
-import { Route, routerConfig } from "./router";
+import { Route, routerConfig } from "./router/index";
 import { filterPermissionRoute } from "./util/permission";
 import styles from "./App.module.less";
 const { Header, Content, Footer, Sider } = Layout;

@@ -1,15 +1,14 @@
 import { ApplicationConfigurationDto } from "@abp/ng.core";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { applicationConfiguration } from "../../apis/Abp";
 
 class ApplicationConfigurationStore {
-    private config: ApplicationConfigurationDto | null
+    private config?: ApplicationConfigurationDto
     constructor() {
         makeAutoObservable(this);
-        this.config = null;
     }
     async Get() {
-        if (this.config == null) {
+        if (this.config === undefined) {
             const config = await applicationConfiguration.getApplicationConfiguration();
             this.config = config.data;
             return this.config;
@@ -17,5 +16,5 @@ class ApplicationConfigurationStore {
         return this.config;
     }
 }
-
-export default new ApplicationConfigurationStore();
+const applicationConfigurationStore = new ApplicationConfigurationStore()
+export default applicationConfigurationStore;
