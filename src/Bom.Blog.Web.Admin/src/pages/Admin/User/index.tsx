@@ -7,7 +7,7 @@ import { useState } from "react";
 import shallow from 'zustand/shallow'
 import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
 import { useAppConfig, useStores } from "../../../hooks/useStore";
-import Permission from "../../Components/Permission";
+import Permission from "../../../components/Permission";
 import styles from "./index.module.less";
 function User() {
   const { useApplicationConfigurationStore } = useAppConfig();

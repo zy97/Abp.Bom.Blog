@@ -5,7 +5,7 @@ import { Button, Checkbox, Form, Input, message, Modal, Space, Table } from "ant
 import { useEffect, useState } from "react";
 import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
 import { useAppConfig, useStores } from "../../../hooks/useStore";
-import Permission from "../../Components/Permission";
+import Permission from "../../../components/Permission";
 import styles from "./index.module.less";
 function Role() {
   const { useApplicationConfigurationStore } = useAppConfig();
