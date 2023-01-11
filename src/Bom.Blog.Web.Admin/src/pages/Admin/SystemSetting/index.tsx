@@ -18,11 +18,9 @@ function SystemSetting() {
     useEffect(() => {
         getAppConfig().then((config) => {
             const temp = config.setting.values;
-            console.log(temp);
             const kv = temp as Record<string, string | boolean>;
             Object.keys(temp).forEach((key) => {
-                console.log(temp[key] + " " + typeof temp[key]);
-                const value = upperCaseFirst(temp[key]);
+                const value = upperCaseFirst(temp[key] + "");
                 if (value === "True") {
                     kv[key] = true;
                 }
