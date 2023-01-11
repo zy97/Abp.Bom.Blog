@@ -22,15 +22,14 @@
     "axios": "^1.2.2",
     "dayjs": "^1.11.7",
     "just-diff": "^5.2.0",
-    "mobx": "^6.7.0",
-    "mobx-react": "^7.6.0",
     "oidc-client-ts": "^2.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-oidc-context": "^2.2.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.6.1",
-    "upper-case-first": "^2.0.2"
+    "upper-case-first": "^2.0.2",
+    "zustand": "^4.2.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

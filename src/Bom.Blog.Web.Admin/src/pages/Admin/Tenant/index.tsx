@@ -14,8 +14,10 @@ import {
 } from "../../../util/formValid";
 import styles from "./index.module.less";
 function Tenant() {
-    const { applicationConfigurationStore } = useAppConfig();
-    const { tenantStore } = useStores();
+    const { useApplicationConfigurationStore } = useAppConfig();
+    const getAppConfig = useApplicationConfigurationStore(state => state.Get)
+    const { useTenantsStore } = useStores();
+    const [getTenants, getTenantById, deleteTenantSvc, getHostFeatures, getTenantFeatures, updateTenant, updateHostFeatures, updateTenantFeatures, addTenant] = useTenantsStore(state => [state.getTenants, state.getTenantById, state.deleteTenant, state.getHostFeatures, state.getTenantFeatures, state.updateTenant, state.updateHostFeatures, state.updateTenantFeatures, state.addTenant])
     const [visible, setVisible] = useState(false);
     const [tenantId, setTenantId] = useState<string | null>();
     const [featureModalState, { setTrue: openFeatureModal, setFalse: closeFeatureModal }] = useBoolean(false);
@@ -25,16 +27,16 @@ function Tenant() {
     const [modalForm] = Form.useForm();
     const [permissions, setpermissions] = useState({} as Record<string, boolean>);
     useEffect(() => {
-        applicationConfigurationStore.Get().then((config) => {
+        getAppConfig().then((config) => {
             setpermissions(config.auth.grantedPolicies);
         });
     }, []);
-    const { tableProps, search } = useAntdTable(tenantStore.getTenants, {
+    const { tableProps, search } = useAntdTable(getTenants, {
         defaultPageSize: 10,
         form,
         debounceWait: 500,
     });
-    const { runAsync } = useRequest(tenantStore.getTenantById, {
+    const { runAsync } = useRequest(getTenantById, {
         manual: true,
     });
     const deleteTenant = (record: TenantDto) => {
@@ -42,7 +44,7 @@ function Tenant() {
             title: "删除标签",
             content: "确定删除吗？",
             onOk: async () => {
-                const success = await tenantStore.deleteTenant(record.id);
+                const success = await deleteTenantSvc(record.id);
                 if (success) {
                     message.success("删除成功");
                     search.submit();
@@ -62,11 +64,11 @@ function Tenant() {
         resetList([]);
         let featureList;
         if (id) {
-            featureList = await tenantStore.getTenantFeatures(id);
+            featureList = await getTenantFeatures(id);
             setTenantId(id);
         }
         else {
-            featureList = await tenantStore.getHostFeatures();
+            featureList = await getHostFeatures();
         }
         const features = featureList?.groups.flatMap(i => i.features)
         if (features) {
@@ -80,13 +82,13 @@ function Tenant() {
                 modalForm.setFieldsValue(tenant);
                 setVisible(true);
             }
-        } catch (error) { }
+        } catch (error) { message.error((error as Error).message) }
     };
     const addOrUpdateTag = async (data: any) => {
         console.log("data", data);
         try {
             if (data.id) {
-                const tag = await tenantStore.updateTenant(data.id, data);
+                const tag = await updateTenant(data.id, data);
                 if (tag) {
                     modalForm.resetFields();
                     message.success("更新成功");
@@ -94,7 +96,7 @@ function Tenant() {
                     search.submit();
                 }
             } else {
-                const tenant = await tenantStore.addTenant(data);
+                const tenant = await addTenant(data);
                 if (tenant) {
                     modalForm.resetFields();
                     message.success("添加成功");
@@ -102,15 +104,15 @@ function Tenant() {
                     search.submit();
                 }
             }
-        } catch (error) { }
+        } catch (error) { message.error((error as Error).message) }
     };
     const updateFeatures = async (data: any) => {
         if (tenantId) {
-            await tenantStore.updateTenantFeatures(tenantId, { features: transformToArray(data) });
+            await updateTenantFeatures(tenantId, { features: transformToArray(data) });
             setTenantId(null);
         }
         else {
-            await tenantStore.updateHostFeatures({ features: transformToArray(data) });
+            await updateHostFeatures({ features: transformToArray(data) });
         }
         closeFeatureModal();
     }

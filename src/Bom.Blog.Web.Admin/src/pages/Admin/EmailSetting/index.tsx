@@ -1,33 +1,35 @@
 import { SendTestEmailInput, UpdateEmailSettingsDto } from "@abp/ng.setting-management/config/public-api";
 import { Button, Form, Input, message, Space, Switch, Tabs } from "antd";
-import { toJS } from "mobx";
 import { useEffect, useState } from "react";
 import Editor from "../../../components/Editor";
-import { useAppConfig } from "../../../hooks/useStore";
+import { useAppConfig, useStores } from "../../../hooks/useStore";
 import { getEmailValidationRule, getRequiredRule } from "../../../util/formValid";
 
 function EmailSetting() {
     const [emailSettingform] = Form.useForm();
     const [sendEmailform] = Form.useForm();
-    const { applicationConfigurationStore, emailSettingStore } = useAppConfig();
+    const { useApplicationConfigurationStore } = useAppConfig();
+    const getAppConfig = useApplicationConfigurationStore(state => state.Get)
+    const { useEmailSettingStore } = useStores();
+    const [getEmailSetting, sendTestEmailService, updateEmailSettingService] = useEmailSettingStore(state => [state.getEmailSetting, state.sendTestEmail, state.updateEmailSetting])
     const [email, setEmail] = useState("");
     const [permissions, setPermissions] = useState({} as Record<string, boolean>)
     useEffect(() => {
-        applicationConfigurationStore.Get().then(config => {
-            const permission = toJS(config.auth.grantedPolicies);
+        getAppConfig().then(config => {
+            const permission = config.auth.grantedPolicies;
             setPermissions(permission);
         });
-        emailSettingStore.getEmailSetting().then(setting => {
+        getEmailSetting().then(setting => {
             emailSettingform.setFieldsValue(setting);
             setEmail(setting.defaultFromAddress!);
         });
     }, []);
     const sendTestEmail = async (values: SendTestEmailInput) => {
-        await emailSettingStore.sendTestEmail({ ...values, senderEmailAddress: email });
+        await sendTestEmailService({ ...values, senderEmailAddress: email });
         message.success("发送成功");
     }
     const updateEmailSetting = async (values: UpdateEmailSettingsDto) => {
-        await emailSettingStore.updateEmailSetting(values);
+        await updateEmailSettingService(values);
         setEmail(values.defaultFromAddress);
         message.success("更新成功");
     }
@@ -59,10 +61,10 @@ function EmailSetting() {
                     <Form.Item name="defaultFromDisplayName" label="默认发送地址展示名">
                         <Input />
                     </Form.Item>
-                    <Form.Item name="smtpEnableSsl" label="启用Ssl" >
+                    <Form.Item name="smtpEnableSsl" label="启用Ssl" valuePropName="checked">
                         <Switch />
                     </Form.Item>
-                    <Form.Item name="smtpUseDefaultCredentials" label="使用默认凭证" >
+                    <Form.Item name="smtpUseDefaultCredentials" label="使用默认凭证" valuePropName="checked">
                         <Switch />
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 10, span: 16 }} style={{ marginBottom: "0px" }}>

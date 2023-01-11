@@ -3,14 +3,16 @@ import { IdentityRoleDto } from "@abp/ng.identity/proxy";
 import { GetPermissionListResultDto, UpdatePermissionDto } from "@abp/ng.permission-management/proxy";
 import { useAntdTable, useRequest, useThrottleEffect } from "ahooks";
 import { Button, Checkbox, Form, Input, message, Modal, Row, Space, Switch, Table, Tabs } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import shallow from 'zustand/shallow'
 import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
 import { useAppConfig, useStores } from "../../../hooks/useStore";
 import Permission from "../../Components/Permission";
 import styles from "./index.module.less";
 function User() {
-  const { applicationConfigurationStore } = useAppConfig();
-  const { userStore, permissionStore } = useStores();
+  const { useApplicationConfigurationStore } = useAppConfig();
+  const { useUserStore, usePermissionStore, } = useStores();
+  // const [addUser, getAssignableRoles, updateUser, deleteUser, getUserById, getUsers] = useUserStore(state => [state.addUser, state.getAssignableRoles, state.updateUser, state.deleteUser, state.getUserById, state.getUsers], shallow)
   const [visible, setVisible] = useState(false);
   const [permissionModalVisible, setPermissionModalVisible] = useState(false);
   const [isAddUser, setIsAddUser] = useState(true);
@@ -20,11 +22,12 @@ function User() {
   const [userId, setUserId] = useState("");
   const [permissionGroup, setPermissionGroup] = useState<GetPermissionListResultDto>({} as GetPermissionListResultDto);
   let changedPermession: UpdatePermissionDto[];
-  const { tableProps, search } = useAntdTable(userStore.getUsers, { defaultPageSize: 10, form, debounceWait: 500, });
-  const { runAsync } = useRequest(userStore.getUserById, { manual: true, });
+  const { tableProps, search } = useAntdTable(useUserStore(state => state.getUsers), { defaultPageSize: 10, form, debounceWait: 500, });
+  const { runAsync } = useRequest(useUserStore(state => state.getUserById), { manual: true, });
   const [permissions, setpermissions] = useState({} as Record<string, boolean>);
+  const Get = useApplicationConfigurationStore(state => state.Get);
   useThrottleEffect(() => {
-    applicationConfigurationStore.Get().then(config => {
+    Get().then(config => {
       setpermissions(config.auth.grantedPolicies);
     });
   }, [], { "wait": 300 });
@@ -32,7 +35,7 @@ function User() {
     Modal.confirm({
       title: "删除标签", content: "确定删除吗？",
       onOk: async () => {
-        const success = await userStore.deleteUser(record.id);
+        const success = await useUserStore(state => state.deleteUser)(record.id);
         if (success) {
           message.success("删除成功");
           search.submit();
@@ -42,12 +45,12 @@ function User() {
     });
   };
   const showModal = () => {
-    userStore.getAssignableRoles().then((res) => { setRoles(res.items!) });
+    useUserStore(state => state.getAssignableRoles)().then((res) => { setRoles(res.items!) });
     setVisible(true);
   };
   const showPermissionModal = (id: string) => {
     setUserId(id);
-    permissionStore.getPermissionByUser(id).then((res) => {
+    usePermissionStore(state => state.getPermissionByUser)(id).then((res) => {
       setPermissionGroup(res);
       setPermissionModalVisible(true);
     });
@@ -59,7 +62,7 @@ function User() {
   const updateUser = (id: string, user: IdentityUserDto) => {
     setIsAddUser(false);
     showModal();
-    userStore.getUserRoleById(id).then((res) => {
+    useUserStore(state => state.getUserById)(id).then((res) => {
       modalForm.setFieldsValue({ ...user, roleNames: res.items!.map(i => i.name) });
     });
   };
@@ -77,7 +80,7 @@ function User() {
   const addOrUpdateUser = async (id: string, data: any) => {
     try {
       if (id) {
-        const user = await userStore.updateUser(id, data);
+        const user = await useUserStore(state => state.updateUser)(id, data);
         if (user) {
           modalForm.resetFields();
           message.success("更新成功");
@@ -85,7 +88,7 @@ function User() {
           search.submit();
         }
       } else {
-        const user = await userStore.addUser(data);
+        const user = await useUserStore(state => state.addUser)(data);
         if (user) {
           modalForm.resetFields();
           message.success("添加成功");
@@ -212,7 +215,7 @@ function User() {
           // modalForm.resetFields();
         }}
         onOk={() => {
-          permissionStore.updatePermissionsByUser(userId, { permissions: changedPermession }).then(() => {
+          usePermissionStore(state => state.updatePermissionsByUser)(userId, { permissions: changedPermession }).then(() => {
             setPermissionModalVisible(false);
           });
         }}

@@ -1,6 +1,5 @@
 import { Router } from "@remix-run/router";
 import { useRequest, useThrottleEffect } from "ahooks";
-import { toJS } from "mobx";
 import { useEffect, useState } from "react";
 import { createBrowserRouter, RouteObject, RouterProvider } from "react-router-dom";
 import App from "../App";
@@ -17,20 +16,19 @@ import { filterPermissionRoute } from "../util/permission";
 import styles from "./index.module.less"
 function Router() {
     const [router, setRouter] = useState<Router>()
-    const { applicationConfigurationStore } = useAppConfig();
-    const { data, error, loading, runAsync } = useRequest(applicationConfigurationStore.Get, { throttleWait: 1000, manual: true });
+    const { useApplicationConfigurationStore } = useAppConfig();
+    const { data, error, loading, runAsync } = useRequest(useApplicationConfigurationStore(state => state.Get), { throttleWait: 1000, manual: true });
     useThrottleEffect(() => {
         runAsync()
     }, [], { "wait": 300 })
     useEffect(() => {
         if (data !== undefined) {
-            const routes = filterPermissionRoute(routerConfig, toJS(data.auth.grantedPolicies));
+            const routes = filterPermissionRoute(routerConfig, data.auth.grantedPolicies);
             const r = createBrowserRouter(routes);
             setRouter(r);
         }
 
     }, [data]);
-
     return (
         <div className={styles.wrapper}>
             {loading ? <Loading /> :

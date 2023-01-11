@@ -1,27 +1,29 @@
 import { UpdateEmailSettingsDto } from "@abp/ng.setting-management/config";
-import { SendTestEmailInput } from "@abp/ng.setting-management/config/public-api";
+import { EmailSettingsDto, SendTestEmailInput } from "@abp/ng.setting-management/config/public-api";
 import { message } from "antd";
-import { makeAutoObservable } from "mobx";
+import create from "zustand";
 import { emailSettingApi } from "../../apis/Abp";
 import { getErrorResponse } from "../../util/response";
 
-class EmailSettingStore {
-    constructor() {
-        makeAutoObservable(this);
-    }
-    async getEmailSetting() {
+interface EmailSettingState {
+    getEmailSetting: () => Promise<EmailSettingsDto>
+    updateEmailSetting: (update: UpdateEmailSettingsDto) => Promise<void>
+    sendTestEmail: (email: SendTestEmailInput) => Promise<void>
+}
+export const useEmailSettingStore = create<EmailSettingState>()(() => ({
+    getEmailSetting: async () => {
         const setting = await emailSettingApi.getEmailSetting();
         return setting.data;
-    }
-    async updateEmailSetting(update: UpdateEmailSettingsDto) {
+    },
+    updateEmailSetting: async (update: UpdateEmailSettingsDto) => {
         try {
             await emailSettingApi.updateEmailSetting(update);
         } catch (error) {
             message.error(getErrorResponse(error));
             throw error;
         }
-    }
-    async sendTestEmail(email: SendTestEmailInput) {
+    },
+    sendTestEmail: async (email: SendTestEmailInput) => {
         try {
             await emailSettingApi.sendTestEmail(email);
 
@@ -30,5 +32,4 @@ class EmailSettingStore {
             throw error;
         }
     }
-}
-export default new EmailSettingStore();
+}))

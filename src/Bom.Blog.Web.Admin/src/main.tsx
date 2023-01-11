@@ -20,11 +20,10 @@ interceptors();
 // 这一阶段还是先进行正常的显示，调用的时候服务器判断是否有权限，后期在进行权限菜单优化显示
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <AuthProvider {...oidcConfig} >
-            <ConfigProvider locale={zhCN}>
-                <Router />
-            </ConfigProvider>
-        </AuthProvider>
-    </React.StrictMode>
+
+    <AuthProvider {...oidcConfig} >
+        <ConfigProvider locale={zhCN}>
+            <Router />
+        </ConfigProvider>
+    </AuthProvider>
 );

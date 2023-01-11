@@ -7,16 +7,17 @@ import { AuditLogDto } from "../../../data/models/AuditLog";
 import { useStores } from "../../../hooks/useStore";
 import styles from "./index.module.less";
 function AuditLog() {
-  const { audit_logStore } = useStores();
+  const { useAuditLogStore } = useStores();
+  const [getAuditLogs, getAuditLogById] = useAuditLogStore(state => [state.getAuditLogs, state.getAuditLogById])
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
   const [modalForm] = Form.useForm();
-  const { tableProps, search } = useAntdTable(audit_logStore.getAuditLogs, {
+  const { tableProps, search } = useAntdTable(getAuditLogs, {
     defaultPageSize: 10,
     form,
     debounceWait: 500,
   });
-  const { runAsync } = useRequest(audit_logStore.getAuditLogById, {
+  const { runAsync } = useRequest(getAuditLogById, {
     manual: true,
   });
 
@@ -31,7 +32,7 @@ function AuditLog() {
         console.log(audit_log);
         setVisible(true);
       }
-    } catch (error) { }
+    } catch (error) { message.error((error as Error).message) }
   };
   return (
     <div>

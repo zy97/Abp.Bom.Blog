@@ -8,8 +8,11 @@ import { useAppConfig, useStores } from "../../../hooks/useStore";
 import Permission from "../../Components/Permission";
 import styles from "./index.module.less";
 function Role() {
-  const { applicationConfigurationStore } = useAppConfig();
-  const { roleStore, permissionStore } = useStores();
+  const { useApplicationConfigurationStore } = useAppConfig();
+  const { useRoleStore, usePermissionStore } = useStores();
+  const getApplicationConfiguration = useApplicationConfigurationStore(state => state.Get)
+  const [getRoles, getRoleById, deleteRoleService, updateRole, addRole] = useRoleStore(state => [state.getRoles, state.getRoleById, state.deleteRole, state.updateRole, state.addRole]);
+  const [getPermissionByRole, updatePermissionsByRole] = usePermissionStore(state => [state.getPermissionByRole, state.updatePermissionsByRole]);
   const [modalTitle, setModalTitle] = useState("");
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
@@ -17,12 +20,12 @@ function Role() {
   const [roleName, setRoleName] = useState("");
   const [permissionModalVisible, setPermissionModalVisible] = useState(false);
   const [permissionGroup, setPermissionGroup] = useState<GetPermissionListResultDto>({} as GetPermissionListResultDto);
-  const { tableProps, search } = useAntdTable(roleStore.getRoles, { defaultPageSize: 10, form, debounceWait: 500, });
-  const { runAsync } = useRequest(roleStore.getRoleById, { manual: true, });
+  const { tableProps, search } = useAntdTable(getRoles, { defaultPageSize: 10, form, debounceWait: 500, });
+  const { runAsync } = useRequest(getRoleById, { manual: true, });
   let changedPermession: UpdatePermissionDto[];
   const [permissions, setpermissions] = useState({} as Record<string, boolean>);
   useEffect(() => {
-    applicationConfigurationStore.Get().then(config => {
+    getApplicationConfiguration().then(config => {
       setpermissions(config.auth.grantedPolicies);
     });
   }, []);
@@ -30,7 +33,7 @@ function Role() {
     Modal.confirm({
       title: "删除标签", content: "确定删除吗？",
       onOk: async () => {
-        const success = await roleStore.deleteRole(record.id);
+        const success = await deleteRoleService(record.id);
         if (success) {
           message.success("删除成功");
           search.submit();
@@ -60,7 +63,7 @@ function Role() {
   const addOrUpdateRole = async (data: any) => {
     try {
       if (data.id) {
-        const role = await roleStore.updateRole(data.id, data);
+        const role = await updateRole(data.id, data);
         if (role) {
           modalForm.resetFields();
           message.success("更新成功");
@@ -68,7 +71,7 @@ function Role() {
           search.submit();
         }
       } else {
-        const role = await roleStore.addRole(data);
+        const role = await addRole(data);
         if (role) {
           modalForm.resetFields();
           message.success("添加成功");
@@ -83,7 +86,7 @@ function Role() {
 
   const showPermissionModal = (name: string) => {
     setRoleName(name);
-    permissionStore.getPermissionByRole(name).then((res) => {
+    getPermissionByRole(name).then((res) => {
       setPermissionGroup(res);
       setPermissionModalVisible(true);
     });
@@ -162,7 +165,7 @@ function Role() {
       </Modal>
       <Modal open={permissionModalVisible} title="权限" okText="确定" cancelText="取消" onCancel={() => { setPermissionModalVisible(false); }}
         onOk={() => {
-          permissionStore.updatePermissionsByRole(roleName, { permissions: changedPermession }).then(() => {
+          updatePermissionsByRole(roleName, { permissions: changedPermession }).then(() => {
             setPermissionModalVisible(false);
           });
         }}

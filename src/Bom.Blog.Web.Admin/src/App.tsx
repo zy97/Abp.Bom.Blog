@@ -1,7 +1,6 @@
 import { useDebounceEffect } from "ahooks";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu } from "antd";
-import { toJS } from "mobx";
 import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppConfig } from "./hooks/useStore";
@@ -22,12 +21,13 @@ type MenuItemProps = {
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { applicationConfigurationStore } = useAppConfig();
+  const { useApplicationConfigurationStore } = useAppConfig();
   const [routes, setRoutes] = useState([] as Route[])
   const [menues, setMenues] = useState([] as MenuItem[])
+  const Get = useApplicationConfigurationStore(state => state.Get);
   useDebounceEffect(() => {
-    applicationConfigurationStore.Get().then((config) => {
-      const routes = filterPermissionRoute(routerConfig, toJS(config.auth.grantedPolicies));
+    Get().then((config) => {
+      const routes = filterPermissionRoute(routerConfig, config.auth.grantedPolicies);
       const m = createMenu("", routes[0].children!, [])
       removeInvalidChildrenMenu(m);
       setMenues([...m])

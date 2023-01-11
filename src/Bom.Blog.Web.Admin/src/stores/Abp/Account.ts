@@ -1,25 +1,26 @@
-import { ChangePasswordInput, UpdateProfileDto } from "@abp/ng.account.core/proxy";
-import { makeAutoObservable } from "mobx";
+import { ChangePasswordInput, ProfileDto, UpdateProfileDto } from "@abp/ng.account.core/proxy";
+import create from "zustand";
 import { accountApi } from "../../apis";
 
-class AccountStore {
-    constructor() {
-        makeAutoObservable(this);
-    }
-    async logout() {
+interface AccountState {
+    logout: () => Promise<void>
+    getProfile: () => Promise<ProfileDto>
+    updateProfile: (update: UpdateProfileDto) => Promise<ProfileDto>
+    changePassword: (update: ChangePasswordInput) => Promise<void>
+}
+export const useAccountStore = create<AccountState>()(() => ({
+    logout: async () => {
         await accountApi.logout();
-    }
-    async getProfile() {
+    },
+    getProfile: async () => {
         const profile = await accountApi.getProfile();
         return profile.data;
-    }
-    async updateProfile(update: UpdateProfileDto) {
+    },
+    updateProfile: async (update: UpdateProfileDto) => {
         const profile = await accountApi.updateProfile(update);
         return profile.data;
-    }
-    async changePassword(update: ChangePasswordInput) {
+    },
+    changePassword: async (update: ChangePasswordInput) => {
         await accountApi.changePassword(update);
     }
-}
-
-export default new AccountStore();
+}))

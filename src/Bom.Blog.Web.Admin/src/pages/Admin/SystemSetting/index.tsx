@@ -7,14 +7,16 @@ import { transformToZH } from "../../../util/formTransform";
 
 function SystemSetting() {
     const [settingform] = Form.useForm();
-    const { applicationConfigurationStore } = useAppConfig();
-    const { settingStore } = useStores();
+    const { useApplicationConfigurationStore } = useAppConfig();
+    const getAppConfig = useApplicationConfigurationStore(state => state.Get)
+    const { useSettingStore } = useStores();
+    const [changeSetting] = useSettingStore(state => [state.changeSetting])
     const [setting, setSetting] = useState<Record<string, string | boolean>>({})
     useEffect(() => {
         settingform.setFieldsValue(setting);
     }, [setting]);
     useEffect(() => {
-        applicationConfigurationStore.Get().then((config) => {
+        getAppConfig().then((config) => {
             const temp = config.setting.values;
             console.log(temp);
             const kv = temp as Record<string, string | boolean>;
@@ -39,7 +41,7 @@ function SystemSetting() {
             console.log(typeof kv[key]);
             if (typeof kv[key] === "boolean") {
                 return (
-                    <Col span={12}>
+                    <Col span={12} key={key}>
                         <Form.Item name={key} label={transformToZH(key)} valuePropName='checked' key={key}>
                             <Checkbox />
                         </Form.Item>
@@ -49,7 +51,7 @@ function SystemSetting() {
             }
             if (!isNaN(+kv[key])) {
                 return (
-                    <Col span={12}>
+                    <Col span={12} key={key}>
                         <Form.Item name={key} label={transformToZH(key)} key={key}>
                             <InputNumber style={{ width: '80%' }} />
                         </Form.Item>
@@ -68,12 +70,13 @@ function SystemSetting() {
             changes.forEach(async item => {
                 const key = item.path[0] as string;
                 const value = upperCaseFirst(item.value.toString());
-                await settingStore.changeSetting({ key, value });
+                await changeSetting({ key, value });
                 message.success(`${transformToZH(key)}更新成功`);
             });
             setSetting(values);
         }
         catch (e) {
+            message.error((e as Error).message)
         }
     }
 

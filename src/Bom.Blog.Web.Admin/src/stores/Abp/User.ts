@@ -1,11 +1,19 @@
-import { IdentityUserCreateDto, IdentityUserUpdateDto } from "@abp/ng.identity/proxy";
-import { makeAutoObservable } from "mobx";
+import { ListResultDto } from "@abp/ng.core";
+import { IdentityRoleDto, IdentityUserCreateDto, IdentityUserDto, IdentityUserUpdateDto } from "@abp/ng.identity/proxy";
+import create from "zustand";
 import { userApi } from "../../apis";
-class UserStore {
-  constructor() {
-    makeAutoObservable(this);
-  }
-  getUsers = async (data: any, form: any) => {
+
+interface UserState {
+  getUsers: (data: { current: number; pageSize: number; }, form: any) => Promise<{ total: number; list: IdentityUserDto[]; }>
+  deleteUser: (id: string) => Promise<boolean>
+  addUser: (user: IdentityUserCreateDto) => Promise<false | IdentityUserDto>
+  getUserById: (id: string) => Promise<IdentityUserDto | undefined>
+  updateUser: (id: string, user: IdentityUserUpdateDto) => Promise<IdentityUserDto | undefined>
+  getUserRoleById: (id: string) => Promise<ListResultDto<IdentityRoleDto>>
+  getAssignableRoles: () => Promise<ListResultDto<IdentityRoleDto>>
+}
+export const useUserStore = create<UserState>()(() => ({
+  getUsers: async (data: { current: number; pageSize: number }, form: any) => {
     try {
       const result = await userApi.getUsers({
         skipCount: data.pageSize * (data.current - 1),
@@ -19,40 +27,40 @@ class UserStore {
     } catch (error) {
       return { total: 0, list: [] };
     }
-  };
-  async deleteUser(id: string) {
+  },
+  deleteUser: async (id: string) => {
     try {
       await userApi.deleteUser(id);
       return true;
-    } catch (error: any) {
+    } catch (error) {
       return false;
     }
-  }
-  async addUser(user: IdentityUserCreateDto) {
+  },
+  addUser: async (user: IdentityUserCreateDto) => {
     try {
       const data = await userApi.addUser(user);
       return data.data;
     } catch (error) {
       return false;
     }
-  }
-  async getUserById(id: string) {
+  },
+  getUserById: async (id: string) => {
     try {
       const user = await userApi.getUserById(id);
       return user.data;
     } catch (error) {
       console.log(error);
     }
-  }
-  async updateUser(id: string, user: IdentityUserUpdateDto) {
+  },
+  updateUser: async (id: string, user: IdentityUserUpdateDto) => {
     try {
       const result = await userApi.updateUser(id, user);
       return result.data;
     } catch (error) {
       console.log(error);
     }
-  }
-  async getUserRoleById(id: string) {
+  },
+  getUserRoleById: async (id: string) => {
     try {
       const result = await userApi.getUserRoleById(id);
       return result.data;
@@ -60,8 +68,8 @@ class UserStore {
       console.log(error);
       return { items: [] };
     }
-  }
-  async getAssignableRoles() {
+  },
+  getAssignableRoles: async () => {
     try {
       const result = await userApi.getAssignableRoles();
       return result.data;
@@ -70,6 +78,5 @@ class UserStore {
       return { items: [] };
     }
   }
-}
+}));
 
-export default new UserStore();

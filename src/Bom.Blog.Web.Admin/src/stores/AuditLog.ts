@@ -1,11 +1,12 @@
-import { makeAutoObservable } from "mobx";
+import create from "zustand";
 import { audit_logApi } from "../apis";
-import { } from "../data/models/AuditLog";
-class AuditLogStore {
-  constructor() {
-    makeAutoObservable(this);
-  }
-  getAuditLogs = async (data: any, form: any) => {
+import { AuditLogDto } from "../data/models/AuditLog";
+interface AuditLogState {
+  getAuditLogs: (data: { current: number; pageSize: number }, form: any) => Promise<{ total: number; list: any[]; }>
+  getAuditLogById: (id: string) => Promise<AuditLogDto | undefined>
+}
+export const useAuditLogStore = create<AuditLogState>()(() => ({
+  getAuditLogs: async (data: { current: number; pageSize: number }, form: any) => {
     try {
       const result = await audit_logApi.getAuditLogs({
         skipCount: data.pageSize * (data.current - 1),
@@ -19,8 +20,8 @@ class AuditLogStore {
     } catch (error) {
       return { total: 0, list: [] };
     }
-  };
-  async getAuditLogById(id: string) {
+  },
+  getAuditLogById: async (id: string) => {
     try {
       const audit_log = await audit_logApi.getAuditLogById(id);
       return audit_log.data;
@@ -28,6 +29,4 @@ class AuditLogStore {
       console.log(error);
     }
   }
-}
-
-export default new AuditLogStore();
+}));

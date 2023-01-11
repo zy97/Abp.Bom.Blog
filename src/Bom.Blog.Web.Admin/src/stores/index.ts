@@ -1,17 +1,23 @@
 import React from "react";
-import audit_logStore from "./AuditLog";
-import userStore from "./Abp/User";
-import permissionStore from "./Abp/Permission";
-import accountStore from "./Abp/Account";
-import roleStore from './Abp/Role';
-import tenantStore from './Abp/tenants'
-import settingStore from './Abp/setting'
+import { useAccountStore } from "./Abp/Account";
+import { useApplicationConfigurationStore } from "./Abp/ApplicationConfiguration";
+import { useEmailSettingStore } from "./Abp/EmailSetting";
+import { usePermissionStore } from "./Abp/Permission";
+import { useRoleStore } from "./Abp/Role";
+import { useSettingStore } from "./Abp/Setting";
+import { useTenantsStore } from "./Abp/Tenants";
+import { useUserStore } from "./Abp/User";
+import { useAuditLogStore } from './AuditLog'
 export const storesContext = React.createContext({
-  audit_logStore,
-  userStore,
-  permissionStore,
-  roleStore,
-  accountStore,
-  tenantStore,
-  settingStore
+  useAuditLogStore,
+  useAccountStore,
+  usePermissionStore,
+  useRoleStore,
+  useSettingStore,
+  useTenantsStore,
+  useUserStore,
+  useEmailSettingStore
+});
+export const abpApplicationConfigurationContext = React.createContext({
+  useApplicationConfigurationStore,
 });
