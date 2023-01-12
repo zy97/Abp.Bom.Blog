@@ -16,6 +16,7 @@ type extraActionProps = {
 };
 const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
   const { form, submit, reset, extraActions } = props;
+  console.log(extraActions, props)
   let totalChildren: React.ReactNode[] = [];
   if (props.children instanceof Array) {
     totalChildren = props.children;
@@ -36,38 +37,32 @@ const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
     }
     return children;
   };
+  const extraButton = (extraActions: Array<extraActionProps | null>) => {
+    const buttons = [];
+    for (const i of extraActions) {
+      if (i) {
+        buttons.push(<Button type="primary" key={i.content} onClick={() => i.action()}>{i.content}</Button>)
+      }
+    }
+    return buttons;
+  }
   return (
     <Form form={form} name="advanced_search" >
       <Row gutter={24}>{getFields()}</Row>
       <Row>
         <Col span={24} className={styles.search}>
           <Space>
-            {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              extraActions.filter(i => i !== null).map((i: extraActionProps, key: number) => {
-                return (
-                  <Button type="primary" key={key} onClick={() => i.action()}>
-                    {i.content}
-                  </Button>
-                );
-              })}
+            {extraButton(extraActions)}
             <Button type="primary" htmlType="submit" onClick={submit}>
               搜索
             </Button>
             <Button onClick={reset}>重置</Button>
             {formCount >= 6 && (
-              <a
-                style={{ fontSize: 12 }}
-                onClick={() => {
-                  setExpand(!expand);
-                }}
-              >
+              <a style={{ fontSize: 12 }} onClick={() => { setExpand(!expand); }}>
                 {expand ? <UpOutlined /> : <DownOutlined />} 折叠
               </a>
             )}
           </Space>
-
         </Col>
       </Row>
     </Form>

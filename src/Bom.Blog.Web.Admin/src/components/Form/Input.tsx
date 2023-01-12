@@ -11,9 +11,12 @@ type InputProps = {
 function Input(props: InputProps) {
     const { name, label, rules, dependencies, isPassword } = props;
     return (
-        <Form.Item name={name} label={label} rules={rules} dependencies={dependencies}>
-            {isPassword === true ? <AntdInput.Password /> : <AntdInput />}
-        </Form.Item>
+        <>
+            <Form.Item name={name} label={label} rules={rules} dependencies={dependencies}>
+                {isPassword === true ? <AntdInput.Password /> : <AntdInput />}
+            </Form.Item>
+        </>
+
     );
 }
 

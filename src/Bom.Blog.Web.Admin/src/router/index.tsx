@@ -1,5 +1,5 @@
 import { Router } from "@remix-run/router";
-import { useRequest, useThrottleEffect } from "ahooks";
+import { useAsyncEffect, useRequest, useThrottleEffect } from "ahooks";
 import { useEffect, useState } from "react";
 import { createBrowserRouter, RouteObject, RouterProvider } from "react-router-dom";
 import App from "../App";
@@ -18,9 +18,9 @@ function Router() {
     const [router, setRouter] = useState<Router>()
     const { useApplicationConfigurationStore } = useAppConfig();
     const { data, error, loading, runAsync } = useRequest(useApplicationConfigurationStore(state => state.Get), { throttleWait: 1000, manual: true });
-    useThrottleEffect(() => {
-        runAsync()
-    }, [], { "wait": 300 })
+    useAsyncEffect(async () => {
+        await runAsync()
+    }, [])
     useEffect(() => {
         if (data !== undefined) {
             const routes = filterPermissionRoute(routerConfig, data.auth.grantedPolicies);

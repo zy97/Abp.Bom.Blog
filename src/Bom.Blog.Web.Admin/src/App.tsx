@@ -138,13 +138,13 @@ function App() {
             <Login />
           </span>
         </Header>
-        <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}>
+        <Content style={{ margin: "16px" }}>
+          <Breadcrumb>
             {
               breadcrumbs().map(i => { return <Breadcrumb.Item key={i}>{i}</Breadcrumb.Item> })
             }
           </Breadcrumb>
-          <div>
+          <div className={styles.wrapper}>
             <Outlet />
           </div>
         </Content>
