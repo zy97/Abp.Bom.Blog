@@ -1,5 +1,5 @@
 import { ApplicationConfigurationDto } from "@abp/ng.core";
-import create from "zustand";
+import { create } from "zustand";
 import { applicationConfiguration } from "../../apis/Abp";
 
 interface ApplicationConfigurationState {

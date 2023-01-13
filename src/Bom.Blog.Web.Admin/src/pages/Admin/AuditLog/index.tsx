@@ -56,6 +56,7 @@ function AuditLog() {
       <div className={styles.table}>
         <Table<AuditLogDto>
           rowKey="id"
+          size="middle"
           {...{
             ...tableProps,
             pagination: {

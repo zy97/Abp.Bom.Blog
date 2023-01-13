@@ -1,6 +1,6 @@
 import { ListResultDto } from "@abp/ng.core";
 import { IdentityRoleDto, IdentityUserCreateDto, IdentityUserDto, IdentityUserUpdateDto } from "@abp/ng.identity/proxy";
-import create from "zustand";
+import { create } from "zustand";
 import { userApi } from "../../apis";
 
 interface UserState {

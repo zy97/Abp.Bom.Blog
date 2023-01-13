@@ -1,5 +1,5 @@
 import { ChangePasswordInput, ProfileDto, UpdateProfileDto } from "@abp/ng.account.core/proxy";
-import create from "zustand";
+import { create } from "zustand";
 import { accountApi } from "../../apis";
 
 interface AccountState {

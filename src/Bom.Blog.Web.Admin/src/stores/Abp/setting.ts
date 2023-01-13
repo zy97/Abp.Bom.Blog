@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import { settingApi } from "../../apis";
 import { SettingDto } from "../../data/models/abp/settingDto";
 

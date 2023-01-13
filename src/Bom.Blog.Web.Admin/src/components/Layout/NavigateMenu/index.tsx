@@ -3,11 +3,11 @@ import { Layout, Menu } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppConfig, useStores } from "../../../hooks/useStore";
-import { Route, routerConfig } from "../../../router";
 import { filterPermissionRoute } from "../../../util/permission";
 import type { MenuProps } from 'antd';
 import styles from './index.module.less'
 import { SubMenuType } from "antd/es/menu/hooks/useItems";
+import { Route, ROUTES } from "../../../router/routes";
 const { Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
 function NavigateMenu() {
@@ -20,10 +20,9 @@ function NavigateMenu() {
     const [menues, setMenues] = useState([] as MenuItem[])
     useAsyncEffect(async () => {
         const config = await getAppConfig();
-        const routes = filterPermissionRoute(routerConfig, config.auth.grantedPolicies);
+        const routes = filterPermissionRoute(ROUTES, config.auth.grantedPolicies);
         const m = createMenu("", routes[0].children, [])
         setMenues(m)
-        console.log(m)
         saveMenu(m)
     }, [])
     const createMenu = (rootPath: React.Key, nodes: Route[] | undefined, arr: MenuItem[]) => {

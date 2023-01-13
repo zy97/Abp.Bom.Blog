@@ -1,7 +1,7 @@
 import { featureApi, tenantsApi } from "../../apis";
 import { TenantCreateDto, TenantUpdateDto } from "@abp/ng.tenant-management/proxy";
 import { UpdateFeaturesDto } from "@abp/ng.feature-management/proxy";
-import create from "zustand";
+import { create } from "zustand";
 
 interface TenantsStoreState {
   getTenants: (data: { current: number; pageSize: number }, form: any) => Promise<{ total: number; list: any[]; }>;

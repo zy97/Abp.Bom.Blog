@@ -1,6 +1,6 @@
 import { UpdateEmailSettingsDto } from "@abp/ng.setting-management/config";
 import { EmailSettingsDto, SendTestEmailInput } from "@abp/ng.setting-management/config/public-api";
-import create from "zustand";
+import { create } from "zustand";
 import { emailSettingApi } from "../../apis/Abp";
 
 interface EmailSettingState {

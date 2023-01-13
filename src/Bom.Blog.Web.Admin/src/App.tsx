@@ -15,7 +15,7 @@ function App() {
             <Login />
           </span>
         </Header>
-        <Content style={{ margin: "16px" }}>
+        <Content style={{ margin: "16px 16px 0px" }}>
           <Breadcrumb />
           <div className={styles.wrapper}>
             <Outlet />

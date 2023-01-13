@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
-// import react from '@vitejs/plugin-react';
-import react from "@vitejs/plugin-react-swc";
+import react from '@vitejs/plugin-react';
+// import react from "@vitejs/plugin-react-swc";
 import { setDefaultResultOrder } from 'dns'
 // import WindiCSS from 'vite-plugin-windicss';
 // import vitePluginImp from 'vite-plugin-imp';
@@ -11,13 +11,26 @@ export default defineConfig({
         react(),
         // 用于antd按需加载，但很慢,内置支持了多个库
         // vitePluginImp(),
+        // 用于解决App主键热更新异常
+        {
+            name: "singleHMR",
+            handleHotUpdate({ modules }) {
+                modules.map((m) => {
+                    m.importedModules = new Set();
+                    m.importers = new Set();
+                });
+
+                return modules;
+            },
+        },
     ],
     css: {
         preprocessorOptions: {
             less: {
                 javascriptEnabled: true,
                 modifyVars: {
-                    // '@primary-color': '#4377FE', //设置antd主题色
+                    // '@primary-color': '#4377F0', //设置antd主题色
+                    '@primary-color': 'red', //设置antd主题色
                 },
             },
         },
@@ -32,6 +45,5 @@ export default defineConfig({
             },
         },
         port: 3000,
-
     },
 });

@@ -1,5 +1,5 @@
 import { IdentityRoleCreateDto, IdentityRoleDto, IdentityRoleUpdateDto } from "@abp/ng.identity/proxy";
-import create from "zustand";
+import { create } from "zustand";
 import { roleApi } from "../../apis";
 
 interface RoleState {

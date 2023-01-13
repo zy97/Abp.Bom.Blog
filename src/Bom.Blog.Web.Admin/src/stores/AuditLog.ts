@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import { audit_logApi } from "../apis";
 import { AuditLogDto } from "../data/models/AuditLog";
 interface AuditLogState {

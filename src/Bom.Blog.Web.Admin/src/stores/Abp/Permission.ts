@@ -1,5 +1,5 @@
 import { GetPermissionListResultDto, UpdatePermissionsDto } from "@abp/ng.permission-management/proxy";
-import create from "zustand";
+import { create } from "zustand";
 import { permissionApi } from "../../apis";
 interface PermissionState {
   getPermissionByUser: (providerKey: string) => Promise<GetPermissionListResultDto>
