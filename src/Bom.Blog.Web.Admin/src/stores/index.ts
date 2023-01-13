@@ -8,6 +8,7 @@ import { useSettingStore } from "./Abp/Setting";
 import { useTenantsStore } from "./Abp/Tenants";
 import { useUserStore } from "./Abp/User";
 import { useAuditLogStore } from './AuditLog'
+import { useNavigateMenuStore } from "./NavigateMenu";
 export const storesContext = React.createContext({
   useAuditLogStore,
   useAccountStore,
@@ -16,7 +17,8 @@ export const storesContext = React.createContext({
   useSettingStore,
   useTenantsStore,
   useUserStore,
-  useEmailSettingStore
+  useEmailSettingStore,
+  useNavigateMenuStore
 });
 export const abpApplicationConfigurationContext = React.createContext({
   useApplicationConfigurationStore,

@@ -1,5 +1,5 @@
 import { Router } from "@remix-run/router";
-import { useAsyncEffect, useRequest, useThrottleEffect } from "ahooks";
+import { useAsyncEffect, useRequest } from "ahooks";
 import { useEffect, useState } from "react";
 import { createBrowserRouter, RouteObject, RouterProvider } from "react-router-dom";
 import App from "../App";
@@ -27,7 +27,6 @@ function Router() {
             const r = createBrowserRouter(routes);
             setRouter(r);
         }
-
     }, [data]);
     return (
         <div className={styles.wrapper}>
@@ -70,6 +69,6 @@ export const routerConfig: Route[] = [
                 path: "*",
                 element: <NotFound />,
             },
-        ],
+        ] as Route[],
     },
 ];

@@ -62,7 +62,7 @@ function EmailSetting() {
                 <Input name="defaultFromDisplayName" label="默认发送地址展示名" />
                 <Switch name="smtpEnableSsl" label="启用Ssl" />
                 <Switch name="smtpUseDefaultCredentials" label="使用默认凭证" />
-                <Form.Item wrapperCol={{ offset: 2, span: 10 }} >
+                <Form.Item wrapperCol={{ offset: 6, span: 10 }} >
                     <Space>
                         <Button type="primary" htmlType="submit">提交</Button>
                         <Button type="primary" >取消</Button>

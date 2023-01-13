@@ -16,7 +16,6 @@ type extraActionProps = {
 };
 const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
   const { form, submit, reset, extraActions } = props;
-  console.log(extraActions, props)
   let totalChildren: React.ReactNode[] = [];
   if (props.children instanceof Array) {
     totalChildren = props.children;
