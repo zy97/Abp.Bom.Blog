@@ -1,5 +1,4 @@
-import { Route } from "../router";
-
+import { Route } from "../router/routes";
 export const filterPermissionRoute = (routes: Route[], permissions: Record<string, boolean>) => {
     const returnRoute: Route[] = [];
     for (const route of routes) {
@@ -14,7 +13,7 @@ export const filterPermissionRoute = (routes: Route[], permissions: Record<strin
         else {
             if (route.permission === undefined || (route.permission && permissions[route.permission])) {
                 returnRoute.push(route);
-            }                                                                  
+            }
         }
     }
     return returnRoute;

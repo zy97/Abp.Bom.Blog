@@ -36,6 +36,13 @@ const interceptors = () => {
           msg += "：" + error.response.data.error.message;
         message.error(msg);
       }
+      if (error.response.status === 400) {
+        let msg = "";
+        const data = error.response.data;
+        if (data && data.error && data.error.message)
+          msg = error.response.data.error.details;
+        message.error(msg);
+      }
       return Promise.reject(error);
     }
   );

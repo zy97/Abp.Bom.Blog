@@ -1,5 +1,3 @@
-
-
 export function getPhoneValidationRule() {
     return {
         pattern: /^(\+?0?86-?)?1[345789]\d{9}$/,
@@ -12,7 +10,7 @@ export function getRequiredRule(tip: string) {
     }
     return {
         required: true,
-        message: "请输入",
+        message: tip,
     }
 }
 export function getEmailValidationRule() {
