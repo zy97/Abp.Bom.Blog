@@ -1,6 +1,7 @@
 import { GetPermissionListResultDto, UpdatePermissionDto } from "@abp/ng.permission-management/proxy";
 import { Checkbox, Divider, Form, Row, Tabs, TabsProps } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
+import { diff } from "just-diff";
 import { useEffect, useState } from "react";
 type PermissionProp = {
     permissions: GetPermissionListResultDto,
@@ -40,7 +41,7 @@ function Permission(props: PermissionProp) {
         delete temp.allCheck;
 
         permissionGroup.groups.forEach(g => {
-            delete temp[g.name!];
+            delete temp[g.name ?? ""];
         });
         setInitPermission(temp);
     };
@@ -61,7 +62,7 @@ function Permission(props: PermissionProp) {
         return count;
     }
     const onPermissionChange = (e: CheckboxChangeEvent) => {
-        const name = e.target.name!;
+        const name = e.target.name ?? "";
         const value = e.target.checked;
         if (name === "allCheck") {
             //勾选全部点击
@@ -118,60 +119,26 @@ function Permission(props: PermissionProp) {
                 }
             }
         }
-        let array = Array<{ key: string, value: boolean }>();
-        for (const key in allCheckStatus) {
-            array.push({ key: key, value: allCheckStatus[key] });
-        }
-        if (name.split('.').length > 1) {
-            const groupName = name.substring(0, name.indexOf('.'));
-            const group1 = array.filter(i => i.key.startsWith(groupName));
-            const group2 = group1.filter(i => i.key !== groupName);
-            if (group2.every(i => i.value === true)) {
-                allCheckStatus[groupName] = true;
-            }
-            else {
-                allCheckStatus[groupName] = false;
-            }
-        }
-        array = Array<{ key: string, value: boolean }>();
-        for (const key in allCheckStatus) {
-            array.push({ key: key, value: allCheckStatus[key] });
-        }
-        const group = array.filter(i => permissions.groups.map(i => i.name).includes(i.key));
-        if (group.every(i => i.value === true)) {
-            allCheckStatus["allCheck"] = true;
-        }
-        else {
-            allCheckStatus["allCheck"] = false;
-        }
         setAllCheckStatus({ ...allCheckStatus });
 
-        const temp = { ...allCheckStatus };
-        delete temp.allCheck;
-        permissions.groups.forEach(g => {
-            delete temp[g.name!];
-        });
-        const change: UpdatePermissionDto[] = [];
-        for (const key in initPermission) {
-            if (initPermission[key] !== temp[key]) {
-                change.push({ name: key, isGranted: temp[key] });
-            }
-        }
+        const diffirent = diff(initPermission, allCheckStatus);
+        const change = diffirent.filter(i => i.op === "replace").map(i => ({ name: i.path[0], isGranted: i.value } as UpdatePermissionDto));
+        console.log(change);
         onPermissionChanged(change);
     };
     const tabs = () => {
         return permissions.groups && permissions.groups.map(g => {
             return {
                 key: g.name,
-                label: `${g.displayName}(${checkedCount(g.name!)}/${g.permissions.length})`,
+                label: `${g.displayName}(${checkedCount(g.name ?? "")}/${g.permissions.length})`,
                 children: (
                     <>
                         {g.displayName}
                         <Divider />
-                        <Checkbox name={g.name} checked={allCheckStatus[g.name!]} onChange={onPermissionChange}>全选</Checkbox>
+                        <Checkbox name={g.name} checked={allCheckStatus[g.name ?? ""]} onChange={onPermissionChange}>全选</Checkbox>
                         <Divider />
                         {g.permissions.map(p => {
-                            return <Row key={p.name}>{p.parentName !== null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> : ""}<Checkbox name={p.name} onChange={onPermissionChange} checked={allCheckStatus[p.name!]}>{p.displayName}</Checkbox></Row>
+                            return <Row key={p.name}>{p.parentName !== null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> : ""}<Checkbox name={p.name} onChange={onPermissionChange} checked={allCheckStatus[p.name ?? ""]}>{p.displayName}</Checkbox></Row>
                         })}
 
                     </>
