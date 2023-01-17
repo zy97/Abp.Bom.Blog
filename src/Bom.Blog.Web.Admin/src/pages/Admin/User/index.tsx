@@ -21,7 +21,7 @@ type UserState = {
   assignableRoles: IdentityRoleDto[],
   userRoles: IdentityRoleDto[],
   userId: string
-  permissionGroup: GetPermissionListResultDto
+  grantedPermissions: GetPermissionListResultDto
   permissions: Record<string, boolean>
 }
 function User() {
@@ -32,7 +32,7 @@ function User() {
     assignableRoles: [],
     userRoles: [],
     userId: "",
-    permissionGroup: {} as GetPermissionListResultDto,
+    grantedPermissions: {} as GetPermissionListResultDto,
     permissions: {}
   })
   const { useApplicationConfigurationStore } = useAppConfig();
@@ -73,7 +73,7 @@ function User() {
     setState(produce(draft => {
       draft.permissionModalVisible = true
       draft.userId = id
-      draft.permissionGroup = permission
+      draft.grantedPermissions = permission
     }))
   };
   const addUser = () => {
@@ -206,7 +206,7 @@ function User() {
       <Modal open={state.permissionModalVisible} title="权限" okText="确定" cancelText="取消"
         onCancel={() => { setState(produce(draft => { draft.permissionModalVisible = false })); }}
         onOk={updatePermissionsByUser}>
-        <Permission permissionGroup={state.permissionGroup} onPermissionChanged={onPermissionChange} />
+        <Permission permissions={state.grantedPermissions} onPermissionChanged={onPermissionChange} />
       </Modal>
     </div >
   );

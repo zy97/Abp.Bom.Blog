@@ -1,30 +1,34 @@
 import { GetPermissionListResultDto, UpdatePermissionDto } from "@abp/ng.permission-management/proxy";
-import { Checkbox, Divider, Form, Row, Tabs } from "antd";
+import { Checkbox, Divider, Form, Row, Tabs, TabsProps } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useEffect, useState } from "react";
-
 type PermissionProp = {
-    permissionGroup: GetPermissionListResultDto,
+    permissions: GetPermissionListResultDto,
     onPermissionChanged: (checkedValues: UpdatePermissionDto[]) => void,
 }
-
 function Permission(props: PermissionProp) {
-
     const [permissionModalForm] = Form.useForm();
-    const { permissionGroup, onPermissionChanged } = props;
+    const { permissions, onPermissionChanged } = props;
     const [allCheckStatus, setAllCheckStatus] = useState<{ [key: string]: boolean }>({});
     const [initPermission, setInitPermission] = useState<{ [key: string]: boolean }>({});
     const init = (permissionGroup: GetPermissionListResultDto) => {
+        //权限的结构为组/基础权限
+        //为了操作方便与ui显示，最总的展开为一层，但逻辑是三层：所有全选-组-基础权限
+        //把所有嵌套结构展开到一层,并添加每一层的全选状态
         const staus: { [key: string]: boolean } = {};
-        permissionGroup.groups.forEach(g => {
-            g.permissions.forEach(p => { staus[p.name!] = p.isGranted; });
-            if (g.permissions.every(p => p.isGranted === true)) {
-                staus[g.name!] = true;
+        permissionGroup.groups.forEach(group => {
+            //把所有最底层权限展开到一层
+            group.permissions.forEach(permission => { staus[permission.name ?? ""] = permission.isGranted; });
+            //添加组的选择，这个组的选择不会导致组下面的权限被权限
+            //因为他们的逻辑结构为：读-增删改...
+            if (group.permissions.every(p => p.isGranted === true)) {
+                staus[group.name ?? ""] = true;
             }
             else {
-                staus[g.name!] = false;
+                staus[group.name ?? ""] = false;
             }
         });
+        //添加一个所有全选状态，并判断是否全选
         staus.allCheck = true;
         for (const k in staus) {
             if (staus[k] === false) {
@@ -41,8 +45,8 @@ function Permission(props: PermissionProp) {
         setInitPermission(temp);
     };
     useEffect(() => {
-        init(permissionGroup);
-    }, [permissionGroup])
+        init(permissions);
+    }, [permissions])
 
 
     const checkedCount = (groupName: string) => {
@@ -75,7 +79,7 @@ function Permission(props: PermissionProp) {
             }
         }
         else {
-            if (permissionGroup.groups.findIndex(g => g.name === name) !== -1) {
+            if (permissions.groups.findIndex(g => g.name === name) !== -1) {
                 //是组点击
                 if (value === true) {
                     for (const key in allCheckStatus) {
@@ -133,7 +137,7 @@ function Permission(props: PermissionProp) {
         for (const key in allCheckStatus) {
             array.push({ key: key, value: allCheckStatus[key] });
         }
-        const group = array.filter(i => permissionGroup.groups.map(i => i.name).includes(i.key));
+        const group = array.filter(i => permissions.groups.map(i => i.name).includes(i.key));
         if (group.every(i => i.value === true)) {
             allCheckStatus["allCheck"] = true;
         }
@@ -144,7 +148,7 @@ function Permission(props: PermissionProp) {
 
         const temp = { ...allCheckStatus };
         delete temp.allCheck;
-        permissionGroup.groups.forEach(g => {
+        permissions.groups.forEach(g => {
             delete temp[g.name!];
         });
         const change: UpdatePermissionDto[] = [];
@@ -156,27 +160,31 @@ function Permission(props: PermissionProp) {
         onPermissionChanged(change);
     };
     const tabs = () => {
-        return permissionGroup.groups && permissionGroup.groups.map(g => {
-            return <Tabs.TabPane tab={`${g.displayName}(${checkedCount(g.name!)}/${g.permissions.length})`} key={g.name}>
-                {g.displayName}
-                <Divider />
-                <Checkbox name={g.name} checked={allCheckStatus[g.name!]} onChange={onPermissionChange}>全选</Checkbox>
-                <Divider />
-                {g.permissions.map(p => {
-                    return <Row key={p.name}>{p.parentName !== null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> : ""}<Checkbox name={p.name} onChange={onPermissionChange} checked={allCheckStatus[p.name!]}>{p.displayName}</Checkbox></Row>
-                })}
+        return permissions.groups && permissions.groups.map(g => {
+            return {
+                key: g.name,
+                label: `${g.displayName}(${checkedCount(g.name!)}/${g.permissions.length})`,
+                children: (
+                    <>
+                        {g.displayName}
+                        <Divider />
+                        <Checkbox name={g.name} checked={allCheckStatus[g.name!]} onChange={onPermissionChange}>全选</Checkbox>
+                        <Divider />
+                        {g.permissions.map(p => {
+                            return <Row key={p.name}>{p.parentName !== null ? <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> : ""}<Checkbox name={p.name} onChange={onPermissionChange} checked={allCheckStatus[p.name!]}>{p.displayName}</Checkbox></Row>
+                        })}
 
-            </Tabs.TabPane>
-        })
+                    </>
+                ),
+            }
+        }) as TabsProps['items']
     }
     return (
         <>
             <Checkbox onChange={onPermissionChange} name="allCheck" checked={allCheckStatus.allCheck}>授予所有权限</Checkbox>
             <Divider />
             <Form form={permissionModalForm} name="form_in_modal" labelCol={{ span: 7 }} wrapperCol={{ span: 17 }} >
-                <Tabs defaultActiveKey="1" tabPosition="left" items={tabs()}>
-
-                </Tabs>
+                <Tabs defaultActiveKey="1" tabPosition="left" items={tabs()} />
             </Form>
         </>
     );

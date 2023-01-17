@@ -30,10 +30,15 @@ const interceptors = () => {
         message.error(error.response.data.error.message);
       }
       if (error.response.status === 403) {
-        let msg = "未授权，请联系管理员";
+        // let msg = "未授权，请联系管理员";
+        let msg = ""
         const data = error.response.data;
         if (data && data.error && data.error.message)
-          msg += "：" + error.response.data.error.message;
+          msg = "错误信息：" + error.response.data.error.message;
+        if (data && data.error && data.error.detail) {
+          msg = "\r\n详细信息：" + error.response.data.error.detail
+        }
+
         message.error(msg);
       }
       if (error.response.status === 400) {
