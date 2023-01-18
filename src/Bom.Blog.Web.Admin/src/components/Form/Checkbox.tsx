@@ -1,12 +1,14 @@
 import { Form, Checkbox as AntdCheckbox } from "antd";
 type CheckboxProps = {
     name: string
-    label: string
+    label?: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    initialValue?: any
 }
 function Checkbox(props: CheckboxProps) {
-    const { name, label } = props;
+    const { name, label, initialValue } = props;
     return (
-        <Form.Item name={name} label={label} valuePropName="checked" >
+        <Form.Item name={name} label={label} valuePropName="checked" initialValue={initialValue}>
             <AntdCheckbox />
         </Form.Item>
     );

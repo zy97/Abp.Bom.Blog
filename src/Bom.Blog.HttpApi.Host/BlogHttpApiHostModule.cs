@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Bom.Blog.EntityFrameworkCore;
 using Bom.Blog.MultiTenancy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,11 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc;
@@ -27,6 +27,7 @@ using Volo.Abp.Emailing;
 using Volo.Abp.Localization;
 using Volo.Abp.MailKit;
 using Volo.Abp.Modularity;
+using Volo.Abp.Settings;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.VirtualFileSystem;
 
@@ -47,6 +48,12 @@ namespace Bom.Blog;
 )]
 public class BlogHttpApiHostModule : AbpModule
 {
+    public override Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
+    {
+        var app = context.GetApplicationBuilder();
+        app.ApplicationServices.GetService<SettingDefinitionManager>().Get(LocalizationSettingNames.DefaultLanguage).DefaultValue = "zh-Hans";
+        return base.OnApplicationInitializationAsync(context);
+    }
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
@@ -153,7 +160,7 @@ public class BlogHttpApiHostModule : AbpModule
     {
         Configure<AbpLocalizationOptions>(options =>
         {
-            options.Languages.Add(new LanguageInfo("zh-Hans", "zh-Hans", "简体中文"));
+            options.Languages.Insert(0, new LanguageInfo("zh-Hans", "zh-Hans", "简体中文"));
         });
     }
     private void ConfigureDataProtection(ServiceConfigurationContext context, IConfiguration configuration, IWebHostEnvironment hostEnvironment)

@@ -7,7 +7,7 @@ type AdvanceSearchFormProps = {
   form: FormInstance;
   submit: () => void;
   reset: () => void;
-  extraActions: Array<extraActionProps | null>;
+  extraActions?: Array<extraActionProps | null>;
   children: React.ReactNode[] | React.ReactNode;
 };
 type extraActionProps = {
@@ -36,9 +36,9 @@ const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
     }
     return children;
   };
-  const extraButton = (extraActions: Array<extraActionProps | null>) => {
+  const extraButton = (extraActions?: Array<extraActionProps | null>) => {
     const buttons = [];
-    for (const i of extraActions) {
+    for (const i of extraActions ?? []) {
       if (i) {
         buttons.push(<Button type="primary" key={i.content} onClick={() => i.action()}>{i.content}</Button>)
       }

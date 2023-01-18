@@ -1,269 +1,155 @@
-import { FeatureDto } from "@abp/ng.feature-management/proxy";
-import {
-    TenantDto,
-} from "@abp/ng.tenant-management/proxy/lib";
-import { useAntdTable, useBoolean, useDynamicList, useRequest } from "ahooks";
-import { Button, Checkbox, Form, Input, message, Modal, Space, Table } from "antd";
-import { useEffect, useState } from "react";
+import { FeatureDto, GetFeatureListResultDto } from "@abp/ng.feature-management/proxy";
+import { TenantDto, } from "@abp/ng.tenant-management/proxy/lib";
+import { useAntdTable, useAsyncEffect, useBoolean } from "ahooks";
+import { Button, Form, message, Modal, Space } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { produce } from 'immer';
+import { useState } from "react";
 import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
+import Checkbox from "../../../components/Form/Checkbox";
+import Input from "../../../components/Form/Input";
+import Table from "../../../components/Table/Table";
 import { useAppConfig, useStores } from "../../../hooks/useStore";
 import { transformToArray } from "../../../util/formTransform";
-import {
-    getEmailValidationRule,
-    getRequiredRule,
-} from "../../../util/formValid";
+import { getEmailValidationRule, getRequiredRule, } from "../../../util/formValid";
 import styles from "./index.module.less";
+type TanantState = {
+    tenantId: string
+    tenantModalVisible: boolean
+    featureModalVisible: boolean
+    grantedPolicies: Record<string, boolean>
+    features: FeatureDto[]
+}
 function Tenant() {
+    const [state, setState] = useState<TanantState>({
+        tenantId: "",
+        tenantModalVisible: false,
+        featureModalVisible: false,
+        grantedPolicies: {},
+        features: []
+    })
     const { useApplicationConfigurationStore } = useAppConfig();
     const getAppConfig = useApplicationConfigurationStore(state => state.Get)
     const { useTenantsStore } = useStores();
-    const [getTenants, getTenantById, deleteTenantSvc, getHostFeatures, getTenantFeatures, updateTenant, updateHostFeatures, updateTenantFeatures, addTenant] = useTenantsStore(state => [state.getTenants, state.getTenantById, state.deleteTenant, state.getHostFeatures, state.getTenantFeatures, state.updateTenant, state.updateHostFeatures, state.updateTenantFeatures, state.addTenant])
-    const [visible, setVisible] = useState(false);
-    const [tenantId, setTenantId] = useState<string | null>();
-    const [featureModalState, { setTrue: openFeatureModal, setFalse: closeFeatureModal }] = useBoolean(false);
+    const [getTenants, getTenantById, deleteTenantSvc, getHostFeatures, getTenantFeatures, updateTenant, updateHostFeatures, updateTenantFeatures, addTenantSvc] = useTenantsStore(state => [state.getTenants, state.getTenantById, state.deleteTenant, state.getHostFeatures, state.getTenantFeatures, state.updateTenant, state.updateHostFeatures, state.updateTenantFeatures, state.addTenant])
+    // const [featureModalState, { setTrue: openFeatureModal, setFalse: closeFeatureModal }] = useBoolean(false);
     const [form] = Form.useForm();
     const [featuresForm] = Form.useForm();
-    const { list, resetList, merge, getKey } = useDynamicList<FeatureDto>([]);
-    const [modalForm] = Form.useForm();
-    const [permissions, setpermissions] = useState({} as Record<string, boolean>);
-    useEffect(() => {
-        getAppConfig().then((config) => {
-            setpermissions(config.auth.grantedPolicies);
-        });
-    }, []);
-    const { tableProps, search } = useAntdTable(getTenants, {
-        defaultPageSize: 10,
-        form,
-        debounceWait: 500,
-    });
-    const { runAsync } = useRequest(getTenantById, {
-        manual: true,
-    });
+    const [tenantForm] = Form.useForm();
+    useAsyncEffect(async () => {
+        const config = await getAppConfig();
+        setState(produce(draft => { draft.grantedPolicies = config.auth.grantedPolicies }))
+    }, [])
+    const { tableProps, search } = useAntdTable(getTenants, { defaultPageSize: 10, form, debounceWait: 500, });
     const deleteTenant = (record: TenantDto) => {
         Modal.confirm({
             title: "删除标签",
             content: "确定删除吗？",
             onOk: async () => {
-                const success = await deleteTenantSvc(record.id);
-                if (success) {
+                if (await deleteTenantSvc(record.id)) {
                     message.success("删除成功");
                     search.submit();
-                } else {
-                    message.error("删除失败");
                 }
             },
             okText: "确定",
             cancelText: "取消",
         });
     };
-    const showModal = () => {
-        setVisible(true);
-    };
+    const showTenantModal = () => { setState(produce(draft => { draft.tenantModalVisible = true })) }
+    const addTenant = () => { showTenantModal() }
     const showFeatureModal = async (id?: string) => {
-        openFeatureModal();
-        resetList([]);
-        let featureList;
-        if (id) {
+        let featureList: GetFeatureListResultDto;
+        if (id)
             featureList = await getTenantFeatures(id);
-            setTenantId(id);
-        }
-        else {
+        else
             featureList = await getHostFeatures();
-        }
-        const features = featureList?.groups.flatMap(i => i.features)
-        if (features) {
-            merge(0, features);
-        }
+        const tenantId = id ?? "";
+        const features = featureList.groups.flatMap(i => i.features)
+        setState(produce(draft => {
+            draft.features = features
+            draft.tenantId = tenantId
+            draft.featureModalVisible = true
+        }))
     };
     const getTenant = async (record: TenantDto) => {
-        try {
-            const tenant = await runAsync(record.id);
-            if (tenant) {
-                modalForm.setFieldsValue(tenant);
-                setVisible(true);
-            }
-        } catch (error) { message.error((error as Error).message) }
+        const tenant = await getTenantById(record.id);
+        tenantForm.setFieldsValue(tenant);
+        setState(produce(draft => {
+            draft.tenantModalVisible = true
+            draft.tenantId = tenant.id
+        }))
+
     };
     const addOrUpdateTag = async (data: any) => {
-        console.log("data", data);
-        try {
-            if (data.id) {
-                const tag = await updateTenant(data.id, data);
-                if (tag) {
-                    modalForm.resetFields();
-                    message.success("更新成功");
-                    setVisible(false);
-                    search.submit();
-                }
-            } else {
-                const tenant = await addTenant(data);
-                if (tenant) {
-                    modalForm.resetFields();
-                    message.success("添加成功");
-                    setVisible(false);
-                    search.submit();
-                }
-            }
-        } catch (error) { message.error((error as Error).message) }
+        if (data.id) {
+            if (await updateTenant(data.id, data))
+                message.success("更新成功");
+        } else {
+            if (await addTenantSvc(data))
+                message.success("添加成功");
+        }
+        tenantForm.resetFields();
+        setState(produce(draft => { draft.tenantModalVisible = false }))
+        search.submit();
     };
     const updateFeatures = async (data: any) => {
-        if (tenantId) {
+        const { tenantId } = state;
+        if (tenantId !== "") {
             await updateTenantFeatures(tenantId, { features: transformToArray(data) });
-            setTenantId(null);
+            setState(produce(draft => { draft.tenantId = "" }))
         }
-        else {
+        else
             await updateHostFeatures({ features: transformToArray(data) });
-        }
-        closeFeatureModal();
+        setState(produce(draft => { draft.featureModalVisible = false }))
+    }
+    const tableColumns: ColumnsType<TenantDto> = [
+        { title: '租户名', dataIndex: 'name', },
+        {
+            title: '操作', render: (record) => (
+                <Space>
+                    {state.grantedPolicies["AbpTenantManagement.Tenants.Update"] && <Button type="primary" onClick={() => getTenant(record)}>编辑</Button>}
+                    {state.grantedPolicies["AbpTenantManagement.Tenants.Update"] && <Button type="primary" onClick={() => showFeatureModal(record.id)}>功能</Button>}
+                    {state.grantedPolicies["AbpTenantManagement.Tenants.ManageFeatures"] && <Button type="primary" danger onClick={() => deleteTenant(record)} >删除</Button>}
+                </Space>
+            )
+        },
+    ]
+    const closeTenantModal = () => {
+        setState(produce(draft => { draft.tenantModalVisible = false }))
+        tenantForm.resetFields();
+    }
+    const submitTenantModal = async () => {
+        addOrUpdateTag(await tenantForm.validateFields());
+    }
+    const submitFeaturesModal = async () => {
+        updateFeatures(await featuresForm.validateFields());
     }
     return (
         <div>
-            <AdvancedSearchForm
-                form={form}
-                {...search}
-                extraActions={
-                    [
-                        permissions["AbpTenantManagement.Tenants.Create"]
-                            ? { content: "添加", action: showModal }
-                            : null,
-                        permissions["FeatureManagement.ManageHostFeatures"]
-                            ? { content: "管理宿主功能", action: showFeatureModal }
-                            : null,
-                    ]}
-            >
-                <Form.Item name="Filter" label="租户名">
-                    <Input placeholder="请输入租户名" />
-                </Form.Item>
+            <AdvancedSearchForm form={form} {...search} extraActions={[state.grantedPolicies["AbpTenantManagement.Tenants.Create"] ? { content: "添加", action: addTenant } : null, state.grantedPolicies["FeatureManagement.ManageHostFeatures"] ? { content: "管理宿主功能", action: showFeatureModal } : null,]}>
+                <Input name="Filter" label="租户名" placeholder={true} />
             </AdvancedSearchForm>
             <div className={styles.table}>
-                <Table<TenantDto>
-                    rowKey="id"
-                    {...{
-                        ...tableProps,
-                        pagination: {
-                            ...tableProps.pagination,
-                            showTotal: (total) => {
-                                return <div>总共：{total} 项</div>;
-                            },
-                            showSizeChanger: true,
-                        },
-                    }}
-                >
-                    <Table.Column<TenantDto> title="租户名" dataIndex="name" />
-                    <Table.Column<TenantDto>
-                        title="操作"
-                        render={(recode) => {
-                            return (
-                                <Space>
-                                    {permissions["AbpTenantManagement.Tenants.Update"] && (
-                                        <Button type="primary" onClick={() => getTenant(recode)}>
-                                            编辑
-                                        </Button>
-                                    )}
-                                    {permissions["AbpTenantManagement.Tenants.Update"] && (
-                                        <Button type="primary" onClick={() => showFeatureModal(recode.id)}>
-                                            功能
-                                        </Button>
-                                    )}
-                                    {permissions["AbpTenantManagement.Tenants.ManageFeatures"] && (
-                                        <Button
-                                            type="primary"
-                                            danger
-                                            onClick={() => deleteTenant(recode)}
-                                        >
-                                            删除
-                                        </Button>
-                                    )}
-                                </Space>
-                            );
-                        }}
-                    />
-                </Table>
+                <Table<TenantDto> columns={tableColumns}  {...tableProps} />
             </div>
-            <Modal
-                open={visible}
-                title="添加一个新标签"
-                okText="确定"
-                cancelText="取消"
-                onCancel={() => {
-                    setVisible(false);
-                    modalForm.resetFields();
-                }}
-                onOk={() => {
-                    modalForm
-                        .validateFields()
-                        .then((values) => {
-                            addOrUpdateTag(values);
-                        })
-                        .catch((info) => {
-                            message.error("添加失败");
-                        });
-                }}
-            >
-                <Form
-                    form={modalForm}
-                    name="form_in_modal"
-                    labelCol={{ span: 6 }}
-                    wrapperCol={{ span: 18 }}
-                >
-                    <Form.Item name="id" label="id" hidden>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="name" label="租户名" rules={[getRequiredRule("名字")]}>
-                        <Input />
-                    </Form.Item>
-                    {!modalForm.getFieldValue("id") && (
+            <Modal open={state.tenantModalVisible} title="添加一个新标签" okText="确定" cancelText="取消" onCancel={closeTenantModal} onOk={submitTenantModal}>
+                <Form form={tenantForm} name="form_in_modal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
+                    <Input name="id" label="id" hidden />
+                    <Input name="name" label="租户名" rules={[getRequiredRule("名字")]} />
+                    {!tenantForm.getFieldValue("id") && (
                         <>
-                            <Form.Item
-                                name="adminEmailAddress"
-                                label="管理员邮件地址"
-                                rules={[
-                                    getRequiredRule("管理员邮件地址"),
-                                    getEmailValidationRule(),
-                                ]}
-                            >
-                                <Input />
-                            </Form.Item>
-                            <Form.Item
-                                name="adminPassword"
-                                label="管理员密码"
-                                rules={[getRequiredRule("管理员密码")]}
-                            >
-                                <Input.Password />
-                            </Form.Item>
+                            <Input name="adminEmailAddress" label="管理员邮件地址" rules={[getRequiredRule("管理员邮件地址"), getEmailValidationRule(),]} />
+                            <Input name="adminPassword" label="管理员密码" rules={[getRequiredRule("管理员密码")]} isPassword />
                         </>
                     )}
                 </Form>
             </Modal>
-            <Modal
-                open={featureModalState}
-                title="设置管理"
-                okText="确定"
-                cancelText="取消"
-                onCancel={() => {
-                    closeFeatureModal();
-                }}
-                onOk={() => {
-                    featuresForm
-                        .validateFields()
-                        .then((values) => {
-                            updateFeatures(values);
-                        })
-                        .catch(() => {
-                            message.error("添加失败");
-                        });
-                }}
-            >
+            <Modal open={featureModalState} title="设置管理" okText="确定" cancelText="取消" onCancel={closeFeatureModal} onOk={submitFeaturesModal}>
                 <Form form={featuresForm}>
-                    {list.map((i, index) => {
-                        return <Form.Item name={[i.name!, getKey(index)]} key={i.name} label={i.displayName} valuePropName="checked" initialValue={i.value === "true" ? true : false
-                        }>
-                            <Checkbox />
-                        </Form.Item>
-                    })}
+                    {state.features.map((i) => { return <Checkbox name={i.name ?? ""} label={i.displayName} key={i.name} initialValue={i.value === "true" ? true : false} /> })}
                 </Form>
             </Modal>
-        </div>
+        </div >
     );
 }
 

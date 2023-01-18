@@ -15,7 +15,7 @@ function Input(props: InputProps) {
     const { name, label, rules, dependencies, isPassword, placeholder, hidden } = props;
     let waterText = undefined;
     if (placeholder === true) {
-        waterText = rules?.filter((r: any) => r.required === true).map((r: any) => r.message).join(" ");
+        waterText = rules?.filter((r: any) => r.required === true).map((r: any) => r.message).join(" ") ?? "请输入" + label;
     }
     else {
         waterText = placeholder

@@ -26,28 +26,33 @@ const interceptors = () => {
       if (axios.isCancel(error)) {
         return Promise.reject(error);
       }
-      if (error.response.status === 500) {
-        message.error(error.response.data.error.message);
-      }
+      // if (error.response.status === 500) {
+      //   message.error(error.response.data.error.message);
+      // }
+      let msg = "";
       if (error.response.status === 403) {
-        // let msg = "未授权，请联系管理员";
-        let msg = ""
         const data = error.response.data;
         if (data && data.error && data.error.message)
           msg = "错误信息：" + error.response.data.error.message;
         if (data && data.error && data.error.detail) {
           msg = "\r\n详细信息：" + error.response.data.error.detail
         }
-
         message.error(msg);
       }
+      else if (error.response.status === 404) {
+        msg = "请求的资源不存在"
+      }
+      else if (error.response.status === 500) {
+        msg = "服务器内部错误"
+      }
       if (error.response.status === 400) {
-        let msg = "";
         const data = error.response.data;
         if (data && data.error && data.error.message)
           msg = error.response.data.error.details;
         message.error(msg);
       }
+      if (msg !== "")
+        message.error(msg);
       return Promise.reject(error);
     }
   );

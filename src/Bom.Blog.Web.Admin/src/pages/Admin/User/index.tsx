@@ -183,7 +183,7 @@ function User() {
           </Tabs>
         </Form>
       </Modal>
-      <Modal open={state.permissionModalVisible} title="权限" okText="确定" cancelText="取消" onCancel={closePermissionModal} onOk={updatePermissionsByUser}>
+      <Modal open={state.permissionModalVisible} title="权限" okText="确定" cancelText="取消" onCancel={closePermissionModal}onOk={updatePermissionsByUser}>
         <Permission permissions={state.grantedPermissions} onPermissionChanged={onPermissionChange} />
       </Modal>
     </div >

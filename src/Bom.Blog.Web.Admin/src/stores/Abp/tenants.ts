@@ -1,17 +1,17 @@
 import { featureApi, tenantsApi } from "../../apis";
-import { TenantCreateDto, TenantUpdateDto } from "@abp/ng.tenant-management/proxy";
-import { UpdateFeaturesDto } from "@abp/ng.feature-management/proxy";
+import { TenantCreateDto, TenantDto, TenantUpdateDto } from "@abp/ng.tenant-management/proxy";
+import { GetFeatureListResultDto, UpdateFeaturesDto } from "@abp/ng.feature-management/proxy";
 import { create } from "zustand";
 
 interface TenantsStoreState {
   getTenants: (data: { current: number; pageSize: number }, form: any) => Promise<{ total: number; list: any[]; }>;
   deleteTenant: (id: string) => Promise<boolean>;
   addTenant: (tenant: TenantCreateDto) => Promise<any>;
-  getTenantById: (id: string) => Promise<any>;
+  getTenantById: (id: string) => Promise<TenantDto>;
   updateTenant: (id: string, tenant: TenantUpdateDto) => Promise<any>;
-  getTenantFeatures: (id: string) => Promise<any>;
+  getTenantFeatures: (id: string) => Promise<GetFeatureListResultDto>;
   updateTenantFeatures: (id: string, features: UpdateFeaturesDto) => Promise<any>;
-  getHostFeatures: () => Promise<any>;
+  getHostFeatures: () => Promise<GetFeatureListResultDto>;
   updateHostFeatures: (features: UpdateFeaturesDto) => Promise<any>;
 }
 export const useTenantsStore = create<TenantsStoreState>()(() => ({
@@ -40,12 +40,8 @@ export const useTenantsStore = create<TenantsStoreState>()(() => ({
     }
   },
   getTenantById: async (id: string) => {
-    try {
-      const tenant = await tenantsApi.getTenantById(id);
-      return tenant.data;
-    } catch (error) {
-      return;
-    }
+    const tenant = await tenantsApi.getTenantById(id);
+    return tenant.data;
   },
   updateTenant: async (id: string, tenant: TenantUpdateDto) => {
     try {
@@ -56,12 +52,8 @@ export const useTenantsStore = create<TenantsStoreState>()(() => ({
     }
   },
   getTenantFeatures: async (id: string) => {
-    try {
-      const result = await featureApi.getFeatures({ providerName: "T", providerKey: id });
-      return result.data;
-    } catch (error) {
-      return;
-    }
+    const result = await featureApi.getFeatures({ providerName: "T", providerKey: id });
+    return result.data;
   },
   updateTenantFeatures: async (id: string, features: UpdateFeaturesDto) => {
     try {
@@ -72,12 +64,8 @@ export const useTenantsStore = create<TenantsStoreState>()(() => ({
     }
   },
   getHostFeatures: async () => {
-    try {
-      const result = await featureApi.getFeatures({ providerName: "T" });
-      return result.data;
-    } catch (error) {
-      return;
-    }
+    const result = await featureApi.getFeatures({ providerName: "T" });
+    return result.data;
   },
   updateHostFeatures: async (features: UpdateFeaturesDto) => {
     try {

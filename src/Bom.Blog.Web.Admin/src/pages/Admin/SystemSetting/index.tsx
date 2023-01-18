@@ -1,7 +1,10 @@
-import { Button, Checkbox, Col, Form, InputNumber, message, Row, Space } from "antd";
+import { useAsyncEffect } from "ahooks";
+import { Button, Col, Form, message, Row, Space } from "antd";
 import { diff } from "just-diff";
 import { useEffect, useState } from "react";
 import { upperCaseFirst } from "upper-case-first";
+import Checkbox from "../../../components/Form/Checkbox";
+import InputNumber from "../../../components/Form/InputNumber";
 import { useAppConfig, useStores } from "../../../hooks/useStore";
 import { transformToZH } from "../../../util/formTransform";
 
@@ -15,34 +18,31 @@ function SystemSetting() {
     useEffect(() => {
         settingform.setFieldsValue(setting);
     }, [setting]);
-    useEffect(() => {
-        getAppConfig().then((config) => {
-            const temp = config.setting.values;
-            const kv = temp as Record<string, string | boolean>;
-            Object.keys(temp).forEach((key) => {
-                const value = upperCaseFirst(temp[key] + "");
-                if (value === "True") {
-                    kv[key] = true;
-                }
-                if (value === "False") {
-                    kv[key] = false;
-                }
-            });
-            setSetting(kv);
+    useAsyncEffect(async () => {
+        const config = await getAppConfig()
+        const temp = config.setting.values;
+        const kv = temp as Record<string, string | boolean>;
+        Object.keys(temp).forEach((key) => {
+            const value = upperCaseFirst(temp[key] + "");
+            if (value === "True") {
+                kv[key] = true;
+            }
+            if (value === "False") {
+                kv[key] = false;
+            }
         });
+        setSetting(kv);
     }, []);
     const createFormItems = () => {
         const kv = setting;
-        delete kv["Abp.Timing.TimeZone"];
-        delete kv["Abp.Localization.DefaultLanguage"];
+        // delete kv["Abp.Timing.TimeZone"];
+        // delete kv["Abp.Localization.DefaultLanguage"];
         const items = Object.keys(kv).map((key) => {
             console.log(typeof kv[key]);
             if (typeof kv[key] === "boolean") {
                 return (
                     <Col span={12} key={key}>
-                        <Form.Item name={key} label={transformToZH(key)} valuePropName='checked' key={key}>
-                            <Checkbox />
-                        </Form.Item>
+                        <Checkbox name={key} label={transformToZH(key)} key={key} />
                     </Col>
 
                 )
@@ -50,9 +50,7 @@ function SystemSetting() {
             if (!isNaN(+kv[key])) {
                 return (
                     <Col span={12} key={key}>
-                        <Form.Item name={key} label={transformToZH(key)} key={key}>
-                            <InputNumber style={{ width: '80%' }} />
-                        </Form.Item>
+                        <InputNumber style={{ width: '150px' }} name={key} label={transformToZH(key)} key={key} />
                     </Col>
                 )
             }
@@ -82,7 +80,6 @@ function SystemSetting() {
         <Form name="form_in_modal" form={settingform} onFinish={updateEmailSetting} labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}>
             <Row gutter={24}> {createFormItems()}</Row>
-
             <Form.Item wrapperCol={{ offset: 10, span: 16 }} style={{ marginBottom: "0px" }}>
                 <Space>
                     <Button type="primary" htmlType="submit">提交</Button>
