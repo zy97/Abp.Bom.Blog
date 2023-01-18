@@ -23,7 +23,6 @@ type RoleState = {
   grantedPermissions: GetPermissionListResultDto
   permissions: Record<string, boolean>
 }
-
 function Role() {
   const [state, setState] = useState<RoleState>({
     roleModalVisible: false,
@@ -64,8 +63,7 @@ function Role() {
     Modal.confirm({
       title: "删除", content: "确定删除吗？",
       onOk: async () => {
-        const success = await deleteRoleService(record.id);
-        if (success) {
+        if (await deleteRoleService(record.id)) {
           message.success("删除成功");
           search.submit();
         }
@@ -79,6 +77,14 @@ function Role() {
       draft.roleModalTitle = roleModelTitle
     }))
   };
+  const closeRoleModal = () => {
+    setState(produce(draft => { draft.roleModalVisible = false }))
+    roleModalForm.resetFields()
+  }
+  const submitRoleModal = async () => {
+    const values = await roleModalForm.validateFields()
+    addOrUpdateRole(values);
+  }
   const addRole = () => {
     showRoleModal("添加")
   }
@@ -113,8 +119,15 @@ function Role() {
     }))
   }
   const onPermissionChange = (checkedValues: UpdatePermissionDto[]) => {
-    console.log(checkedValues)
     changedPermession = checkedValues;
+  }
+  const closePermissionModal = () => {
+    setState(produce(draft => { draft.permissionModalVisible = false }))
+  }
+  const subitPermissionModal = async () => {
+    await updatePermissionsByRole(state.roleName, { permissions: changedPermession })
+    setState(produce(draft => { draft.permissionModalVisible = false }))
+    message.success("更新成功")
   }
   return (
     <div>
@@ -124,20 +137,8 @@ function Role() {
       <div className={styles.table}>
         <Table<IdentityRoleDto> columns={tableColumns} {...tableProps} />
       </div>
-      <Modal open={state.roleModalVisible} title={state.roleModalTitle} okText="确定" cancelText="取消" onCancel={() => {
-        setState(produce(draft => { draft.roleModalVisible = false }))
-        roleModalForm.resetFields()
-      }}
-        onOk={() => {
-          roleModalForm
-            .validateFields()
-            .then((values) => {
-              addOrUpdateRole(values);
-            })
-            .catch((info) => {
-              message.error("添加失败");
-            });
-        }}>
+      <Modal open={state.roleModalVisible} title={state.roleModalTitle} okText="确定" cancelText="取消" onCancel={closeRoleModal}
+        onOk={submitRoleModal}>
         <Form form={roleModalForm} name="form_in_modal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} >
           <Input name="id" label="id" hidden />
           <Input name="name" label="角色名" rules={[getRequiredRule("角色名")]} placeholder={true} />
@@ -146,13 +147,8 @@ function Role() {
           <ConcurrencyStamp />
         </Form>
       </Modal>
-      <Modal open={state.permissionModalVisible} title={`${state.grantedPermissions.entityDisplayName} - 权限`} okText="确定" cancelText="取消" onCancel={() => { setState(produce(draft => { draft.permissionModalVisible = false })) }}
-        onOk={() => {
-          updatePermissionsByRole(state.roleName, { permissions: changedPermession }).then(() => {
-            setState(produce(draft => { draft.permissionModalVisible = false }))
-          });
-        }}
-      >
+      <Modal open={state.permissionModalVisible} title={`${state.grantedPermissions.entityDisplayName} - 权限`} okText="确定" cancelText="取消" onCancel={closePermissionModal}
+        onOk={subitPermissionModal}>
         <Permission permissions={state.grantedPermissions} onPermissionChanged={onPermissionChange} />
       </Modal>
     </div>
