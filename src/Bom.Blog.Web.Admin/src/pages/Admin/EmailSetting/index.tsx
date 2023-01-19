@@ -1,6 +1,6 @@
 import { UpdateEmailSettingsDto } from "@abp/ng.setting-management/config/public-api";
 import { useAsyncEffect } from "ahooks";
-import { Button, Form, message, Space } from "antd";
+import { Form, message, Space } from "antd";
 import { useState } from "react";
 import { produce } from 'immer';
 import Input from "../../../components/Form/Input";
@@ -8,22 +8,16 @@ import Switch from "../../../components/Form/Switch";
 import { useAppConfig, useStores } from "../../../hooks/useStore";
 import { getEmailValidationRule } from "../../../util/formValid";
 import styles from "./index.module.less";
+import Button from "../../../components/Button";
 type State = {
     email: string
-    permissions: Record<string, boolean>
 }
 function EmailSetting() {
     const [emailSettingform] = Form.useForm();
-    const [state, setState] = useState<State>({ email: "", permissions: {} });
-    const { useApplicationConfigurationStore } = useAppConfig();
-    const getAppConfig = useApplicationConfigurationStore(state => state.Get)
+    const [state, setState] = useState<State>({ email: "" });
     const { useEmailSettingStore } = useStores();
     const [getEmailSetting, sendTestEmailService, updateEmailSettingService] = useEmailSettingStore(state => [state.getEmailSetting, state.sendTestEmail, state.updateEmailSetting])
     useAsyncEffect(async () => {
-        const config = await getAppConfig()
-        setState(produce(draft => {
-            draft.permissions = config.auth.grantedPolicies
-        }))
         const setting = await getEmailSetting()
         emailSettingform.setFieldsValue(setting);
         if (setting.defaultFromAddress) {
@@ -66,7 +60,7 @@ function EmailSetting() {
                     <Space>
                         <Button type="primary" htmlType="submit">提交</Button>
                         <Button type="primary" >取消</Button>
-                        {state.permissions["SettingManagement.Emailing.Test"] && <Button type="primary" onClick={sendTestEmail}>发送测试邮件</Button>}
+                        <Button permission="SettingManagement.Emailing.Test" type="primary" onClick={sendTestEmail}>发送测试邮件</Button>
                     </Space>
                 </Form.Item>
 

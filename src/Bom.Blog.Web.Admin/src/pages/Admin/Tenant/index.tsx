@@ -1,7 +1,7 @@
 import { FeatureDto, GetFeatureListResultDto } from "@abp/ng.feature-management/proxy";
 import { TenantDto, } from "@abp/ng.tenant-management/proxy/lib";
-import { useAntdTable, useAsyncEffect, useBoolean } from "ahooks";
-import { Button, Form, message, Modal, Space } from "antd";
+import { useAntdTable } from "ahooks";
+import { Form, message, Modal, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { produce } from 'immer';
 import { useState } from "react";
@@ -9,15 +9,15 @@ import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
 import Checkbox from "../../../components/Form/Checkbox";
 import Input from "../../../components/Form/Input";
 import Table from "../../../components/Table/Table";
-import { useAppConfig, useStores } from "../../../hooks/useStore";
+import { useStores } from "../../../hooks/useStore";
 import { transformToArray } from "../../../util/formTransform";
 import { getEmailValidationRule, getRequiredRule, } from "../../../util/formValid";
 import styles from "./index.module.less";
+import Button from "../../../components/Button";
 type TanantState = {
     tenantId: string
     tenantModalVisible: boolean
     featureModalVisible: boolean
-    grantedPolicies: Record<string, boolean>
     features: FeatureDto[]
 }
 function Tenant() {
@@ -25,21 +25,13 @@ function Tenant() {
         tenantId: "",
         tenantModalVisible: false,
         featureModalVisible: false,
-        grantedPolicies: {},
         features: []
     })
-    const { useApplicationConfigurationStore } = useAppConfig();
-    const getAppConfig = useApplicationConfigurationStore(state => state.Get)
     const { useTenantsStore } = useStores();
     const [getTenants, getTenantById, deleteTenantSvc, getHostFeatures, getTenantFeatures, updateTenant, updateHostFeatures, updateTenantFeatures, addTenantSvc] = useTenantsStore(state => [state.getTenants, state.getTenantById, state.deleteTenant, state.getHostFeatures, state.getTenantFeatures, state.updateTenant, state.updateHostFeatures, state.updateTenantFeatures, state.addTenant])
-    // const [featureModalState, { setTrue: openFeatureModal, setFalse: closeFeatureModal }] = useBoolean(false);
     const [form] = Form.useForm();
     const [featuresForm] = Form.useForm();
     const [tenantForm] = Form.useForm();
-    useAsyncEffect(async () => {
-        const config = await getAppConfig();
-        setState(produce(draft => { draft.grantedPolicies = config.auth.grantedPolicies }))
-    }, [])
     const { tableProps, search } = useAntdTable(getTenants, { defaultPageSize: 10, form, debounceWait: 500, });
     const deleteTenant = (record: TenantDto) => {
         Modal.confirm({
@@ -107,9 +99,9 @@ function Tenant() {
         {
             title: '操作', render: (record) => (
                 <Space>
-                    {state.grantedPolicies["AbpTenantManagement.Tenants.Update"] && <Button type="primary" onClick={() => getTenant(record)}>编辑</Button>}
-                    {state.grantedPolicies["AbpTenantManagement.Tenants.Update"] && <Button type="primary" onClick={() => showFeatureModal(record.id)}>功能</Button>}
-                    {state.grantedPolicies["AbpTenantManagement.Tenants.ManageFeatures"] && <Button type="primary" danger onClick={() => deleteTenant(record)} >删除</Button>}
+                    <Button permission="AbpTenantManagement.Tenants.Update" type="primary" onClick={() => getTenant(record)}>编辑</Button>
+                    <Button permission="AbpTenantManagement.Tenants.Update" type="primary" onClick={() => showFeatureModal(record.id)}>功能</Button>
+                    <Button permission="AbpTenantManagement.Tenants.ManageFeatures" type="primary" danger onClick={() => deleteTenant(record)} >删除</Button>
                 </Space>
             )
         },
@@ -124,9 +116,13 @@ function Tenant() {
     const submitFeaturesModal = async () => {
         updateFeatures(await featuresForm.validateFields());
     }
+    const closeFeaturesModal = () => {
+        setState(produce(draft => { draft.featureModalVisible = false }))
+        featuresForm.resetFields();
+    }
     return (
         <div>
-            <AdvancedSearchForm form={form} {...search} extraActions={[state.grantedPolicies["AbpTenantManagement.Tenants.Create"] ? { content: "添加", action: addTenant } : null, state.grantedPolicies["FeatureManagement.ManageHostFeatures"] ? { content: "管理宿主功能", action: showFeatureModal } : null,]}>
+            <AdvancedSearchForm form={form} {...search} extraActions={[{ content: "添加", action: addTenant, permission: "AbpTenantManagement.Tenants.Create" }, { content: "管理宿主功能", action: showFeatureModal, permission: "FeatureManagement.ManageHostFeatures" },]}>
                 <Input name="Filter" label="租户名" placeholder={true} />
             </AdvancedSearchForm>
             <div className={styles.table}>
@@ -144,7 +140,7 @@ function Tenant() {
                     )}
                 </Form>
             </Modal>
-            <Modal open={featureModalState} title="设置管理" okText="确定" cancelText="取消" onCancel={closeFeatureModal} onOk={submitFeaturesModal}>
+            <Modal open={state.featureModalVisible} title="设置管理" okText="确定" cancelText="取消" onCancel={closeFeaturesModal} onOk={submitFeaturesModal}>
                 <Form form={featuresForm}>
                     {state.features.map((i) => { return <Checkbox name={i.name ?? ""} label={i.displayName} key={i.name} initialValue={i.value === "true" ? true : false} /> })}
                 </Form>
@@ -154,3 +150,4 @@ function Tenant() {
 }
 
 export default Tenant;
+

@@ -1,7 +1,8 @@
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Row, Space } from "antd";
+import { Col, Form, Row, Space } from "antd";
 import { FormInstance } from "antd/es/form/Form";
 import { useState } from "react";
+import Button from "../Button";
 import styles from "./index.module.less";
 type AdvanceSearchFormProps = {
   form: FormInstance;
@@ -13,6 +14,7 @@ type AdvanceSearchFormProps = {
 type extraActionProps = {
   content: string;
   action: () => void;
+  permission?: string | undefined
 };
 const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
   const { form, submit, reset, extraActions } = props;
@@ -40,7 +42,7 @@ const AdvancedSearchForm = (props: AdvanceSearchFormProps) => {
     const buttons = [];
     for (const i of extraActions ?? []) {
       if (i) {
-        buttons.push(<Button type="primary" key={i.content} onClick={() => i.action()}>{i.content}</Button>)
+        buttons.push(<Button permission={i.permission} type="primary" key={i.content} onClick={() => i.action()}>{i.content}</Button>)
       }
     }
     return buttons;

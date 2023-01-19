@@ -1,12 +1,12 @@
 import { IdentityUserDto } from "@abp/ng.account.core/proxy";
 import { IdentityRoleDto } from "@abp/ng.identity/proxy";
 import { GetPermissionListResultDto, UpdatePermissionDto } from "@abp/ng.permission-management/proxy";
-import { useAntdTable, useAsyncEffect } from "ahooks";
-import { Button, Checkbox, Form, message, Modal, Row, Space, Tabs } from "antd";
+import { useAntdTable } from "ahooks";
+import { Checkbox, Form, message, Modal, Row, Space, Tabs } from "antd";
 import { useState } from "react";
 import { produce } from 'immer';
 import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
-import { useAppConfig, useStores } from "../../../hooks/useStore";
+import { useStores } from "../../../hooks/useStore";
 import Permission from "../../../components/Permission";
 import styles from "./index.module.less";
 import Input from "../../../components/Form/Input";
@@ -16,6 +16,7 @@ import Switch from "../../../components/Form/Switch";
 import { getEmailValidationRule, getPhoneValidationRule, getRequiredRule } from "../../../util/formValid";
 import Table from "../../../components/Table/Table";
 import { ColumnsType } from "antd/es/table";
+import Button from "../../../components/Button";
 type UserState = {
   userModalVisible: boolean
   permissionModalVisible: boolean
@@ -24,7 +25,6 @@ type UserState = {
   userRoles: IdentityRoleDto[],
   userId: string
   grantedPermissions: GetPermissionListResultDto
-  permissions: Record<string, boolean>
 }
 function User() {
   const [state, setState] = useState<UserState>({
@@ -35,10 +35,7 @@ function User() {
     userRoles: [],
     userId: "",
     grantedPermissions: {} as GetPermissionListResultDto,
-    permissions: {}
   })
-
-  const { useApplicationConfigurationStore } = useAppConfig();
   const { useUserStore, usePermissionStore, } = useStores();
   const [getUsers, getUserById, deleteUserSvc, getAssignableRoles, updateUserSvc, addUserSvc, getUserRoleById] = useUserStore(state => [state.getUsers, state.getUserById, state.deleteUser, state.getAssignableRoles, state.updateUser, state.addUser, state.getUserRoleById])
   const [getPermissionByUser, updatePermissionsByUserSvc] = usePermissionStore(state => [state.getPermissionByUser, state.updatePermissionsByUser])
@@ -46,11 +43,6 @@ function User() {
   const [userModalForm] = Form.useForm();
   let changedPermession: UpdatePermissionDto[];
   const { tableProps, search } = useAntdTable(getUsers, { defaultPageSize: 10, form, debounceWait: 500, });
-  const getAppConfig = useApplicationConfigurationStore(state => state.Get);
-  useAsyncEffect(async () => {
-    const config = await getAppConfig();
-    setState(produce(draft => { draft.permissions = config.auth.grantedPolicies }))
-  }, [])
   const deleteUser = (record: IdentityUserDto) => {
     Modal.confirm({
       title: "删除标签", content: "确定删除吗？",
@@ -139,16 +131,16 @@ function User() {
     {
       title: '操作', render: (record) => (
         <Space>
-          {state.permissions["AbpIdentity.Users.Update"] && <Button type="primary" onClick={() => editUser(record)}>编辑</Button>}
-          {state.permissions["AbpIdentity.Users.ManagePermissions"] && <Button type="primary" onClick={() => showPermissionModal(record.id)}>权限</Button>}
-          {state.permissions["AbpIdentity.Users.Delete"] && <Button type="primary" danger onClick={() => deleteUser(record)} >删除</Button>}
+          <Button permission="AbpIdentity.Users.Update" type="primary" onClick={() => editUser(record)}>编辑</Button>
+          <Button permission="AbpIdentity.Users.ManagePermissions" type="primary" onClick={() => showPermissionModal(record.id)}>权限</Button>
+          <Button permission="AbpIdentity.Users.Delete" type="primary" danger onClick={() => deleteUser(record)} >删除</Button>
         </Space>
       )
     },
   ]
   return (
     <div>
-      <AdvancedSearchForm form={form} {...search} extraActions={[state.permissions["AbpIdentity.Users.Create"] ? { content: "添加", action: addUser } : null]}>
+      <AdvancedSearchForm form={form} {...search} extraActions={[{ content: "添加", action: addUser, permission: "AbpIdentity.Users.Create" }]}>
         <Input name="Filter" label="查找值" placeholder="请输入查找值" />
       </AdvancedSearchForm>
       <div className={styles.table}>
@@ -183,7 +175,7 @@ function User() {
           </Tabs>
         </Form>
       </Modal>
-      <Modal open={state.permissionModalVisible} title="权限" okText="确定" cancelText="取消" onCancel={closePermissionModal}onOk={updatePermissionsByUser}>
+      <Modal open={state.permissionModalVisible} title="权限" okText="确定" cancelText="取消" onCancel={closePermissionModal} onOk={updatePermissionsByUser}>
         <Permission permissions={state.grantedPermissions} onPermissionChanged={onPermissionChange} />
       </Modal>
     </div >

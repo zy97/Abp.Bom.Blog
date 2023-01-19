@@ -1,11 +1,11 @@
 import { IdentityRoleDto } from "@abp/ng.identity/proxy";
 import { GetPermissionListResultDto, UpdatePermissionDto } from "@abp/ng.permission-management/proxy";
-import { useAntdTable, useAsyncEffect } from "ahooks";
-import { Button, Form, message, Modal, Space } from "antd";
+import { useAntdTable } from "ahooks";
+import { Form, message, Modal, Space } from "antd";
 import { useState } from "react";
 import { produce } from 'immer';
 import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
-import { useAppConfig, useStores } from "../../../hooks/useStore";
+import { useStores } from "../../../hooks/useStore";
 import Permission from "../../../components/Permission";
 import styles from "./index.module.less";
 import Input from "../../../components/Form/Input";
@@ -15,13 +15,13 @@ import ConcurrencyStamp from "../../../components/Form/ConcurrencyStamp";
 import Checkbox from "../../../components/Form/Checkbox";
 import { ColumnsType } from "antd/es/table";
 import Table from "../../../components/Table/Table";
+import Button from "../../../components/Button";
 type RoleState = {
   roleModalVisible: boolean
   roleModalTitle: string,
   permissionModalVisible: boolean
   roleName: string
   grantedPermissions: GetPermissionListResultDto
-  permissions: Record<string, boolean>
 }
 function Role() {
   const [state, setState] = useState<RoleState>({
@@ -30,7 +30,6 @@ function Role() {
     permissionModalVisible: false,
     roleName: "",
     grantedPermissions: {} as GetPermissionListResultDto,
-    permissions: {}
   })
   const tableColumns: ColumnsType<IdentityRoleDto> = [
     { title: '角色字', dataIndex: 'name', },
@@ -39,26 +38,20 @@ function Role() {
     {
       title: '操作', render: (record) => (
         <Space>
-          {state.permissions["AbpIdentity.Roles.Update"] && <Button type="primary" onClick={() => editRole(record)}>编辑</Button>}
-          {state.permissions["AbpIdentity.Roles.ManagePermissions"] && <Button type="primary" onClick={() => showPermissionModal(record.name)}>权限</Button>}
-          {state.permissions["AbpIdentity.Roles.Delete"] && <Button type="primary" danger onClick={() => deleteRole(record)}>删除</Button>}
+          <Button permission="AbpIdentity.Roles.Update" type="primary" onClick={() => editRole(record)}>编辑</Button>
+          <Button permission="AbpIdentity.Roles.ManagePermissions" type="primary" onClick={() => showPermissionModal(record.name)}>权限</Button>
+          <Button permission="AbpIdentity.Roles.Delete" type="primary" danger onClick={() => deleteRole(record)}>删除</Button>
         </Space>
       )
     },
   ]
-  const { useApplicationConfigurationStore } = useAppConfig();
   const { useRoleStore, usePermissionStore } = useStores();
-  const getAppConfig = useApplicationConfigurationStore(state => state.Get)
   const [getRoles, getRoleById, deleteRoleService, updateRole, addRoleSvc] = useRoleStore(state => [state.getRoles, state.getRoleById, state.deleteRole, state.updateRole, state.addRole]);
   const [getPermissionByRole, updatePermissionsByRole] = usePermissionStore(state => [state.getPermissionByRole, state.updatePermissionsByRole]);
   const [searchForm] = Form.useForm();
   const [roleModalForm] = Form.useForm();
   const { tableProps, search } = useAntdTable(getRoles, { defaultPageSize: 10, form: searchForm, debounceWait: 500, });
   let changedPermession: UpdatePermissionDto[];
-  useAsyncEffect(async () => {
-    const config = await getAppConfig()
-    setState(produce(draft => { draft.permissions = config.auth.grantedPolicies }))
-  }, []);
   const deleteRole = (record: IdentityRoleDto) => {
     Modal.confirm({
       title: "删除", content: "确定删除吗？",
@@ -131,7 +124,7 @@ function Role() {
   }
   return (
     <div>
-      <AdvancedSearchForm form={searchForm} {...search} extraActions={[state.permissions["AbpIdentity.Roles.Create"] ? { content: "添加", action: addRole } : null]}>
+      <AdvancedSearchForm form={searchForm} {...search} extraActions={[{ content: "添加", action: addRole, permission: "AbpIdentity.Roles.Create" }]}>
         <Input placeholder="请输入查找值" name="Filter" label="查找值" />
       </AdvancedSearchForm>
       <div className={styles.table}>

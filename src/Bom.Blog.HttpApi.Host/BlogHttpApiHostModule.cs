@@ -54,6 +54,7 @@ public class BlogHttpApiHostModule : AbpModule
         app.ApplicationServices.GetService<SettingDefinitionManager>().Get(LocalizationSettingNames.DefaultLanguage).DefaultValue = "zh-Hans";
         return base.OnApplicationInitializationAsync(context);
     }
+
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
