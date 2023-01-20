@@ -35,7 +35,6 @@ export function withPermission<T extends WithPermisionProps = WithPermisionProps
         let showBtn = true;
         if (permission && permission !== "" && !permissions[permission])
             showBtn = false
-        console.log(permissions, permission, showBtn)
         // props comes afterwards so the can override the default ones.
         return showBtn ? <WrappedComponent {...(extraProp as T)} /> : <></>;
     };

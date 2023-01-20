@@ -17,6 +17,7 @@ import { getEmailValidationRule, getPhoneValidationRule, getRequiredRule } from 
 import Table from "../../../components/Table/Table";
 import { ColumnsType } from "antd/es/table";
 import Button from "../../../components/Button";
+import { L } from "../../../util/localization";
 type UserState = {
   userModalVisible: boolean
   permissionModalVisible: boolean
@@ -36,6 +37,7 @@ function User() {
     userId: "",
     grantedPermissions: {} as GetPermissionListResultDto,
   })
+  // const { L } = useAppConfig();
   const { useUserStore, usePermissionStore, } = useStores();
   const [getUsers, getUserById, deleteUserSvc, getAssignableRoles, updateUserSvc, addUserSvc, getUserRoleById] = useUserStore(state => [state.getUsers, state.getUserById, state.deleteUser, state.getAssignableRoles, state.updateUser, state.addUser, state.getUserRoleById])
   const [getPermissionByUser, updatePermissionsByUserSvc] = usePermissionStore(state => [state.getPermissionByUser, state.updatePermissionsByUser])
@@ -131,9 +133,9 @@ function User() {
     {
       title: '操作', render: (record) => (
         <Space>
-          <Button permission="AbpIdentity.Users.Update" type="primary" onClick={() => editUser(record)}>编辑</Button>
-          <Button permission="AbpIdentity.Users.ManagePermissions" type="primary" onClick={() => showPermissionModal(record.id)}>权限</Button>
-          <Button permission="AbpIdentity.Users.Delete" type="primary" danger onClick={() => deleteUser(record)} >删除</Button>
+          <Button permission="AbpIdentity.Users.Update" type="primary" onClick={() => editUser(record)}>{L("AbpIdentity::Edit")}</Button>
+          <Button permission="AbpIdentity.Users.ManagePermissions" type="primary" onClick={() => showPermissionModal(record.id)}>{L("AbpPermissionManagement::Permissions")}</Button>
+          <Button permission="AbpIdentity.Users.Delete" type="primary" danger onClick={() => deleteUser(record)} >{L("AbpIdentity::Delete")}</Button>
         </Space>
       )
     },

@@ -13,6 +13,7 @@ export const useApplicationConfigurationStore = create<ApplicationConfigurationS
         if (configuration === undefined) {
             const config = await applicationConfiguration.getApplicationConfiguration();
             set({ configuration: config.data });
+            localStorage.setItem("abp:application:localization", JSON.stringify(config.data.localization.values));
             return config.data;
         }
         return configuration;

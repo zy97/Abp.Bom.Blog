@@ -9,11 +9,12 @@ import AdvancedSearchForm from "../../../components/AdvanceSearchForm";
 import Checkbox from "../../../components/Form/Checkbox";
 import Input from "../../../components/Form/Input";
 import Table from "../../../components/Table/Table";
-import { useStores } from "../../../hooks/useStore";
+import { useAppConfig, useStores } from "../../../hooks/useStore";
 import { transformToArray } from "../../../util/formTransform";
 import { getEmailValidationRule, getRequiredRule, } from "../../../util/formValid";
 import styles from "./index.module.less";
 import Button from "../../../components/Button";
+import { useApplicationConfigurationStore } from "../../../stores/Abp/ApplicationConfiguration";
 type TanantState = {
     tenantId: string
     tenantModalVisible: boolean
@@ -27,6 +28,7 @@ function Tenant() {
         featureModalVisible: false,
         features: []
     })
+    const { L } = useAppConfig();
     const { useTenantsStore } = useStores();
     const [getTenants, getTenantById, deleteTenantSvc, getHostFeatures, getTenantFeatures, updateTenant, updateHostFeatures, updateTenantFeatures, addTenantSvc] = useTenantsStore(state => [state.getTenants, state.getTenantById, state.deleteTenant, state.getHostFeatures, state.getTenantFeatures, state.updateTenant, state.updateHostFeatures, state.updateTenantFeatures, state.addTenant])
     const [form] = Form.useForm();
