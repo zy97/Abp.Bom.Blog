@@ -35,27 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.DbMigrator", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.HttpApi.Host", "src\Bom.Blog.HttpApi.Host\Bom.Blog.HttpApi.Host.csproj", "{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Bom.Blog.Web.Admin", "src\Bom.Blog.Web.Admin\", "{35607467-9549-4BB9-8F92-5DB2F0BA10E5}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_52449"
-		Debug.AspNetCompiler.PhysicalPath = "src\Bom.Blog.Web.Admin\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52449\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_52449"
-		Release.AspNetCompiler.PhysicalPath = "src\Bom.Blog.Web.Admin\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52449\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "52449"
-		SlnRelativePath = "src\Bom.Blog.Web.Admin\"
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bom.Blog.Openiddict", "src\Bom.Blog.Openiddict\Bom.Blog.Openiddict.csproj", "{1AC11972-C051-40E8-AF5D-17A8119827C1}"
 EndProject
 Global
@@ -120,10 +99,6 @@ Global
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35607467-9549-4BB9-8F92-5DB2F0BA10E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35607467-9549-4BB9-8F92-5DB2F0BA10E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35607467-9549-4BB9-8F92-5DB2F0BA10E5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{35607467-9549-4BB9-8F92-5DB2F0BA10E5}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{1AC11972-C051-40E8-AF5D-17A8119827C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1AC11972-C051-40E8-AF5D-17A8119827C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AC11972-C051-40E8-AF5D-17A8119827C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -147,7 +122,6 @@ Global
 		{EF480016-9127-4916-8735-D2466BDBC582} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
-		{35607467-9549-4BB9-8F92-5DB2F0BA10E5} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{1AC11972-C051-40E8-AF5D-17A8119827C1} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
